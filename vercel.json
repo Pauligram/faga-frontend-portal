@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/user portal/login.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin portal/login.html"
+    }
+  ]
+}
