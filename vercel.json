@@ -3,10 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/Public website/index.html" },
-    { "source": "/index", "destination": "/Public website/index.html" },
-    { "source": "/login", "destination": "/user portal/login.html" },
-    { "source": "/register", "destination": "/user portal/register.html" },
-    { "source": "/dashboard", "destination": "/user portal/dashboard.html" }
+    { "source": "/", "destination": "/public-website/index.html" },
+    { "source": "/login", "destination": "/user-portal/login.html" }
   ]
 }
