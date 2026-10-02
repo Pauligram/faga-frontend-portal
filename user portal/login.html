@@ -1263,6 +1263,24 @@ function socialLogin(provider) {
         " login will be connected to the FAGA authentication system."
     );
 }
+document.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Grabs value from your original custom field element
+    const userCredential = document.getElementById('email_or_phone').value; 
+    const userPassword = document.getElementById('password').value;
+
+    try {
+        // Aligns fields precisely with what index.js is looking for
+        const response = await FagaAPI.login(userCredential, userPassword);
+        if (response.token) {
+            window.location.href = "dashboard.html"; // Routes logged in profile to console
+        }
+    } catch (err) {
+        console.error("Authentication rejected:", err.data?.message);
+        alert(err.data?.message || "Invalid email parameter or password string.");
+    }
+});
 
 </script>
 
