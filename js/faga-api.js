@@ -45,8 +45,7 @@ const FagaAPI = {
 
         try {
 
-            response = await fetch(
-                `${FAGA_API_BASE_URL}${endpoint}`,
+            response = await fetch( "https://railway.app",
                 {
                     ...options,
                     headers
