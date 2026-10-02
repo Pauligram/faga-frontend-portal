@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "rewrites": [
+  "cleanUrls": true,
+  "headers": [
     {
-      "source": "/",
-      "destination": "/user portal/login.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin portal/login.html"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
     }
   ]
 }
