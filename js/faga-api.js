@@ -3,7 +3,6 @@
  * Fully calibrated to dynamically map your production Railway infrastructure.
  */
 
-//  CORRECTED: Pointing to your specific live public production link
 const FAGA_API_BASE_URL = "https://railway.app";
 
 const FagaAPI = {
@@ -44,7 +43,7 @@ const FagaAPI = {
         let response;
 
         try {
-            // Reconstructs links using your production base URL token
+            // CORRECTION: Dynamic connection reconstruction pointing to your live machine endpoint
             response = await fetch(`${FAGA_API_BASE_URL}${endpoint}`, {
                 ...options,
                 headers
@@ -82,7 +81,7 @@ const FagaAPI = {
     ========================================= */
 
     async register(name, email, password, passwordConfirmation = null) {
-        //  CORRECTED: Changed path prefix to match Node routing
+        // CORRECTION: Added the missing /api prefix to pass validation checks
         const data = await this.request("/api/register", {
             method: "POST",
             body: JSON.stringify({
@@ -100,7 +99,7 @@ const FagaAPI = {
     },
 
     async login(email, password) {
-        //  CORRECTED: Changed path prefix to match Node routing
+        // CORRECTION: Added the missing /api prefix to match Node routing definitions
         const data = await this.request("/api/login", {
             method: "POST",
             body: JSON.stringify({
@@ -116,13 +115,11 @@ const FagaAPI = {
     },
 
     async me() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/profile", { method: "GET" });
     },
 
     async logout() {
         try {
-            //  CORRECTED: Changed path prefix to match Node routing
             const data = await this.request("/api/logout", { method: "POST" });
             this.removeToken();
             return data;
@@ -141,12 +138,10 @@ const FagaAPI = {
     ========================================= */
 
     async getProfile() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/profile", { method: "GET" });
     },
 
     async updateProfile(profileData) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/profile", {
             method: "PATCH",
             body: JSON.stringify(profileData)
@@ -158,17 +153,14 @@ const FagaAPI = {
     ========================================= */
 
     async getAddresses() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/addresses", { method: "GET" });
     },
 
     async getAddress(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/addresses/${id}`, { method: "GET" });
     },
 
     async createAddress(addressData) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/addresses", {
             method: "POST",
             body: JSON.stringify(addressData)
@@ -176,7 +168,6 @@ const FagaAPI = {
     },
 
     async updateAddress(id, addressData) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/addresses/${id}`, {
             method: "PATCH",
             body: JSON.stringify(addressData)
@@ -184,12 +175,10 @@ const FagaAPI = {
     },
 
     async deleteAddress(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/addresses/${id}`, { method: "DELETE" });
     },
 
     async setDefaultAddress(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/addresses/${id}/default`, { method: "PATCH" });
     },
 
@@ -198,17 +187,14 @@ const FagaAPI = {
     ========================================= */
 
     async getDeliveries() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/deliveries", { method: "GET" });
     },
 
     async getDelivery(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/deliveries/${id}`, { method: "GET" });
     },
 
     async createDelivery(deliveryData) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/deliveries", {
             method: "POST",
             body: JSON.stringify(deliveryData)
@@ -216,12 +202,10 @@ const FagaAPI = {
     },
 
     async getDeliveryStatus(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/deliveries/${id}/status`, { method: "GET" });
     },
 
     async updateDeliveryStatus(id, statusData) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/deliveries/${id}/status`, {
             method: "PATCH",
             body: JSON.stringify(statusData)
@@ -229,10 +213,9 @@ const FagaAPI = {
     },
 
     async assignDeliveryRider(id, riderId) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/deliveries/${id}/assign-rider`, {
             method: "PATCH",
-            body: JSON.stringify({ riderId: riderId })
+            body: JSON.stringify({ rider_id: riderId })
         });
     },
 
@@ -241,17 +224,14 @@ const FagaAPI = {
     ========================================= */
 
     async getJobs(params = "") {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/jobs${params}`, { method: "GET" });
     },
 
     async getJob(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/jobs/${id}`, { method: "GET" });
     },
 
     async applyForJob(id, applicationData = {}) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/jobs/${id}/apply`, {
             method: "POST",
             body: JSON.stringify(applicationData)
@@ -259,12 +239,10 @@ const FagaAPI = {
     },
 
     async getMyJobApplications() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/job-applications/me", { method: "GET" });
     },
 
     async getCurrentJobSubscription() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/job-subscriptions/current", { method: "GET" });
     },
 
@@ -273,7 +251,6 @@ const FagaAPI = {
     ========================================= */
 
     async requestRide(rideData) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/deliveries", {
             method: "POST",
             body: JSON.stringify(rideData)
@@ -281,15 +258,28 @@ const FagaAPI = {
     },
 
     async getRides() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/deliveries", {
             method: "GET"
         });
     },
 
     async getRide(id) {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request(`/api/deliveries/${id}`, {
+            method: "GET"
+        });
+    },
+
+    async cancelRide(id, reason = null) {
+        return this.request(`/api/deliveries/${id}/cancel`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                reason: reason
+            })
+        });
+    },
+
+    async getRideStatus(id) {
+        return this.request(`/api/deliveries/${id}/status`, {
             method: "GET"
         });
     },
@@ -299,7 +289,6 @@ const FagaAPI = {
     ========================================= */
 
     async testConnection() {
-        //  CORRECTED: Changed path prefix to match Node routing
         return this.request("/api/profile", {
             method: "GET"
         });
@@ -325,31 +314,34 @@ const FagaLiveTracking = {
         try {
             const token = localStorage.getItem('faga_auth_token');
             
-//  CORRECTED: Re-routed query to target the telemetry updates endpoint on your server
-const response = await fetch(${FAGA_API_BASE_URL}/api/telemetry/update, {
-method: 'POST',
-headers: {
-'Authorization': Bearer ${token},
-'Content-Type': 'application/json',
-'Accept': 'application/json'
-},
-body: JSON.stringify({ ride_id: rideId })
-});
-if (!response.ok) {
-throw new Error(Server returned error status code: ${response.status});
-}
-const result = await response.json();
-if (result.success && result.data) {
-successCallback(result.data.latitude, result.data.longitude);
-}
-} catch (error) {
-console.error("FAGA live map tracking signal error logs trace:", error);
-if (errorCallback) errorCallback(error);
-}
-},
+            // CORRECTION: Connected directly to your telemetry updates endpoint sequence
+            const response = await fetch(`${FAGA_API_BASE_URL}/api/telemetry/update`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ ride_id: rideId })
+            });
 
-stopTrackingDriver(intervalId) {
-clearInterval(intervalId);
-console.log("FAGA tracking system turned off safely.");
-}
+            if (!response.ok) {
+                throw new Error(`Server returned error status code: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                successCallback(result.data.latitude, result.data.longitude);
+            }
+        } catch (error) {
+            console.error("FAGA live map tracking signal error logs trace:", error);
+            if (errorCallback) errorCallback(error);
+        }
+    },
+
+    stopTrackingDriver(intervalId) {
+        clearInterval(intervalId);
+        console.log("FAGA tracking system turned off safely.");
+    }
 };
