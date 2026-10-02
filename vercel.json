@@ -5,13 +5,8 @@
   "rewrites": [
     { "source": "/", "destination": "/Public website/index.html" },
     { "source": "/index", "destination": "/Public website/index.html" },
-    { "source": "/login", "destination": "/user portal/login.html" }
-  ],
-  "routes": [
-    { "src": "/js/(.*)", "dest": "/js/$1" },
-    { "src": "/Public%20website/(.*)", "dest": "/Public website/$1" },
-    { "src": "/user%20portal/(.*)", "dest": "/user portal/$1" },
-    { "src": "/admin%20portal/(.*)", "dest": "/admin portal/$1" },
-    { "handle": "filesystem" }
+    { "source": "/login", "destination": "/user portal/login.html" },
+    { "source": "/register", "destination": "/user portal/register.html" },
+    { "source": "/dashboard", "destination": "/user portal/dashboard.html" }
   ]
 }
