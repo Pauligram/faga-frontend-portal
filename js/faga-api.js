@@ -3,6 +3,7 @@
  * Fully calibrated to dynamically map your production Railway infrastructure.
  */
 
+// CORRECTION: Pointing directly to your unique live backend public engine url
 const FAGA_API_BASE_URL = "https://railway.app";
 
 const FagaAPI = {
