@@ -1059,6 +1059,253 @@
                 grid-template-columns: 1fr;
             }
         }
+    
+/* =========================================================
+   FAGA PRODUCTION MOBILE HARDENING
+   Keeps the existing visual design but prevents overflow
+   and improves touch usability on phones.
+========================================================= */
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img, svg, video, iframe {
+    max-width: 100%;
+}
+
+button, a, input, select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 1000px) {
+    .booking-wrapper {
+        width: 100%;
+    }
+
+    .booking-grid {
+        width: 100%;
+    }
+
+    .map-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 650px) {
+    .navbar {
+        min-height: 64px;
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        gap: 10px;
+    }
+
+    .logo {
+        min-width: 0;
+    }
+
+    .nav-actions {
+        margin-left: auto;
+    }
+
+    .mobile-menu {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .page-header {
+        padding: 32px 16px 58px;
+    }
+
+    .page-header h1 {
+        font-size: clamp(28px, 8vw, 34px);
+        line-height: 1.1;
+    }
+
+    .page-header p {
+        line-height: 1.55;
+    }
+
+    .booking-wrapper {
+        margin-top: -28px;
+        padding: 0 10px;
+        margin-bottom: 45px;
+    }
+
+    .booking-card {
+        padding: 18px 14px;
+        border-radius: 15px;
+    }
+
+    .location-box {
+        padding: 4px 11px;
+    }
+
+    .location-row {
+        min-height: 58px;
+        gap: 9px;
+    }
+
+    .location-button {
+        font-size: 12px;
+        padding: 8px 2px;
+    }
+
+    .location-input {
+        min-width: 0;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .ride-types {
+        gap: 8px;
+    }
+
+    .ride-option {
+        min-height: 66px;
+        padding: 10px;
+    }
+
+    .ride-price {
+        white-space: nowrap;
+    }
+
+    .options-row {
+        gap: 8px;
+    }
+
+    .option-box {
+        min-height: 58px;
+    }
+
+    .estimate-card {
+        padding: 14px;
+    }
+
+    .estimate-price {
+        font-size: 21px;
+    }
+
+    .estimate-details {
+        gap: 5px;
+    }
+
+    .estimate-item {
+        min-width: 0;
+    }
+
+    .estimate-item strong {
+        font-size: 12px;
+    }
+
+    .estimate-item span {
+        font-size: 10px;
+    }
+
+    .book-btn {
+        min-height: 52px;
+    }
+
+    .map-card,
+    .map-area {
+        min-height: 360px;
+        height: 360px;
+    }
+
+    .map-note {
+        right: 12px;
+        max-width: none;
+        width: auto;
+        font-size: 10px;
+    }
+
+    .map-controls button {
+        width: 44px;
+        height: 44px;
+    }
+
+    .recent-section,
+    .info-section {
+        padding-left: 12px;
+        padding-right: 12px;
+        margin-bottom: 45px;
+    }
+
+    .recent-card {
+        min-height: 64px;
+    }
+
+    .info-card {
+        padding: 20px;
+    }
+
+    footer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .modal {
+        padding: 12px;
+    }
+
+    .modal-box {
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        padding: 22px 17px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions button {
+        min-height: 48px;
+    }
+
+    .toast {
+        left: 12px;
+        right: 12px;
+        bottom: 14px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 430px) {
+    .nav-actions .btn-orange {
+        display: none;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .location-button {
+        max-width: 74px;
+        white-space: normal;
+        line-height: 1.15;
+    }
+
+    .estimate-details {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
     </style>
 </head>
 
@@ -1919,6 +2166,11 @@
                         longitude
                     );
 
+                    window.fagaPickupCoordinates = {
+                        latitude,
+                        longitude
+                    };
+
                     pickupInput.value =
                         "Current location";
 
@@ -2055,89 +2307,134 @@
 
 
         /* =====================================
-           CONFIRM BOOKING
+           LIVE RIDE BOOKING
         ===================================== */
 
-        confirmBooking.addEventListener("click", async () => {
+        async function createLiveRide() {
+            const pickup = pickupInput.value.trim();
+            const destination = destinationInput.value.trim();
 
-            confirmBooking.disabled = true;
-
-            confirmBooking.textContent =
-                "Finding Driver...";
-
-
-            /*
-            ==========================================
-            PRODUCTION API
-
-            POST /api/rides
-
-            Example request:
-
-            {
-                "pickup": {
-                    "address": "...",
-                    "latitude": 0,
-                    "longitude": 0
-                },
-                "destination": {
-                    "address": "...",
-                    "latitude": 0,
-                    "longitude": 0
-                },
-                "ride_type": "economy",
-                "passengers": 1
+            if (!pickup || !destination) {
+                showToast("Please enter pickup and destination.");
+                return;
             }
 
-            Backend must:
+            if (typeof FagaAPI === "undefined" || typeof FagaAPI.request !== "function") {
+                showToast("FAGA connection is unavailable. Please refresh and try again.");
+                return;
+            }
 
-            1. Authenticate the user.
-            2. Validate pickup/destination.
-            3. Calculate the authoritative fare.
-            4. Check available drivers.
-            5. Create the ride.
-            6. Return a ride ID.
-            7. Start driver matching.
+            if (!FagaAPI.isLoggedIn()) {
+                showToast("Please sign in before booking a ride.");
+                setTimeout(() => {
+                    window.location.href =
+                        "../user-portal/login.html?redirect=" +
+                        encodeURIComponent("../Public-website/ride-booking.html");
+                }, 700);
+                return;
+            }
 
-            Never trust the frontend fare.
-            Never trust frontend ride status.
-            ==========================================
-            */
+            confirmBooking.disabled = true;
+            confirmBooking.textContent = "Booking...";
 
+            try {
+                const response = await FagaAPI.request("/api/rides", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        pickupAddress: pickup,
+                        destinationAddress: destination,
+                        rideType: selectedRide,
+                        passengers: passengers,
+                        pickupLatitude: window.fagaPickupCoordinates?.latitude ?? null,
+                        pickupLongitude: window.fagaPickupCoordinates?.longitude ?? null
+                    })
+                });
 
-            setTimeout(() => {
+                const ride = response?.ride || response?.data || response;
+
+                const rideId =
+                    ride?.id ??
+                    ride?.rideId ??
+                    response?.rideId ??
+                    response?.id;
+
+                if (!rideId) {
+                    throw {
+                        data: {
+                            message: "The ride service returned an invalid booking response."
+                        }
+                    };
+                }
 
                 bookingModal.classList.remove("show");
-
-                confirmBooking.disabled = false;
-
-                confirmBooking.textContent =
-                    "Find Driver";
-
-                /*
-                Demo redirect.
-
-                Production example:
-
-                window.location.href =
-                    "./ride-tracking.html?rideId=" + rideId;
-                */
-
-                showToast(
-                    "Ride request created. Finding a driver..."
-                );
+                showToast("Ride booked. Looking for an available driver...");
 
                 setTimeout(() => {
-
                     window.location.href =
-                        "./ride-tracking.html";
+                        "./ride-tracking.html?rideId=" +
+                        encodeURIComponent(rideId);
+                }, 700);
 
-                }, 1200);
+            } catch (error) {
+                console.error("FAGA ride booking error:", error);
 
-            }, 1800);
+                let message =
+                    "We could not create your ride. Please try again.";
 
+                if (error?.data?.message) {
+                    message = error.data.message;
+                } else if (error?.data?.error) {
+                    message = error.data.error;
+                }
+
+                showToast(message);
+                confirmBooking.disabled = false;
+                confirmBooking.textContent = "Find Driver";
+            }
+        }
+
+        bookRideBtn.addEventListener("click", () => {
+            const pickup = pickupInput.value.trim();
+            const destination = destinationInput.value.trim();
+
+            if (!pickup) {
+                showToast("Please enter your pickup location.");
+                pickupInput.focus();
+                return;
+            }
+
+            if (!destination) {
+                showToast("Please enter your destination.");
+                destinationInput.focus();
+                return;
+            }
+
+            if (typeof FagaAPI !== "undefined" && !FagaAPI.isLoggedIn()) {
+                modalText.textContent =
+                    "Please sign in to your FAGA account before requesting a ride.";
+            } else {
+                modalText.textContent =
+                    `Find an available ${selectedRide} driver from ${pickup} to ${destination}?`;
+            }
+
+            bookingModal.classList.add("show");
         });
 
+        cancelModal.addEventListener("click", () => {
+            bookingModal.classList.remove("show");
+            confirmBooking.disabled = false;
+            confirmBooking.textContent = "Find Driver";
+        });
+
+        bookingModal.addEventListener("click", event => {
+            if (event.target === bookingModal) {
+                bookingModal.classList.remove("show");
+                confirmBooking.disabled = false;
+                confirmBooking.textContent = "Find Driver";
+            }
+        });
+
+        confirmBooking.addEventListener("click", createLiveRide);
 
         /* =====================================
            MAP CONTROLS
@@ -2241,64 +2538,7 @@
         });
 
 
-        /* =====================================
-           FUTURE LIVE RIDE INTEGRATION
-        =====================================
 
-        After ride creation:
-
-        GET
-        /api/rides/:rideId
-
-        GET
-        /api/rides/:rideId/driver
-
-        GET
-        /api/rides/:rideId/tracking
-
-        POST
-        /api/rides/:rideId/cancel
-
-        POST
-        /api/rides/:rideId/share
-
-        POST
-        /api/rides/:rideId/safety-report
-
-
-        Real-time driver location:
-
-        WebSocket:
-        wss://your-api-domain/rides/:rideId
-
-        OR
-
-        Server-Sent Events:
-        GET /api/rides/:rideId/tracking/stream
-
-
-        Backend remains authoritative for:
-
-        - Driver GPS coordinates
-        - Driver assignment
-        - Ride status
-        - Fare
-        - ETA
-        - Payment
-        - Cancellation
-        - Trip completion
-
-
-        Map provider options can later include:
-
-        - Google Maps
-        - Mapbox
-        - OpenStreetMap + Leaflet
-
-
-        Do not put private API keys or backend secrets
-        inside this HTML file.
-        ===================================== */
 
     </script>
 
