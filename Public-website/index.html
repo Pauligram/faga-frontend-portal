@@ -1,20 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>FAGA - Everything You Need, One App</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Tailwind configuration -->
-    <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FAGA - Everything You Need, One App</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Tailwind configuration -->
+<script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -30,12 +24,9 @@
             }
         }
     </script>
-
-    <!-- Icons -->
-    <script
-        src="https://unpkg.com/lucide@latest"
-    ></script>
-      <style>
+<!-- Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #102A43; background: #fff; }
@@ -75,7 +66,6 @@
       .hero-image { background-image: linear-gradient(90deg, rgba(6,38,83,.98), rgba(6,38,83,.82)), url('assets/images/hero.jpg'); }
     }
   </style>
-
 <style>
 
         /* ==========================================
@@ -1141,778 +1131,436 @@
   }
 
 </style>
+
+<style>
+body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:24px;z-index:200;transform:translateX(-50%) translateY(16px);opacity:0;pointer-events:none;max-width:92vw;padding:12px 16px;border-radius:12px;background:#062653;color:#fff;font-size:14px;font-weight:700;box-shadow:0 18px 40px rgba(6,38,83,.22);transition:.25s}.faga-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.product-card.faga-search-hidden{display:none}.product-card.faga-search-match{outline:2px solid rgba(255,121,0,.25)}.faga-search-empty{display:none;grid-column:1/-1;padding:28px;text-align:center;border:1px dashed #cbd5e1;border-radius:16px;color:#64748b;background:#f8fafc}.faga-search-empty.show{display:block}.faga-drawer-item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eef2f7}.faga-drawer-item img{width:64px;height:64px;border-radius:12px;object-fit:cover;background:#f2f5f8}.faga-drawer-item-title{margin:0;color:#123f76;font-size:13px;font-weight:800}.faga-drawer-item-meta{margin:4px 0 0;color:#64748b;font-size:12px}@media(max-width:640px){.faga-drawer-item{grid-template-columns:54px minmax(0,1fr) auto;gap:9px}.faga-drawer-item img{width:54px;height:54px}.faga-toast{bottom:14px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+<div id="dispatchModal" class="modal-backdrop fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/60 p-4" aria-hidden="true">
+<div class="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="dispatchModalTitle">
+<div class="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><p class="text-xs font-extrabold uppercase tracking-wider text-faga-orange">FAGA DISPATCH</p><h2 id="dispatchModalTitle" class="text-xl font-black text-faga-navy">Find a dispatch rider</h2></div><button type="button" data-close="dispatchModal" aria-label="Close" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100"><i data-lucide="x"></i></button></div>
+<form id="dispatchQuickForm" class="space-y-4 p-5"><div><label for="dispatchPickup" class="mb-1.5 block text-sm font-bold">Pickup location</label><input id="dispatchPickup" required placeholder="Where should the rider pick up?" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-faga-orange"></div><div><label for="dispatchDestination" class="mb-1.5 block text-sm font-bold">Destination</label><input id="dispatchDestination" required placeholder="Where should the rider deliver?" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-faga-orange"></div><div><label for="dispatchPackage" class="mb-1.5 block text-sm font-bold">Package description</label><input id="dispatchPackage" placeholder="e.g. documents, food, small parcel" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-faga-orange"></div><p id="dispatchFormMessage" class="hidden rounded-xl bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-700"></p><div class="grid gap-3 sm:grid-cols-2"><button type="button" data-close="dispatchModal" class="rounded-xl border px-4 py-3 font-bold">Cancel</button><button type="submit" class="rounded-xl bg-faga-orange px-4 py-3 font-extrabold text-white">Continue to booking</button></div></form></div></div>
+<div id="cartDrawer" class="fixed inset-0 z-[110] hidden" aria-hidden="true"><div class="absolute inset-0 bg-slate-950/50" data-close-drawer="cartDrawer"></div><aside class="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div class="flex items-center justify-between border-b px-5 py-4"><h2 class="text-xl font-black text-faga-navy">Cart</h2><button type="button" data-close-drawer="cartDrawer" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100"><i data-lucide="x"></i></button></div><div id="cartItems" class="flex-1 overflow-y-auto p-5"></div><div class="border-t p-5"><div class="mb-4 flex justify-between"><span class="font-bold">Subtotal</span><strong id="cartSubtotal" class="text-xl font-black text-faga-navy">₦0</strong></div><a href="./marketplace.html" class="block rounded-xl bg-faga-orange px-4 py-3 text-center font-extrabold text-white">Continue to Marketplace</a></div></aside></div>
+<div id="wishlistDrawer" class="fixed inset-0 z-[110] hidden" aria-hidden="true"><div class="absolute inset-0 bg-slate-950/50" data-close-drawer="wishlistDrawer"></div><aside class="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div class="flex items-center justify-between border-b px-5 py-4"><h2 class="text-xl font-black text-faga-navy">Wishlist</h2><button type="button" data-close-drawer="wishlistDrawer" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100"><i data-lucide="x"></i></button></div><div id="wishlistItems" class="flex-1 overflow-y-auto p-5"></div><div class="border-t p-5"><a href="./marketplace.html" class="block rounded-xl bg-faga-navy px-4 py-3 text-center font-extrabold text-white">Browse Marketplace</a></div></aside></div>
+
 </head>
-
 <body class="bg-white text-gray-900">
-
-    <!-- =====================================================
+<!-- =====================================================
          TOP HEADER
     ====================================================== -->
-
-    <header class="bg-faga-navy text-white">
-
-        <div class="
-            mx-auto
-            flex
-            max-w-7xl
-            items-center
-            gap-4
-            px-4
-            py-3
-            lg:px-6
-        ">
-
-            <!-- Logo -->
-            <a
-                href="/"
-                class="shrink-0 text-3xl font-black tracking-tight sm:text-4xl"
-            >
-                <span>FA</span><span class="text-faga-orange">GA</span>
-            </a>
-
-
-            <!-- Search -->
-            <div class="
-                hidden
-                flex-1
-                overflow-hidden
-                rounded-lg
-                bg-white
-                md:flex
-            ">
-
-                <!-- Category -->
-                <button class="
-                    flex
-                    items-center
-                    gap-2
-                    border-r
-                    border-gray-200
-                    px-4
-                    text-sm
-                    font-medium
-                    text-gray-700
-                    hover:bg-gray-50
-                ">
+<header class="bg-faga-navy text-white">
+<div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 lg:px-6">
+<!-- Logo -->
+<a class="shrink-0 text-3xl font-black tracking-tight sm:text-4xl" href="./index.html">
+<span>FA</span><span class="text-faga-orange">GA</span>
+</a>
+<!-- Search -->
+<div class="hidden flex-1 overflow-hidden rounded-lg bg-white md:flex">
+<!-- Category -->
+<button class="flex items-center gap-2 border-r border-gray-200 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     All Categories
 
-                    <i
-                        data-lucide="chevron-down"
-                        class="h-4 w-4"
-                    ></i>
-                </button>
-
-
-                <!-- Input -->
-                <input
-                    type="search"
-                    placeholder="Search for products, brands and services..."
-                    class="
-                        min-w-0
-                        flex-1
-                        px-5
-                        py-3
-                        text-sm
-                        text-gray-900
-                        outline-none
-                        placeholder:text-gray-400
-                    "
-                >
-
-
-                <!-- Search button -->
-                <button class="
-                    flex
-                    w-14
-                    items-center
-                    justify-center
-                    bg-faga-orange
-                    transition
-                    hover:bg-orange-600
-                ">
-
-                    <i
-                        data-lucide="search"
-                        class="h-5 w-5"
-                    ></i>
-
-                </button>
-
-            </div>
-
-
-            <!-- Account -->
-            <button class="
-                hidden
-                items-center
-                gap-2
-                text-sm
-                lg:flex
-            ">
-
-                <i
-                    data-lucide="user-round"
-                    class="h-6 w-6"
-                ></i>
-
-                <span>
-                    <span class="block text-xs text-gray-300">
+                    <i class="h-4 w-4" data-lucide="chevron-down"></i>
+</button>
+<!-- Input -->
+<input class="min-w-0 flex-1 px-5 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400" id="desktopSearchInput" placeholder="Search for products, brands and services..." type="search"/>
+<!-- Search button -->
+<button aria-label="Search" class="flex w-14 items-center justify-center bg-faga-orange transition hover:bg-orange-600" id="desktopSearchButton" type="button">
+<i class="h-5 w-5" data-lucide="search"></i>
+</button>
+</div>
+<!-- Account -->
+<button aria-label="accountButton" class="hidden items-center gap-2 text-sm lg:flex" id="accountButton" type="button">
+<i class="h-6 w-6" data-lucide="user-round"></i>
+<span>
+<span class="block text-xs text-gray-300">
                         Hello, Gb...
                     </span>
-
-                    <span class="font-semibold">
+<span class="font-semibold">
                         Account
                     </span>
-                </span>
-
-                <i
-                    data-lucide="chevron-down"
-                    class="h-4 w-4"
-                ></i>
-
-            </button>
-
-
-            <!-- Wishlist -->
-            <button class="
-                hidden
-                items-center
-                gap-2
-                text-sm
-                xl:flex
-            ">
-
-                <i
-                    data-lucide="heart"
-                    class="h-6 w-6"
-                ></i>
+</span>
+<i class="h-4 w-4" data-lucide="chevron-down"></i>
+</button>
+<!-- Wishlist -->
+<button aria-label="headerWishlistButton" class="hidden items-center gap-2 text-sm xl:flex" id="headerWishlistButton" type="button">
+<i class="h-6 w-6" data-lucide="heart"></i>
 
                 Wishlist
 
             </button>
-
-
-            <!-- Cart -->
-            <button class="
-                relative
-                flex
-                items-center
-                gap-2
-                text-sm
-            ">
-
-                <i
-                    data-lucide="shopping-cart"
-                    class="h-6 w-6"
-                ></i>
-
-                <span class="hidden sm:inline">
+<!-- Cart -->
+<button aria-label="headerCartButton" class="relative flex items-center gap-2 text-sm" id="headerCartButton" type="button">
+<i class="h-6 w-6" data-lucide="shopping-cart"></i>
+<span class="hidden sm:inline">
                     Cart
                 </span>
-
-                <span class="
-                    absolute
-                    -right-2
-                    -top-2
-                    flex
-                    h-5
-                    min-w-5
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-faga-orange
-                    px-1
-                    text-xs
-                    font-bold
-                ">
-                    3
-                </span>
-
-            </button>
-
-        </div>
-
-
-        <!-- Mobile search -->
-
-        <div class="px-4 pb-3 md:hidden">
-
-            <div class="
-                flex
-                overflow-hidden
-                rounded-lg
-                bg-white
-            ">
-
-                <input
-                    type="search"
-                    placeholder="Search products, brands and services..."
-                    class="
-                        min-w-0
-                        flex-1
-                        px-4
-                        py-3
-                        text-sm
-                        text-gray-900
-                        outline-none
-                    "
-                >
-
-                <button class="
-                    flex
-                    w-12
-                    items-center
-                    justify-center
-                    bg-faga-orange
-                ">
-
-                    <i
-                        data-lucide="search"
-                        class="h-5 w-5 text-white"
-                    ></i>
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </header>
-
-
-
-    <!-- =====================================================
+<span class="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-faga-orange px-1 text-xs font-bold" id="headerCartCount">0</span>
+</button>
+</div>
+<button aria-expanded="false" aria-label="Open navigation menu" class="absolute right-4 top-3 flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 text-white md:hidden" id="mobileMenuButton" type="button"><i class="h-5 w-5" data-lucide="menu"></i></button>
+<!-- Mobile search -->
+<div class="px-4 pb-3 md:hidden">
+<div class="flex overflow-hidden rounded-lg bg-white">
+<input class="min-w-0 flex-1 px-4 py-3 text-sm text-gray-900 outline-none" id="mobileSearchInput" placeholder="Search products, brands and services..." type="search"/>
+<button aria-label="Search" class="flex w-12 items-center justify-center bg-faga-orange" id="mobileSearchButton" type="button">
+<i class="h-5 w-5 text-white" data-lucide="search"></i>
+</button>
+</div>
+</div>
+</header>
+<div class="hidden border-b border-gray-200 bg-white shadow-lg md:hidden" id="mobileNav"><nav aria-label="Mobile navigation" class="mx-auto grid max-w-7xl gap-1 px-4 py-3">
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./index.html">Home</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./logistics.html">Logistics</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./services.html">Services</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./marketplace.html">Buy &amp; Sell</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./food.html">Food</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./jobs.html">Jobs</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./help.html">Help</a>
+<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./track-order.html">Track Order</a>
+<button class="rounded-lg px-4 py-3 text-left font-semibold text-faga-navy hover:bg-orange-50" data-action="open-cart" type="button">Cart</button>
+<button class="rounded-lg px-4 py-3 text-left font-semibold text-faga-navy hover:bg-orange-50" data-action="open-wishlist" type="button">Wishlist</button>
+</nav></div>
+<!-- =====================================================
          MAIN NAVIGATION
     ====================================================== -->
-
-    <nav class="
-        border-b
-        border-gray-200
-        bg-white
-        shadow-sm
-    ">
-
-        <div class="
-            mx-auto
-            flex
-            max-w-7xl
-            items-center
-            px-4
-            lg:px-6
-        ">
-
-            <!-- Categories -->
-
-            <button class="
-                flex
-                items-center
-                gap-3
-                border-r
-                border-gray-200
-                py-4
-                pr-6
-                font-semibold
-                text-faga-navy
-            ">
-
-                <i
-                    data-lucide="menu"
-                    class="h-6 w-6"
-                ></i>
-
-                <span class="hidden sm:inline">
+<nav class="border-b border-gray-200 bg-white shadow-sm">
+<div class="mx-auto flex max-w-7xl items-center px-4 lg:px-6">
+<!-- Categories -->
+<button class="flex items-center gap-3 border-r border-gray-200 py-4 pr-6 font-semibold text-faga-navy">
+<i class="h-6 w-6" data-lucide="menu"></i>
+<span class="hidden sm:inline">
                     All Categories
                 </span>
-
-                <i
-                    data-lucide="chevron-down"
-                    class="hidden h-4 w-4 sm:block"
-                ></i>
-
-            </button>
-
-
-            <!-- Navigation links -->
-
-            <div class="
-                flex
-                flex-1
-                items-center
-                justify-center
-                gap-5
-                overflow-x-auto
-                px-4
-                lg:gap-10
-            ">
-
-                <a
-                    href="./index.html"
-                    class="
-                        relative
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-orange
-                    "
-                >
+<i class="hidden h-4 w-4 sm:block" data-lucide="chevron-down"></i>
+</button>
+<!-- Navigation links -->
+<div class="flex flex-1 items-center justify-center gap-5 overflow-x-auto px-4 lg:gap-10">
+<a class="relative whitespace-nowrap py-4 font-semibold text-faga-orange" href="./index.html">
                     Home
 
-                    <span class="
-                        absolute
-                        bottom-0
-                        left-0
-                        h-0.5
-                        w-full
-                        bg-faga-orange
-                    "></span>
-                </a>
-
-
-                <a
-                    href="./logistics.html"
-                    class="
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-navy
-                        hover:text-faga-orange
-                    "
-                >
+                    <span class="absolute bottom-0 left-0 h-0.5 w-full bg-faga-orange"></span>
+</a>
+<a class="whitespace-nowrap py-4 font-semibold text-faga-navy hover:text-faga-orange" href="./logistics.html">
                     Logistics
                 </a>
-
-
-                <a
-                    href="./services.html"
-                    class="
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-navy
-                        hover:text-faga-orange
-                    "
-                >
+<a class="whitespace-nowrap py-4 font-semibold text-faga-navy hover:text-faga-orange" href="./services.html">
                     Services
                 </a>
+<a class="flex items-center gap-1 whitespace-nowrap py-4 font-semibold text-faga-navy hover:text-faga-orange" href="./marketplace.html">
+                    Buy &amp; Sell
 
-
-                <a
-                    href="./marketplace.html"
-                    class="
-                        flex
-                        items-center
-                        gap-1
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-navy
-                        hover:text-faga-orange
-                    "
-                >
-                    Buy & Sell
-
-                    <i
-                        data-lucide="chevron-down"
-                        class="h-4 w-4"
-                    ></i>
-                </a>
-
-
-                <a
-                    href="./jobs.html"
-                    class="
-                        flex
-                        items-center
-                        gap-1
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-navy
-                        hover:text-faga-orange
-                    "
-                >
+                    <i class="h-4 w-4" data-lucide="chevron-down"></i>
+</a>
+<a class="flex items-center gap-1 whitespace-nowrap py-4 font-semibold text-faga-navy hover:text-faga-orange" href="./jobs.html">
                     Jobs
 
-                    <i
-                        data-lucide="chevron-down"
-                        class="h-4 w-4"
-                    ></i>
-                </a>
-
-
-                <a
-                    href="./help.html"
-                    class="
-                        flex
-                        items-center
-                        gap-1
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-navy
-                        hover:text-faga-orange
-                    "
-                >
+                    <i class="h-4 w-4" data-lucide="chevron-down"></i>
+</a>
+<a class="flex items-center gap-1 whitespace-nowrap py-4 font-semibold text-faga-navy hover:text-faga-orange" href="./help.html">
                     Help
 
-                    <i
-                        data-lucide="chevron-down"
-                        class="h-4 w-4"
-                    ></i>
-                </a>
-
-
-                <a
-                    href="./track-order.html"
-                    class="
-                        whitespace-nowrap
-                        py-4
-                        font-semibold
-                        text-faga-navy
-                        hover:text-faga-orange
-                    "
-                >
+                    <i class="h-4 w-4" data-lucide="chevron-down"></i>
+</a>
+<a class="whitespace-nowrap py-4 font-semibold text-faga-navy hover:text-faga-orange" href="./track-order.html">
                     Track Order
                 </a>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-         <!-- ========================= HERO ========================= -->
-  <main>
-    <section class="relative overflow-hidden bg-faga-navy text-white">
-      <div class="absolute inset-0 hero-grid opacity-70"></div>
-      <div class="absolute inset-0 hero-image opacity-80"></div>
-
-      <div class="container relative grid min-h-[610px] items-center gap-12 py-14 lg:grid-cols-[1.05fr_.95fr] lg:py-20">
-        <div class="max-w-2xl">
-          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold">
-            <span class="h-2 w-2 rounded-full bg-faga-orange"></span>
+</div>
+</div>
+</nav>
+<!-- ========================= HERO ========================= -->
+<main>
+<section class="relative overflow-hidden bg-faga-navy text-white">
+<div class="absolute inset-0 hero-grid opacity-70"></div>
+<div class="absolute inset-0 hero-image opacity-80"></div>
+<div class="container relative grid min-h-[610px] items-center gap-12 py-14 lg:grid-cols-[1.05fr_.95fr] lg:py-20">
+<div class="max-w-2xl">
+<div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold">
+<span class="h-2 w-2 rounded-full bg-faga-orange"></span>
             One platform. Many everyday solutions.
           </div>
-
-          <h1 class="text-4xl font-black leading-[1.04] tracking-tight sm:text-6xl">
+<h1 class="text-4xl font-black leading-[1.04] tracking-tight sm:text-6xl">
             Move. Send. Shop.
             <span class="block text-faga-orange">Get things done.</span>
-          </h1>
-
-          <p class="mt-6 max-w-xl text-base leading-7 text-slate-200 sm:text-lg">
+</h1>
+<p class="mt-6 max-w-xl text-base leading-7 text-slate-200 sm:text-lg">
             FAGA brings rides, dispatch, logistics, services, food, marketplace shopping and jobs together in one simple platform.
           </p>
-
-          <!-- Quick action buttons -->
-          <div class="mt-8 flex flex-wrap gap-3">
-            <a href="./ride-booking.html" class="inline-flex items-center gap-2 rounded-xl bg-faga-orange px-5 py-3.5 font-extrabold shadow-lg hover:bg-orange-600">
-              <i data-lucide="car-front" class="h-5 w-5"></i>
+<!-- Quick action buttons -->
+<div class="mt-8 flex flex-wrap gap-3">
+<a class="inline-flex items-center gap-2 rounded-xl bg-faga-orange px-5 py-3.5 font-extrabold shadow-lg hover:bg-orange-600" href="./ride-booking.html">
+<i class="h-5 w-5" data-lucide="car-front"></i>
               Book a Ride
             </a>
-            <button type="button" data-open="dispatchModal" class="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3.5 font-extrabold text-faga-navy shadow-lg hover:bg-slate-100">
-              <i data-lucide="bike" class="h-5 w-5"></i>
+<button class="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3.5 font-extrabold text-faga-navy shadow-lg hover:bg-slate-100" data-open="dispatchModal" type="button">
+<i class="h-5 w-5" data-lucide="bike"></i>
               Find a Dispatch Rider
             </button>
-          </div>
-
-          <div class="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-200">
-            <span class="inline-flex items-center gap-2"><i data-lucide="shield-check" class="h-4 w-4 text-faga-orange"></i> Safer transactions</span>
-            <span class="inline-flex items-center gap-2"><i data-lucide="map-pin" class="h-4 w-4 text-faga-orange"></i> Track your orders</span>
-            <span class="inline-flex items-center gap-2"><i data-lucide="wallet" class="h-4 w-4 text-faga-orange"></i> Easy payments</span>
-          </div>
-        </div>
-
-        <!-- Hero booking panel -->
-        <div class="glass rounded-3xl p-5 text-faga-navy shadow-2xl sm:p-7">
-          <div class="mb-5 flex items-center justify-between">
-            <div>
-              <p class="text-sm font-bold text-faga-orange">FAGA QUICK ACTIONS</p>
-              <h2 class="mt-1 text-2xl font-black">What do you need today?</h2>
-            </div>
-            <div class="rounded-2xl bg-faga-light p-3">
-              <i data-lucide="sparkles" class="h-6 w-6 text-faga-orange"></i>
-            </div>
-          </div>
-
-          <div class="grid gap-3 sm:grid-cols-2">
-            <a href="./ride-booking.html" class="action-card rounded-2xl border border-slate-200 bg-white p-4">
-              <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-faga-blue">
-                <i data-lucide="car-front"></i>
-              </div>
-              <h3 class="font-extrabold">Book a Ride</h3>
-              <p class="mt-1 text-sm text-slate-500">Go where you need to go.</p>
-              <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Book now <i data-lucide="arrow-right" class="h-4 w-4"></i></span>
-            </a>
-
-            <button type="button" data-open="dispatchModal" class="action-card text-left rounded-2xl border border-slate-200 bg-white p-4">
-              <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-faga-orange">
-                <i data-lucide="bike"></i>
-              </div>
-              <h3 class="font-extrabold">Find a Rider</h3>
-              <p class="mt-1 text-sm text-slate-500">Send packages around town.</p>
-              <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Find rider <i data-lucide="arrow-right" class="h-4 w-4"></i></span>
-            </button>
-
-            <a href="./marketplace.html" class="action-card rounded-2xl border border-slate-200 bg-white p-4">
-              <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                <i data-lucide="shopping-bag"></i>
-              </div>
-              <h3 class="font-extrabold">Buy & Sell</h3>
-              <p class="mt-1 text-sm text-slate-500">Discover products and deals.</p>
-              <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Shop now <i data-lucide="arrow-right" class="h-4 w-4"></i></span>
-            </a>
-
-            <a href="./jobs.html" class="action-card rounded-2xl border border-slate-200 bg-white p-4">
-              <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                <i data-lucide="briefcase-business"></i>
-              </div>
-              <h3 class="font-extrabold">Find Jobs</h3>
-              <p class="mt-1 text-sm text-slate-500">Discover opportunities on FAGA.</p>
-              <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">View jobs <i data-lucide="arrow-right" class="h-4 w-4"></i></span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ==========================================
+</div>
+<div class="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-200">
+<span class="inline-flex items-center gap-2"><i class="h-4 w-4 text-faga-orange" data-lucide="shield-check"></i> Safer transactions</span>
+<span class="inline-flex items-center gap-2"><i class="h-4 w-4 text-faga-orange" data-lucide="map-pin"></i> Track your orders</span>
+<span class="inline-flex items-center gap-2"><i class="h-4 w-4 text-faga-orange" data-lucide="wallet"></i> Easy payments</span>
+</div>
+</div>
+<!-- Hero booking panel -->
+<div class="glass rounded-3xl p-5 text-faga-navy shadow-2xl sm:p-7">
+<div class="mb-5 flex items-center justify-between">
+<div>
+<p class="text-sm font-bold text-faga-orange">FAGA QUICK ACTIONS</p>
+<h2 class="mt-1 text-2xl font-black">What do you need today?</h2>
+</div>
+<div class="rounded-2xl bg-faga-light p-3">
+<i class="h-6 w-6 text-faga-orange" data-lucide="sparkles"></i>
+</div>
+</div>
+<div class="grid gap-3 sm:grid-cols-2">
+<a class="action-card rounded-2xl border border-slate-200 bg-white p-4" href="./ride-booking.html">
+<div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-faga-blue">
+<i data-lucide="car-front"></i>
+</div>
+<h3 class="font-extrabold">Book a Ride</h3>
+<p class="mt-1 text-sm text-slate-500">Go where you need to go.</p>
+<span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Book now <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
+</a>
+<button class="action-card text-left rounded-2xl border border-slate-200 bg-white p-4" data-open="dispatchModal" type="button">
+<div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-faga-orange">
+<i data-lucide="bike"></i>
+</div>
+<h3 class="font-extrabold">Find a Rider</h3>
+<p class="mt-1 text-sm text-slate-500">Send packages around town.</p>
+<span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Find rider <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
+</button>
+<a class="action-card rounded-2xl border border-slate-200 bg-white p-4" href="./marketplace.html">
+<div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+<i data-lucide="shopping-bag"></i>
+</div>
+<h3 class="font-extrabold">Buy &amp; Sell</h3>
+<p class="mt-1 text-sm text-slate-500">Discover products and deals.</p>
+<span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Shop now <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
+</a>
+<a class="action-card rounded-2xl border border-slate-200 bg-white p-4" href="./jobs.html">
+<div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+<i data-lucide="briefcase-business"></i>
+</div>
+<h3 class="font-extrabold">Find Jobs</h3>
+<p class="mt-1 text-sm text-slate-500">Discover opportunities on FAGA.</p>
+<span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">View jobs <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
          YOUR NAVBAR
          ========================================== -->
-
-    <!-- Keep the navbar we already built here -->
-
-
-    <!-- ==========================================
+<!-- Keep the navbar we already built here -->
+<!-- ==========================================
          YOUR HERO
          ========================================== -->
-
-    <!-- Keep the hero we already built here -->
-
-
-    <!-- ==========================================
+<!-- Keep the hero we already built here -->
+<!-- ==========================================
          SECTION 2 — LOGISTICS / SERVICES / BUY SELL
          ========================================== -->
-
-
-
- <!-- ========================= SERVICE HUB ========================= -->
-    <section class="bg-white py-10 sm:py-14">
-      <div class="container">
-        <div class="mb-7 flex items-end justify-between gap-4">
-          <div>
-            <p class="text-sm font-extrabold uppercase tracking-wider text-faga-orange">Explore FAGA</p>
-            <h2 class="mt-1 text-3xl font-black text-faga-navy sm:text-4xl">Everything in one place</h2>
-            <p class="mt-2 max-w-2xl text-slate-500">Choose a service and get started in a few clicks.</p>
-          </div>
-          <a href="./services.html" class="hidden items-center gap-1 font-bold text-faga-navy sm:flex">View all <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
-        </div>
-
-        <div class="grid gap-4 md:grid-cols-3">
-          <div class="service-card overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-5">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-faga-blue text-white"><i data-lucide="truck"></i></div>
-                <div><h3 class="text-xl font-black text-faga-navy">Logistics</h3><p class="text-sm text-slate-500">Move people & packages</p></div>
-              </div>
-              <a href="./logistics.html" class="text-faga-orange"><i data-lucide="arrow-up-right"></i></a>
-            </div>
-            <div class="mt-5 grid grid-cols-2 gap-2">
-              <a href="./ride-booking.html" class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange">🚗 Book Ride</a>
-              <button data-open="dispatchModal" class="rounded-xl bg-white p-3 text-left text-sm font-bold shadow-sm hover:text-faga-orange">🏍️ Find Rider</button>
-              <a href="./delivery-booking.html" class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange">📦 Send Package</a>
-              <a href="./track-order.html" class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange">📍 Track Delivery</a>
-            </div>
-          </div>
-
-          <div class="service-card overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-violet-50 to-white p-5">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-600 text-white"><i data-lucide="wrench"></i></div>
-                <div><h3 class="text-xl font-black text-faga-navy">On-Demand Services</h3><p class="text-sm text-slate-500">Trusted service providers</p></div>
-              </div>
-              <a href="./services.html" class="text-faga-orange"><i data-lucide="arrow-up-right"></i></a>
-            </div>
-            <div class="mt-5 flex flex-wrap gap-2">
-              <a href="./services.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">🔧 Plumber</a>
-              <a href="./services.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">🧹 Cleaning</a>
-              <a href="./services.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">🧺 Laundry</a>
-              <a href="./services.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">⚡ Errands</a>
-              <a href="./services.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">🛡️ Security</a>
-            </div>
-          </div>
-
-          <div class="service-card overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white"><i data-lucide="shopping-bag"></i></div>
-                <div><h3 class="text-xl font-black text-faga-navy">Buy & Sell</h3><p class="text-sm text-slate-500">Shop or grow your business</p></div>
-              </div>
-              <a href="./marketplace.html" class="text-faga-orange"><i data-lucide="arrow-up-right"></i></a>
-            </div>
-            <div class="mt-5 flex flex-wrap gap-2">
-              <a href="./marketplace.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">📱 Electronics</a>
-              <a href="./marketplace.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">👕 Fashion</a>
-              <a href="./marketplace.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">🏠 Home</a>
-              <a href="./marketplace.html" class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm">🛒 Groceries</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    </section>
-
-        <!-- ========================= RIDE + DISPATCH CTA ========================= -->
-    <section class="bg-faga-light py-10 sm:py-14">
-      <div class="container">
-        <div class="grid gap-5 lg:grid-cols-2">
-          <div class="rounded-3xl bg-faga-navy p-6 text-white sm:p-8">
-            <div class="flex items-center gap-3">
-              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-faga-orange"><i data-lucide="car-front"></i></div>
-              <div><p class="text-sm font-bold text-orange-300">RIDES</p><h2 class="text-2xl font-black">Need a ride?</h2></div>
-            </div>
-            <p class="mt-4 max-w-lg text-slate-300">Enter your trip details and book a FAGA ride. You can follow the trip from booking to arrival.</p>
-            <div class="mt-6 grid gap-3 sm:grid-cols-2">
-              <a href="./ride-booking.html" class="rounded-xl bg-faga-orange px-4 py-3 text-center font-extrabold hover:bg-orange-600">Book a Ride</a>
-              <a href="./ride-tracking.html" class="rounded-xl border border-white/20 px-4 py-3 text-center font-extrabold hover:bg-white/10">Track Ride</a>
-            </div>
-          </div>
-
-          <div class="rounded-3xl bg-white p-6 shadow-card sm:p-8">
-            <div class="flex items-center gap-3">
-              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-faga-orange"><i data-lucide="bike"></i></div>
-              <div><p class="text-sm font-bold text-faga-orange">DISPATCH</p><h2 class="text-2xl font-black text-faga-navy">Send a package fast</h2></div>
-            </div>
-            <p class="mt-4 text-slate-500">Find an available dispatch rider from the home page, enter pickup and destination details, then confirm your delivery.</p>
-            <div class="mt-6 flex flex-wrap gap-3">
-              <button data-open="dispatchModal" class="rounded-xl bg-faga-orange px-5 py-3 font-extrabold text-white hover:bg-orange-600">Find a Rider</button>
-              <a href="./delivery-booking.html" class="rounded-xl border border-slate-200 px-5 py-3 font-extrabold text-faga-navy hover:border-faga-orange hover:text-faga-orange">Book Delivery</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- ========================= SERVICE HUB ========================= -->
+<section class="bg-white py-10 sm:py-14">
+<div class="container">
+<div class="mb-7 flex items-end justify-between gap-4">
+<div>
+<p class="text-sm font-extrabold uppercase tracking-wider text-faga-orange">Explore FAGA</p>
+<h2 class="mt-1 text-3xl font-black text-faga-navy sm:text-4xl">Everything in one place</h2>
+<p class="mt-2 max-w-2xl text-slate-500">Choose a service and get started in a few clicks.</p>
+</div>
+<a class="hidden items-center gap-1 font-bold text-faga-navy sm:flex" href="./services.html">View all <i class="h-4 w-4" data-lucide="arrow-right"></i></a>
+</div>
+<div class="grid gap-4 md:grid-cols-3">
+<div class="service-card overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-5">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-faga-blue text-white"><i data-lucide="truck"></i></div>
+<div><h3 class="text-xl font-black text-faga-navy">Logistics</h3><p class="text-sm text-slate-500">Move people &amp; packages</p></div>
+</div>
+<a class="text-faga-orange" href="./logistics.html"><i data-lucide="arrow-up-right"></i></a>
+</div>
+<div class="mt-5 grid grid-cols-2 gap-2">
+<a class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange" href="./ride-booking.html">🚗 Book Ride</a>
+<button class="rounded-xl bg-white p-3 text-left text-sm font-bold shadow-sm hover:text-faga-orange" data-open="dispatchModal">🏍️ Find Rider</button>
+<a class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange" href="./delivery-booking.html">📦 Send Package</a>
+<a class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange" href="./track-order.html">📍 Track Delivery</a>
+</div>
+</div>
+<div class="service-card overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-violet-50 to-white p-5">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-600 text-white"><i data-lucide="wrench"></i></div>
+<div><h3 class="text-xl font-black text-faga-navy">On-Demand Services</h3><p class="text-sm text-slate-500">Trusted service providers</p></div>
+</div>
+<a class="text-faga-orange" href="./services.html"><i data-lucide="arrow-up-right"></i></a>
+</div>
+<div class="mt-5 flex flex-wrap gap-2">
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./services.html">🔧 Plumber</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./services.html">🧹 Cleaning</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./services.html">🧺 Laundry</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./services.html">⚡ Errands</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./services.html">🛡️ Security</a>
+</div>
+</div>
+<div class="service-card overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white"><i data-lucide="shopping-bag"></i></div>
+<div><h3 class="text-xl font-black text-faga-navy">Buy &amp; Sell</h3><p class="text-sm text-slate-500">Shop or grow your business</p></div>
+</div>
+<a class="text-faga-orange" href="./marketplace.html"><i data-lucide="arrow-up-right"></i></a>
+</div>
+<div class="mt-5 flex flex-wrap gap-2">
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./marketplace.html">📱 Electronics</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./marketplace.html">👕 Fashion</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./marketplace.html">🏠 Home</a>
+<a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./marketplace.html">🛒 Groceries</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================= RIDE + DISPATCH CTA ========================= -->
+<section class="bg-faga-light py-10 sm:py-14">
+<div class="container">
+<div class="grid gap-5 lg:grid-cols-2">
+<div class="rounded-3xl bg-faga-navy p-6 text-white sm:p-8">
+<div class="flex items-center gap-3">
+<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-faga-orange"><i data-lucide="car-front"></i></div>
+<div><p class="text-sm font-bold text-orange-300">RIDES</p><h2 class="text-2xl font-black">Need a ride?</h2></div>
+</div>
+<p class="mt-4 max-w-lg text-slate-300">Enter your trip details and book a FAGA ride. You can follow the trip from booking to arrival.</p>
+<div class="mt-6 grid gap-3 sm:grid-cols-2">
+<a class="rounded-xl bg-faga-orange px-4 py-3 text-center font-extrabold hover:bg-orange-600" href="./ride-booking.html">Book a Ride</a>
+<a class="rounded-xl border border-white/20 px-4 py-3 text-center font-extrabold hover:bg-white/10" href="./ride-tracking.html">Track Ride</a>
+</div>
+</div>
+<div class="rounded-3xl bg-white p-6 shadow-card sm:p-8">
+<div class="flex items-center gap-3">
+<div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-faga-orange"><i data-lucide="bike"></i></div>
+<div><p class="text-sm font-bold text-faga-orange">DISPATCH</p><h2 class="text-2xl font-black text-faga-navy">Send a package fast</h2></div>
+</div>
+<p class="mt-4 text-slate-500">Find an available dispatch rider from the home page, enter pickup and destination details, then confirm your delivery.</p>
+<div class="mt-6 flex flex-wrap gap-3">
+<button class="rounded-xl bg-faga-orange px-5 py-3 font-extrabold text-white hover:bg-orange-600" data-open="dispatchModal">Find a Rider</button>
+<a class="rounded-xl border border-slate-200 px-5 py-3 font-extrabold text-faga-navy hover:border-faga-orange hover:text-faga-orange" href="./delivery-booking.html">Book Delivery</a>
+</div>
+</div>
+</div>
+</div>
+</section>
 <!-- ========================= FOOD ========================= -->
-    <section class="bg-white py-10 sm:py-14">
-      <div class="container">
-        <div class="mb-6 flex items-end justify-between">
-          <div>
-            <p class="text-sm font-extrabold uppercase tracking-wider text-faga-orange">Food</p>
-            <h2 class="mt-1 text-3xl font-black text-faga-navy">Good food, delivered</h2>
-            <p class="mt-2 text-slate-500">Discover meals from restaurants and food vendors.</p>
-          </div>
-          <a href="./food.html" class="hidden items-center gap-1 font-bold text-faga-navy sm:flex">Explore Food <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
-        </div>
-          </div>
-        <div class="scroll-row flex snap-x gap-4 overflow-x-auto pb-2">
-          <article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
-            <div class="h-40 overflow-hidden bg-slate-100"><img src="./assets/food-1.svg" alt="Jollof rice and chicken" class="h-full w-full object-cover"></div>
-            <div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Jollof Rice & Chicken</h3><span class="text-sm font-bold text-amber-500">★ 4.8</span></div><p class="mt-1 text-sm text-slate-500">FAGA Kitchen</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦4,500</b><a href="./food.html" class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white">Order</a></div></div>
-          </article>
-          <article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
-            <div class="h-40 overflow-hidden bg-slate-100"><img src="./assets/food-2.svg" alt="Burger and fries" class="h-full w-full object-cover"></div>
-            <div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Classic Beef Burger</h3><span class="text-sm font-bold text-amber-500">★ 4.7</span></div><p class="mt-1 text-sm text-slate-500">FAGA Bites</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦5,000</b><a href="./food.html" class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white">Order</a></div></div>
-          </article>
-          <article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
-            <div class="h-40 overflow-hidden bg-slate-100"><img src="./assets/food-3.svg" alt="Chicken pizza" class="h-full w-full object-cover"></div>
-            <div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Chicken Supreme Pizza</h3><span class="text-sm font-bold text-amber-500">★ 4.9</span></div><p class="mt-1 text-sm text-slate-500">FAGA Pizza</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦7,500</b><a href="./food.html" class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white">Order</a></div></div>
-          </article>
-          <article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
-            <div class="h-40 overflow-hidden bg-slate-100"><img src="./assets/food-4.svg" alt="Creamy chicken pasta" class="h-full w-full object-cover"></div>
-            <div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Creamy Chicken Pasta</h3><span class="text-sm font-bold text-amber-500">★ 4.6</span></div><p class="mt-1 text-sm text-slate-500">FAGA Kitchen</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦6,000</b><a href="./food.html" class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white">Order</a></div></div>
-          </article>
-        </div>
-      </div>
-    </section>
+<section class="bg-white py-10 sm:py-14">
+<div class="container">
+<div class="mb-6 flex items-end justify-between">
+<div>
+<p class="text-sm font-extrabold uppercase tracking-wider text-faga-orange">Food</p>
+<h2 class="mt-1 text-3xl font-black text-faga-navy">Good food, delivered</h2>
+<p class="mt-2 text-slate-500">Discover meals from restaurants and food vendors.</p>
+</div>
+<a class="hidden items-center gap-1 font-bold text-faga-navy sm:flex" href="./food.html">Explore Food <i class="h-4 w-4" data-lucide="arrow-right"></i></a>
+</div>
+</div>
+<div class="scroll-row flex snap-x gap-4 overflow-x-auto pb-2">
+<article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
+<div class="h-40 overflow-hidden bg-slate-100"><img alt="Jollof rice and chicken" class="h-full w-full object-cover" src="./assets/food-1.svg"/></div>
+<div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Jollof Rice &amp; Chicken</h3><span class="text-sm font-bold text-amber-500">★ 4.8</span></div><p class="mt-1 text-sm text-slate-500">FAGA Kitchen</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦4,500</b><a class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white" href="./food.html">Order</a></div></div>
+</article>
+<article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
+<div class="h-40 overflow-hidden bg-slate-100"><img alt="Burger and fries" class="h-full w-full object-cover" src="./assets/food-2.svg"/></div>
+<div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Classic Beef Burger</h3><span class="text-sm font-bold text-amber-500">★ 4.7</span></div><p class="mt-1 text-sm text-slate-500">FAGA Bites</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦5,000</b><a class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white" href="./food.html">Order</a></div></div>
+</article>
+<article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
+<div class="h-40 overflow-hidden bg-slate-100"><img alt="Chicken pizza" class="h-full w-full object-cover" src="./assets/food-3.svg"/></div>
+<div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Chicken Supreme Pizza</h3><span class="text-sm font-bold text-amber-500">★ 4.9</span></div><p class="mt-1 text-sm text-slate-500">FAGA Pizza</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦7,500</b><a class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white" href="./food.html">Order</a></div></div>
+</article>
+<article class="min-w-[250px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-w-0 sm:flex-1">
+<div class="h-40 overflow-hidden bg-slate-100"><img alt="Creamy chicken pasta" class="h-full w-full object-cover" src="./assets/food-4.svg"/></div>
+<div class="p-4"><div class="flex justify-between gap-3"><h3 class="font-extrabold">Creamy Chicken Pasta</h3><span class="text-sm font-bold text-amber-500">★ 4.6</span></div><p class="mt-1 text-sm text-slate-500">FAGA Kitchen</p><div class="mt-3 flex items-center justify-between"><b class="text-faga-navy">₦6,000</b><a class="rounded-lg bg-faga-navy px-3 py-2 text-sm font-bold text-white" href="./food.html">Order</a></div></div>
+</article>
+</div>
 
-     <!-- ========================= JOBS ========================= -->
-    <section class="bg-slate-50 py-10 sm:py-14">
-      <div class="container">
-        <div class="grid items-center gap-8 lg:grid-cols-[1fr_auto]">
-          <div>
-            <span class="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-extrabold text-orange-700">FAGA JOBS</span>
-            <h2 class="mt-3 text-3xl font-black text-faga-navy sm:text-4xl">Find opportunities. Build your future.</h2>
-            <p class="mt-3 max-w-2xl leading-7 text-slate-500">Browse jobs, create your applicant profile and apply to opportunities through the FAGA applicant platform.</p>
-            <div class="mt-5 flex flex-wrap gap-3">
-              <a href="./jobs.html" class="rounded-xl bg-faga-orange px-5 py-3 font-extrabold text-white hover:bg-orange-600">Browse Jobs</a>
-              <a href="./job-register.html" class="rounded-xl border border-slate-200 bg-white px-5 py-3 font-extrabold text-faga-navy">Register as Job Seeker</a>
-            </div>
-            <p class="mt-4 text-xs text-slate-500">Applicant access: ₦500 for 1 year or ₦300 for 3 months. FAGA does not guarantee employment, interviews, shortlisting or selection.</p>
-          </div>
-          <div class="rounded-3xl bg-white p-6 shadow-card">
-            <div class="grid grid-cols-2 gap-3 text-center">
-              <div class="rounded-2xl bg-blue-50 p-5"><i data-lucide="search" class="mx-auto text-faga-blue"></i><p class="mt-2 font-extrabold">Find Jobs</p></div>
-              <div class="rounded-2xl bg-orange-50 p-5"><i data-lucide="file-text" class="mx-auto text-faga-orange"></i><p class="mt-2 font-extrabold">Upload CV</p></div>
-              <div class="rounded-2xl bg-emerald-50 p-5"><i data-lucide="send" class="mx-auto text-emerald-600"></i><p class="mt-2 font-extrabold">Apply</p></div>
-              <div class="rounded-2xl bg-violet-50 p-5"><i data-lucide="layout-dashboard" class="mx-auto text-violet-600"></i><p class="mt-2 font-extrabold">Track</p></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================= APP DOWNLOAD ========================= -->
-    <section id="download-app" class="overflow-hidden bg-faga-navy py-12 text-white sm:py-16">
-      <div class="container grid items-center gap-10 lg:grid-cols-[1fr_360px]">
-        <div>
-          <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold">
-            <i data-lucide="smartphone" class="h-4 w-4 text-faga-orange"></i>
+</section>
+<!-- ========================= JOBS ========================= -->
+<section class="bg-slate-50 py-10 sm:py-14">
+<div class="container">
+<div class="grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+<div>
+<span class="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-extrabold text-orange-700">FAGA JOBS</span>
+<h2 class="mt-3 text-3xl font-black text-faga-navy sm:text-4xl">Find opportunities. Build your future.</h2>
+<p class="mt-3 max-w-2xl leading-7 text-slate-500">Browse jobs, create your applicant profile and apply to opportunities through the FAGA applicant platform.</p>
+<div class="mt-5 flex flex-wrap gap-3">
+<a class="rounded-xl bg-faga-orange px-5 py-3 font-extrabold text-white hover:bg-orange-600" href="./jobs.html">Browse Jobs</a>
+<a class="rounded-xl border border-slate-200 bg-white px-5 py-3 font-extrabold text-faga-navy" href="./job-register.html">Register as Job Seeker</a>
+</div>
+<p class="mt-4 text-xs text-slate-500">Applicant access: ₦500 for 1 year or ₦300 for 3 months. FAGA does not guarantee employment, interviews, shortlisting or selection.</p>
+</div>
+<div class="rounded-3xl bg-white p-6 shadow-card">
+<div class="grid grid-cols-2 gap-3 text-center">
+<div class="rounded-2xl bg-blue-50 p-5"><i class="mx-auto text-faga-blue" data-lucide="search"></i><p class="mt-2 font-extrabold">Find Jobs</p></div>
+<div class="rounded-2xl bg-orange-50 p-5"><i class="mx-auto text-faga-orange" data-lucide="file-text"></i><p class="mt-2 font-extrabold">Upload CV</p></div>
+<div class="rounded-2xl bg-emerald-50 p-5"><i class="mx-auto text-emerald-600" data-lucide="send"></i><p class="mt-2 font-extrabold">Apply</p></div>
+<div class="rounded-2xl bg-violet-50 p-5"><i class="mx-auto text-violet-600" data-lucide="layout-dashboard"></i><p class="mt-2 font-extrabold">Track</p></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================= APP DOWNLOAD ========================= -->
+<section class="overflow-hidden bg-faga-navy py-12 text-white sm:py-16" id="download-app">
+<div class="container grid items-center gap-10 lg:grid-cols-[1fr_360px]">
+<div>
+<div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold">
+<i class="h-4 w-4 text-faga-orange" data-lucide="smartphone"></i>
             FAGA Mobile App
           </div>
-          <h2 class="mt-4 max-w-2xl text-3xl font-black sm:text-5xl">Take FAGA with you everywhere.</h2>
-          <p class="mt-4 max-w-xl text-slate-300 sm:text-lg">Book rides, request dispatch, shop, order food, manage services and keep up with your activities from your phone.</p>
-
-          <div class="mt-7 flex flex-wrap gap-3">
-            <!-- Replace the href values with the official App Store / Google Play links when the apps are published. -->
-            <a href="#" class="app-store-btn inline-flex items-center gap-3 rounded-xl bg-black px-5 py-3.5 font-bold" onclick="appComingSoon(event,'Google Play')">
-              <i data-lucide="play" class="h-6 w-6"></i>
-              <span><small class="block text-[10px] text-slate-300">GET IT ON</small>Google Play</span>
-            </a>
-            <a href="#" class="app-store-btn inline-flex items-center gap-3 rounded-xl bg-black px-5 py-3.5 font-bold" onclick="appComingSoon(event,'App Store')">
-              <i data-lucide="apple" class="h-6 w-6"></i>
-              <span><small class="block text-[10px] text-slate-300">DOWNLOAD ON THE</small>App Store</span>
-            </a>
-          </div>
-
-          <div class="mt-6 grid max-w-xl gap-3 sm:grid-cols-3">
-            <div class="rounded-xl border border-white/10 bg-white/5 p-3"><i data-lucide="car-front" class="text-faga-orange"></i><p class="mt-2 text-sm font-bold">Book rides</p></div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-3"><i data-lucide="bike" class="text-faga-orange"></i><p class="mt-2 text-sm font-bold">Find riders</p></div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-3"><i data-lucide="package" class="text-faga-orange"></i><p class="mt-2 text-sm font-bold">Track orders</p></div>
-          </div>
-        </div>
-
-        <div class="mx-auto w-[250px]">
-          <div class="phone overflow-hidden bg-white text-faga-navy">
-            <div class="flex items-center justify-between bg-faga-navy px-4 py-3 text-xs text-white"><b>FAGA</b><span>9:41</span></div>
-            <div class="p-4">
-              <div class="rounded-2xl bg-faga-navy p-4 text-white">
-                <p class="text-[10px] text-slate-300">Good morning</p>
-                <p class="mt-1 text-lg font-black">What do you need?</p>
-                <div class="mt-3 rounded-xl bg-white/10 p-3 text-xs">Search FAGA services...</div>
-              </div>
-              <div class="mt-3 grid grid-cols-2 gap-2">
-                <div class="rounded-xl bg-blue-50 p-3"><i data-lucide="car-front" class="h-5 w-5 text-faga-blue"></i><p class="mt-2 text-xs font-bold">Ride</p></div>
-                <div class="rounded-xl bg-orange-50 p-3"><i data-lucide="bike" class="h-5 w-5 text-faga-orange"></i><p class="mt-2 text-xs font-bold">Dispatch</p></div>
-                <div class="rounded-xl bg-emerald-50 p-3"><i data-lucide="shopping-bag" class="h-5 w-5 text-emerald-600"></i><p class="mt-2 text-xs font-bold">Shop</p></div>
-                <div class="rounded-xl bg-violet-50 p-3"><i data-lucide="briefcase-business" class="h-5 w-5 text-violet-600"></i><p class="mt-2 text-xs font-bold">Jobs</p></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
+<h2 class="mt-4 max-w-2xl text-3xl font-black sm:text-5xl">Take FAGA with you everywhere.</h2>
+<p class="mt-4 max-w-xl text-slate-300 sm:text-lg">Book rides, request dispatch, shop, order food, manage services and keep up with your activities from your phone.</p>
+<div class="mt-7 flex flex-wrap gap-3">
+<!-- Replace the href values with the official App Store / Google Play links when the apps are published. -->
+<a class="app-store-btn inline-flex items-center gap-3 rounded-xl bg-black px-5 py-3.5 font-bold" href="#" onclick="appComingSoon(event,'Google Play')">
+<i class="h-6 w-6" data-lucide="play"></i>
+<span><small class="block text-[10px] text-slate-300">GET IT ON</small>Google Play</span>
+</a>
+<a class="app-store-btn inline-flex items-center gap-3 rounded-xl bg-black px-5 py-3.5 font-bold" href="#" onclick="appComingSoon(event,'App Store')">
+<i class="h-6 w-6" data-lucide="apple"></i>
+<span><small class="block text-[10px] text-slate-300">DOWNLOAD ON THE</small>App Store</span>
+</a>
+</div>
+<div class="mt-6 grid max-w-xl gap-3 sm:grid-cols-3">
+<div class="rounded-xl border border-white/10 bg-white/5 p-3"><i class="text-faga-orange" data-lucide="car-front"></i><p class="mt-2 text-sm font-bold">Book rides</p></div>
+<div class="rounded-xl border border-white/10 bg-white/5 p-3"><i class="text-faga-orange" data-lucide="bike"></i><p class="mt-2 text-sm font-bold">Find riders</p></div>
+<div class="rounded-xl border border-white/10 bg-white/5 p-3"><i class="text-faga-orange" data-lucide="package"></i><p class="mt-2 text-sm font-bold">Track orders</p></div>
+</div>
+</div>
+<div class="mx-auto w-[250px]">
+<div class="phone overflow-hidden bg-white text-faga-navy">
+<div class="flex items-center justify-between bg-faga-navy px-4 py-3 text-xs text-white"><b>FAGA</b><span>9:41</span></div>
+<div class="p-4">
+<div class="rounded-2xl bg-faga-navy p-4 text-white">
+<p class="text-[10px] text-slate-300">Good morning</p>
+<p class="mt-1 text-lg font-black">What do you need?</p>
+<div class="mt-3 rounded-xl bg-white/10 p-3 text-xs">Search FAGA services...</div>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-2">
+<div class="rounded-xl bg-blue-50 p-3"><i class="h-5 w-5 text-faga-blue" data-lucide="car-front"></i><p class="mt-2 text-xs font-bold">Ride</p></div>
+<div class="rounded-xl bg-orange-50 p-3"><i class="h-5 w-5 text-faga-orange" data-lucide="bike"></i><p class="mt-2 text-xs font-bold">Dispatch</p></div>
+<div class="rounded-xl bg-emerald-50 p-3"><i class="h-5 w-5 text-emerald-600" data-lucide="shopping-bag"></i><p class="mt-2 text-xs font-bold">Shop</p></div>
+<div class="rounded-xl bg-violet-50 p-3"><i class="h-5 w-5 text-violet-600" data-lucide="briefcase-business"></i><p class="mt-2 text-xs font-bold">Jobs</p></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 <!-- =========================================================
      SECTION 3 — FOOD & RESTAURANTS
      ========================================================= -->
-
-
-
 <!-- =========================================================
      SECTION 4 — POPULAR PRODUCTS
      ========================================================= -->
-
 <style>
     .products-section {
         padding: 25px 24px 38px;
@@ -2264,467 +1912,229 @@
         }
     }
 </style>
-
-
 <section class="products-section">
-
-    <div class="products-container">
-
-        <!-- Section heading -->
-
-        <div class="products-heading">
-
-            <div class="products-heading-left">
-
-                <div class="products-heading-icon">
-
-                    <!-- Shopping bag -->
-
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path d="M5 8h14l1 13H4L5 8Z"/>
-                        <path d="M9 8a3 3 0 0 1 6 0"/>
-                    </svg>
-
-                </div>
-
-                <div>
-
-                    <h2>Popular Products</h2>
-
-                    <p>
+<div class="products-container">
+<!-- Section heading -->
+<div class="products-heading">
+<div class="products-heading-left">
+<div class="products-heading-icon">
+<!-- Shopping bag -->
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M5 8h14l1 13H4L5 8Z"></path>
+<path d="M9 8a3 3 0 0 1 6 0"></path>
+</svg>
+</div>
+<div>
+<h2>Popular Products</h2>
+<p>
                         Discover great products and amazing deals
                     </p>
-
-                </div>
-
-            </div>
-
-
-            <a href="./marketplace.html" class="products-view-all">
+</div>
+</div>
+<a class="products-view-all" href="./marketplace.html">
 
                 View All
 
-                <svg
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="M4 10h12"/>
-                    <path d="m11 5 5 5-5 5"/>
-                </svg>
-
-            </a>
-
-        </div>
-
-
-        <!-- Product cards -->
-
-        <div class="products-grid">
-
-
-            <!-- Product 1 -->
-
-            <article class="product-card">
-
-                <div class="product-image">
-
-                    <img
-                        src="./assets/product-1.svg"
-                        alt="Smartphone"
-                    >
-
-                    <span class="product-badge">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 20 20">
+<path d="M4 10h12"></path>
+<path d="m11 5 5 5-5 5"></path>
+</svg>
+</a>
+</div>
+<!-- Product cards -->
+<div class="products-grid">
+<!-- Product 1 -->
+<article class="product-card" data-product-category="Electronics" data-product-id="home-product-1" data-product-image="./assets/product-1.svg" data-product-name="Premium Android Smartphone" data-product-price="₦285,000" data-product-seller="FAGA Verified Seller">
+<div class="product-image">
+<img alt="Smartphone" src="./assets/product-1.svg"/>
+<span class="product-badge">
                         HOT DEAL
                     </span>
-
-                    <button
-                        class="product-wishlist"
-                        aria-label="Add product to wishlist"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                        >
-                            <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"/>
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-details">
-
-                    <div class="product-category">
+<button aria-label="Add Premium Android Smartphone to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
+</svg>
+</button>
+</div>
+<div class="product-details">
+<div class="product-category">
                         Electronics
                     </div>
-
-                    <h3 class="product-name">
+<h3 class="product-name">
                         Premium Android Smartphone
                     </h3>
-
-                    <div class="product-seller">
+<div class="product-seller">
                         FAGA Verified Seller
                     </div>
-
-                    <div class="product-price-row">
-
-                        <div>
-
-                            <span class="product-price">
+<div class="product-price-row">
+<div>
+<span class="product-price">
                                 ₦285,000
                             </span>
-
-                            <span class="product-old-price">
+<span class="product-old-price">
                                 ₦320,000
                             </span>
-
-                        </div>
-
-                        <button class="product-cart">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                            >
-                                <path d="M4 5h2l2 11h10l2-8H7"/>
-                                <circle cx="10" cy="20" r="1"/>
-                                <circle cx="18" cy="20" r="1"/>
-                            </svg>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- Product 2 -->
-
-            <article class="product-card">
-
-                <div class="product-image">
-
-                    <img
-                        src="./assets/product-2.svg"
-                        alt="Fashion sneakers"
-                    >
-
-                    <button
-                        class="product-wishlist"
-                        aria-label="Add product to wishlist"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                        >
-                            <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"/>
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-details">
-
-                    <div class="product-category">
+</div>
+<button aria-label="Add Premium Android Smartphone to cart" class="product-cart" data-action="add-cart" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 5h2l2 11h10l2-8H7"></path>
+<circle cx="10" cy="20" r="1"></circle>
+<circle cx="18" cy="20" r="1"></circle>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product 2 -->
+<article class="product-card" data-product-category="Fashion" data-product-id="home-product-2" data-product-image="./assets/product-2.svg" data-product-name="Premium Casual Sneakers" data-product-price="₦65,000" data-product-seller="FAGA Fashion Store">
+<div class="product-image">
+<img alt="Fashion sneakers" src="./assets/product-2.svg"/>
+<button aria-label="Add Premium Casual Sneakers to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
+</svg>
+</button>
+</div>
+<div class="product-details">
+<div class="product-category">
                         Fashion
                     </div>
-
-                    <h3 class="product-name">
+<h3 class="product-name">
                         Premium Casual Sneakers
                     </h3>
-
-                    <div class="product-seller">
+<div class="product-seller">
                         FAGA Fashion Store
                     </div>
-
-                    <div class="product-price-row">
-
-                        <span class="product-price">
+<div class="product-price-row">
+<span class="product-price">
                             ₦65,000
                         </span>
-
-                        <button class="product-cart">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                            >
-                                <path d="M4 5h2l2 11h10l2-8H7"/>
-                                <circle cx="10" cy="20" r="1"/>
-                                <circle cx="18" cy="20" r="1"/>
-                            </svg>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- Product 3 -->
-
-            <article class="product-card">
-
-                <div class="product-image">
-
-                    <img
-                        src="./assets/product-3.svg"
-                        alt="Smart television"
-                    >
-
-                    <span class="product-badge">
+<button aria-label="Add Premium Casual Sneakers to cart" class="product-cart" data-action="add-cart" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 5h2l2 11h10l2-8H7"></path>
+<circle cx="10" cy="20" r="1"></circle>
+<circle cx="18" cy="20" r="1"></circle>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product 3 -->
+<article class="product-card" data-product-category="Electronics" data-product-id="home-product-3" data-product-image="./assets/product-3.svg" data-product-name='55" Smart LED Television' data-product-price="₦520,000" data-product-seller="FAGA Home Electronics">
+<div class="product-image">
+<img alt="Smart television" src="./assets/product-3.svg"/>
+<span class="product-badge">
                         12% OFF
                     </span>
-
-                    <button
-                        class="product-wishlist"
-                        aria-label="Add product to wishlist"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                        >
-                            <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"/>
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-details">
-
-                    <div class="product-category">
+<button aria-label='Add 55" Smart LED Television to wishlist' class="product-wishlist" data-action="toggle-wishlist" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
+</svg>
+</button>
+</div>
+<div class="product-details">
+<div class="product-category">
                         Electronics
                     </div>
-
-                    <h3 class="product-name">
-                        55&quot; Smart LED Television
+<h3 class="product-name">
+                        55" Smart LED Television
                     </h3>
-
-                    <div class="product-seller">
+<div class="product-seller">
                         FAGA Home Electronics
                     </div>
-
-                    <div class="product-price-row">
-
-                        <div>
-
-                            <span class="product-price">
+<div class="product-price-row">
+<div>
+<span class="product-price">
                                 ₦520,000
                             </span>
-
-                            <span class="product-old-price">
+<span class="product-old-price">
                                 ₦590,000
                             </span>
-
-                        </div>
-
-                        <button class="product-cart">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                            >
-                                <path d="M4 5h2l2 11h10l2-8H7"/>
-                                <circle cx="10" cy="20" r="1"/>
-                                <circle cx="18" cy="20" r="1"/>
-                            </svg>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- Product 4 -->
-
-            <article class="product-card">
-
-                <div class="product-image">
-
-                    <img
-                        src="./assets/product-4.svg"
-                        alt="Home furniture"
-                    >
-
-                    <button
-                        class="product-wishlist"
-                        aria-label="Add product to wishlist"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                        >
-                            <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"/>
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-details">
-
-                    <div class="product-category">
+</div>
+<button aria-label='Add 55" Smart LED Television to cart' class="product-cart" data-action="add-cart" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 5h2l2 11h10l2-8H7"></path>
+<circle cx="10" cy="20" r="1"></circle>
+<circle cx="18" cy="20" r="1"></circle>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product 4 -->
+<article class="product-card" data-product-category="Home &amp; Living" data-product-id="home-product-4" data-product-image="./assets/product-4.svg" data-product-name="Modern Living Room Sofa" data-product-price="₦450,000" data-product-seller="FAGA Home Store">
+<div class="product-image">
+<img alt="Home furniture" src="./assets/product-4.svg"/>
+<button aria-label="Add Modern Living Room Sofa to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
+</svg>
+</button>
+</div>
+<div class="product-details">
+<div class="product-category">
                         Home &amp; Living
                     </div>
-
-                    <h3 class="product-name">
+<h3 class="product-name">
                         Modern Living Room Sofa
                     </h3>
-
-                    <div class="product-seller">
+<div class="product-seller">
                         FAGA Home Store
                     </div>
-
-                    <div class="product-price-row">
-
-                        <span class="product-price">
+<div class="product-price-row">
+<span class="product-price">
                             ₦450,000
                         </span>
-
-                        <button class="product-cart">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                            >
-                                <path d="M4 5h2l2 11h10l2-8H7"/>
-                                <circle cx="10" cy="20" r="1"/>
-                                <circle cx="18" cy="20" r="1"/>
-                            </svg>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- Product 5 -->
-
-            <article class="product-card">
-
-                <div class="product-image">
-
-                    <img
-                        src="./assets/product-5.svg"
-                        alt="Beauty products"
-                    >
-
-                    <span class="product-badge">
+<button aria-label="Add Modern Living Room Sofa to cart" class="product-cart" data-action="add-cart" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 5h2l2 11h10l2-8H7"></path>
+<circle cx="10" cy="20" r="1"></circle>
+<circle cx="18" cy="20" r="1"></circle>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<!-- Product 5 -->
+<article class="product-card" data-product-category="Beauty" data-product-id="home-product-5" data-product-image="./assets/product-5.svg" data-product-name="Premium Beauty Collection" data-product-price="₦38,500" data-product-seller="FAGA Beauty Store">
+<div class="product-image">
+<img alt="Beauty products" src="./assets/product-5.svg"/>
+<span class="product-badge">
                         NEW
                     </span>
-
-                    <button
-                        class="product-wishlist"
-                        aria-label="Add product to wishlist"
-                    >
-
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                        >
-                            <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"/>
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-details">
-
-                    <div class="product-category">
+<button aria-label="Add Premium Beauty Collection to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
+</svg>
+</button>
+</div>
+<div class="product-details">
+<div class="product-category">
                         Beauty
                     </div>
-
-                    <h3 class="product-name">
+<h3 class="product-name">
                         Premium Beauty Collection
                     </h3>
-
-                    <div class="product-seller">
+<div class="product-seller">
                         FAGA Beauty Store
                     </div>
-
-                    <div class="product-price-row">
-
-                        <span class="product-price">
+<div class="product-price-row">
+<span class="product-price">
                             ₦38,500
                         </span>
-
-                        <button class="product-cart">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                            >
-                                <path d="M4 5h2l2 11h10l2-8H7"/>
-                                <circle cx="10" cy="20" r="1"/>
-                                <circle cx="18" cy="20" r="1"/>
-                            </svg>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </div>
-
-    </div>
-
+<button aria-label="Add Premium Beauty Collection to cart" class="product-cart" data-action="add-cart" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 5h2l2 11h10l2-8H7"></path>
+<circle cx="10" cy="20" r="1"></circle>
+<circle cx="18" cy="20" r="1"></circle>
+</svg>
+</button>
+</div>
+</div>
+</article>
+<div class="faga-search-empty" id="productSearchEmpty">No matching products found on this page. Try another search or browse the full marketplace.</div></div>
+</div>
 </section>
-
-
 <!-- =========================
      SECTION 5: WHY CHOOSE FAGA
 ========================= -->
@@ -2837,56 +2247,53 @@
     }
   }
 </style>
-  <!-- ========================= HOW IT WORKS ========================= -->
-    <section class="bg-white py-12 sm:py-16">
-      <div class="container">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="text-sm font-extrabold uppercase tracking-wider text-faga-orange">Simple by design</p>
-          <h2 class="mt-2 text-3xl font-black text-faga-navy sm:text-4xl">How FAGA works</h2>
-          <p class="mt-3 text-slate-500">One account gives you access to the FAGA ecosystem. Use different services whenever you need them.</p>
-        </div>
-
-        <div class="mt-10 grid gap-5 md:grid-cols-4">
-          <div class="relative rounded-2xl border border-slate-200 p-5 text-center">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-navy font-black text-white">1</div>
-            <h3 class="mt-4 font-black">Create one account</h3>
-            <p class="mt-2 text-sm leading-6 text-slate-500">Your FAGA account can be used across rides, dispatch, shopping, services and more.</p>
-          </div>
-          <div class="relative rounded-2xl border border-slate-200 p-5 text-center">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-navy font-black text-white">2</div>
-            <h3 class="mt-4 font-black">Choose a service</h3>
-            <p class="mt-2 text-sm leading-6 text-slate-500">Book a ride, find a rider, shop, order food, hire a provider or explore jobs.</p>
-          </div>
-          <div class="relative rounded-2xl border border-slate-200 p-5 text-center">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-navy font-black text-white">3</div>
-            <h3 class="mt-4 font-black">Pay securely</h3>
-            <p class="mt-2 text-sm leading-6 text-slate-500">Confirm the details and complete payment through the supported payment flow.</p>
-          </div>
-          <div class="relative rounded-2xl border border-slate-200 p-5 text-center">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-orange font-black text-white">4</div>
-            <h3 class="mt-4 font-black">Track & manage</h3>
-            <p class="mt-2 text-sm leading-6 text-slate-500">Follow rides and deliveries, view orders and manage your activity from your account.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================= CTA ========================= -->
-    <section class="bg-faga-light py-10">
-      <div class="container rounded-3xl bg-gradient-to-r from-faga-navy to-faga-blue p-7 text-white sm:p-10">
-        <div class="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-          <div>
-            <h2 class="text-3xl font-black">Ready to get started?</h2>
-            <p class="mt-2 text-slate-300">Create one FAGA account and access the services you need.</p>
-          </div>
-          <div class="flex flex-wrap gap-3">
-            <a href="../user-portal/register.html" class="rounded-xl bg-faga-orange px-5 py-3 font-extrabold hover:bg-orange-600">Create Account</a>
-            <a href="../user-portal/login.html" class="rounded-xl border border-white/20 px-5 py-3 font-extrabold hover:bg-white/10">Login</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
+<!-- ========================= HOW IT WORKS ========================= -->
+<section class="bg-white py-12 sm:py-16">
+<div class="container">
+<div class="mx-auto max-w-2xl text-center">
+<p class="text-sm font-extrabold uppercase tracking-wider text-faga-orange">Simple by design</p>
+<h2 class="mt-2 text-3xl font-black text-faga-navy sm:text-4xl">How FAGA works</h2>
+<p class="mt-3 text-slate-500">One account gives you access to the FAGA ecosystem. Use different services whenever you need them.</p>
+</div>
+<div class="mt-10 grid gap-5 md:grid-cols-4">
+<div class="relative rounded-2xl border border-slate-200 p-5 text-center">
+<div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-navy font-black text-white">1</div>
+<h3 class="mt-4 font-black">Create one account</h3>
+<p class="mt-2 text-sm leading-6 text-slate-500">Your FAGA account can be used across rides, dispatch, shopping, services and more.</p>
+</div>
+<div class="relative rounded-2xl border border-slate-200 p-5 text-center">
+<div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-navy font-black text-white">2</div>
+<h3 class="mt-4 font-black">Choose a service</h3>
+<p class="mt-2 text-sm leading-6 text-slate-500">Book a ride, find a rider, shop, order food, hire a provider or explore jobs.</p>
+</div>
+<div class="relative rounded-2xl border border-slate-200 p-5 text-center">
+<div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-navy font-black text-white">3</div>
+<h3 class="mt-4 font-black">Pay securely</h3>
+<p class="mt-2 text-sm leading-6 text-slate-500">Confirm the details and complete payment through the supported payment flow.</p>
+</div>
+<div class="relative rounded-2xl border border-slate-200 p-5 text-center">
+<div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-faga-orange font-black text-white">4</div>
+<h3 class="mt-4 font-black">Track &amp; manage</h3>
+<p class="mt-2 text-sm leading-6 text-slate-500">Follow rides and deliveries, view orders and manage your activity from your account.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================= CTA ========================= -->
+<section class="bg-faga-light py-10">
+<div class="container rounded-3xl bg-gradient-to-r from-faga-navy to-faga-blue p-7 text-white sm:p-10">
+<div class="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+<div>
+<h2 class="text-3xl font-black">Ready to get started?</h2>
+<p class="mt-2 text-slate-300">Create one FAGA account and access the services you need.</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<a class="rounded-xl bg-faga-orange px-5 py-3 font-extrabold hover:bg-orange-600" href="../user-portal/register.html">Create Account</a>
+<a class="rounded-xl border border-white/20 px-5 py-3 font-extrabold hover:bg-white/10" href="../user-portal/login.html">Login</a>
+</div>
+</div>
+</div>
+</section>
 <!-- =========================
      FOOTER
 ========================= -->
@@ -3145,227 +2552,164 @@
     }
   }
 </style>
-
 <footer class="faga-footer">
-
-  <div class="faga-footer-main">
-
-    <div class="faga-footer-grid">
-
-      <!-- Brand -->
-      <div class="faga-footer-brand">
-
-        <div class="faga-footer-logo">
-          <span class="logo-fa">FA</span><span class="logo-ga">GA</span>
-        </div>
-
-        <p class="faga-footer-about">
+<div class="faga-footer-main">
+<div class="faga-footer-grid">
+<!-- Brand -->
+<div class="faga-footer-brand">
+<div class="faga-footer-logo">
+<span class="logo-fa">FA</span><span class="logo-ga">GA</span>
+</div>
+<p class="faga-footer-about">
           Everything you need, all in one place. Send packages,
           discover trusted services, shop for products, and order
           delicious food with FAGA.
         </p>
-
-        <div class="faga-footer-socials">
-          <a href="#" class="faga-footer-social" aria-label="Facebook">
+<div class="faga-footer-socials">
+<a aria-label="Facebook" class="faga-footer-social" href="#">
             f
           </a>
-
-          <a href="#" class="faga-footer-social" aria-label="Instagram">
+<a aria-label="Instagram" class="faga-footer-social" href="#">
             ◎
           </a>
-
-          <a href="#" class="faga-footer-social" aria-label="Twitter">
+<a aria-label="Twitter" class="faga-footer-social" href="#">
             𝕏
           </a>
-
-          <a href="#" class="faga-footer-social" aria-label="LinkedIn">
+<a aria-label="LinkedIn" class="faga-footer-social" href="#">
             in
           </a>
-        </div>
-
-      </div>
-
-      <!-- Quick Links -->
-      <div class="faga-footer-column">
-
-        <h3>Quick Links</h3>
-
-        <ul class="faga-footer-links">
-          <li><a href="./index.html">Home</a></li>
-          <li><a href="#">Logistics</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">Buy & Sell</a></li>
-          <li><a href="#">Food</a></li>
-        </ul>
-
-      </div>
-
-      <!-- Customer Service -->
-      <div class="faga-footer-column">
-
-        <h3>Customer Service</h3>
-
-        <ul class="faga-footer-links">
-          <li><a href="./help.html">Help Center</a></li>
-          <li><a href="./track-order.html">Track Order</a></li>
-          <li><a href="./contact.html">Contact Us</a></li>
-          <li><a href="./help.html">FAQs</a></li>
-          <li><a href="../user-portal/register.html?role=seller">Become a Vendor</a></li>
-        </ul>
-
-      </div>
-
-      <!-- Contact -->
-      <div class="faga-footer-column">
-
-        <h3>Get In Touch</h3>
-
-        <div class="faga-footer-contact">
-
-          <div class="faga-footer-contact-item">
-            <span class="faga-footer-contact-icon">📍</span>
-            <span>Lagos, Nigeria</span>
-          </div>
-
-          <div class="faga-footer-contact-item">
-            <span class="faga-footer-contact-icon">✉</span>
-            <a href="mailto:support@faga.com">
+</div>
+</div>
+<!-- Quick Links -->
+<div class="faga-footer-column">
+<h3>Quick Links</h3>
+<ul class="faga-footer-links">
+<li><a href="./index.html">Home</a></li>
+<li><a href="#">Logistics</a></li>
+<li><a href="#">Services</a></li>
+<li><a href="#">Buy &amp; Sell</a></li>
+<li><a href="#">Food</a></li>
+</ul>
+</div>
+<!-- Customer Service -->
+<div class="faga-footer-column">
+<h3>Customer Service</h3>
+<ul class="faga-footer-links">
+<li><a href="./help.html">Help Center</a></li>
+<li><a href="./track-order.html">Track Order</a></li>
+<li><a href="./contact.html">Contact Us</a></li>
+<li><a href="./help.html">FAQs</a></li>
+<li><a href="../user-portal/register.html?role=seller">Become a Vendor</a></li>
+</ul>
+</div>
+<!-- Contact -->
+<div class="faga-footer-column">
+<h3>Get In Touch</h3>
+<div class="faga-footer-contact">
+<div class="faga-footer-contact-item">
+<span class="faga-footer-contact-icon">📍</span>
+<span>Lagos, Nigeria</span>
+</div>
+<div class="faga-footer-contact-item">
+<span class="faga-footer-contact-icon">✉</span>
+<a href="mailto:support@faga.com">
               support@faga.com
             </a>
-          </div>
-
-          <div class="faga-footer-contact-item">
-            <span class="faga-footer-contact-icon">☎</span>
-            <a href="tel:+2340000000000">
+</div>
+<div class="faga-footer-contact-item">
+<span class="faga-footer-contact-icon">☎</span>
+<a href="tel:+2340000000000">
               +234 000 000 0000
             </a>
-          </div>
-
-          <div class="faga-footer-contact-item">
-            <span class="faga-footer-contact-icon">🕐</span>
-            <span>
-              Mon – Sat<br>
+</div>
+<div class="faga-footer-contact-item">
+<span class="faga-footer-contact-icon">🕐</span>
+<span>
+              Mon – Sat<br/>
               8:00 AM – 8:00 PM
             </span>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Newsletter -->
-    <div class="faga-footer-newsletter">
-
-      <h3>Stay Updated</h3>
-
-      <p>
+</div>
+</div>
+</div>
+</div>
+<!-- Newsletter -->
+<div class="faga-footer-newsletter">
+<h3>Stay Updated</h3>
+<p>
         Subscribe for new offers, updates, and exciting FAGA deals.
       </p>
-
-      <form class="faga-newsletter-form" onsubmit="return false;">
-
-        <input
-          type="email"
-          placeholder="Enter your email address"
-          aria-label="Email address"
-        >
-
-        <button type="submit">
+<form class="faga-newsletter-form" onsubmit="return false;">
+<input aria-label="Email address" placeholder="Enter your email address" type="email"/>
+<button type="submit">
           Subscribe
         </button>
-
-      </form>
-
-    </div>
-
-  </div>
-
-  <!-- Footer Bottom -->
-  <div class="faga-footer-bottom">
-
-    <div class="faga-footer-bottom-inner">
-
-      <p class="faga-copyright">
+</form>
+</div>
+</div>
+<!-- Footer Bottom -->
+<div class="faga-footer-bottom">
+<div class="faga-footer-bottom-inner">
+<p class="faga-copyright">
         © 2026 FAGA. All rights reserved.
       </p>
-
-      <div class="faga-bottom-links">
-        <a href="./privacy.html">Privacy Policy</a>
-        <a href="./terms.html">Terms & Conditions</a>
-        <a href="./privacy.html">Cookie Policy</a>
-      </div>
-
-    </div>
-
-  </div>
-
+<div class="faga-bottom-links">
+<a href="./privacy.html">Privacy Policy</a>
+<a href="./terms.html">Terms &amp; Conditions</a>
+<a href="./privacy.html">Cookie Policy</a>
+</div>
+</div>
+</div>
 </footer>
-
-
 <script>
         function appComingSoon(event, platform) {
             if (event) event.preventDefault();
             window.alert("The FAGA " + platform + " app is not published yet. Please use the web platform for now.");
         }
     </script>
-
-
-
-    </main>
-
-
-
-    <!-- =====================================================
+</main>
+<!-- =====================================================
          JAVASCRIPT
     ====================================================== -->
 
 <script src="../js/faga-api.js"></script>
-
 <script>
-    lucide.createIcons();
-
-
-    // ==========================================
-    // FAGA BACKEND CONNECTION TEST
-    // ==========================================
-
-    async function testFagaBackendConnection() {
-
-        console.log("Connecting to FAGA backend...");
-
-        if (!FagaAPI.isLoggedIn()) {
-
-            console.log(
-                "FAGA frontend is ready. No user is logged in yet."
-            );
-
-            return;
-        }
-
-        try {
-
-            const response = await FagaAPI.me();
-
-            console.log(
-                "FAGA backend connection successful:",
-                response
-            );
-
-        } catch (error) {
-
-            console.error(
-                "FAGA backend connection failed:",
-                error
-            );
-        }
-    }
-
-
-    testFagaBackendConnection();
+(function(){
+"use strict";
+const CK="faga_cart",WK="faga_wishlist",q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const read=k=>{try{let v=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(v)?v:[]}catch(e){return[]}},write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const num=v=>Number(String(v||"").replace(/[^\d.]/g,""))||0,money=v=>"₦"+Number(v||0).toLocaleString("en-NG"),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const toast=m=>{let x=q("#fagaToast");if(!x){x=document.createElement("div");x.id="fagaToast";x.className="faga-toast";document.body.append(x)}x.textContent=m;x.classList.add("show");clearTimeout(window.__ft);window.__ft=setTimeout(()=>x.classList.remove("show"),2500)};
+const prod=c=>({id:c.dataset.productId,name:c.dataset.productName,price:c.dataset.productPrice,numericPrice:num(c.dataset.productPrice),seller:c.dataset.productSeller,category:c.dataset.productCategory,image:c.dataset.productImage});
+function counts(){let c=read(CK),w=read(WK),n=c.reduce((a,i)=>a+(Number(i.quantity)||1),0);q("#headerCartCount")&&(q("#headerCartCount").textContent=n);qa(".product-wishlist").forEach(b=>{let c=b.closest(".product-card"),on=c&&w.some(i=>i.id===c.dataset.productId);b.classList.toggle("text-faga-orange",!!on);b.classList.toggle("bg-orange-50",!!on);b.setAttribute("aria-pressed",on);let s=b.querySelector("svg");s&&s.setAttribute("fill",on?"currentColor":"none")})}
+function add(i){let c=read(CK),f=c.find(x=>x.id===i.id);f?f.quantity=(Number(f.quantity)||1)+1:c.push({...i,quantity:1});write(CK,c);counts();renderCart();toast(i.name+" added to cart.")}
+function wish(i){let w=read(WK),n=w.findIndex(x=>x.id===i.id);n>=0?(w.splice(n,1),toast(i.name+" removed from wishlist.")):(w.push(i),toast(i.name+" saved to wishlist."));write(WK,w);counts();renderWish()}
+function renderCart(){let b=q("#cartItems");if(!b)return;let c=read(CK);if(!c.length){b.innerHTML='<div class="flex h-full min-h-64 flex-col items-center justify-center text-center"><i data-lucide="shopping-cart" class="mb-4 h-10 w-10 text-slate-300"></i><h3 class="font-black text-faga-navy">Your cart is empty</h3><p class="mt-1 text-sm text-slate-500">Add products from the homepage or marketplace.</p></div>';q("#cartSubtotal").textContent="₦0";window.lucide?.createIcons();return}b.innerHTML=c.map(i=>`<div class="faga-drawer-item"><img src="${esc(i.image)}" alt="${esc(i.name)}"><div class="min-w-0"><p class="faga-drawer-item-title truncate">${esc(i.name)}</p><p class="faga-drawer-item-meta">${esc(i.price)} · Qty ${i.quantity}</p><div class="mt-2 flex gap-1"><button data-cart="minus" data-id="${esc(i.id)}" class="rounded bg-slate-100 px-2 py-1 text-xs">−</button><button data-cart="plus" data-id="${esc(i.id)}" class="rounded bg-slate-100 px-2 py-1 text-xs">+</button><button data-cart="remove" data-id="${esc(i.id)}" class="px-2 py-1 text-xs text-red-600">Remove</button></div></div><strong class="text-sm">${money((i.numericPrice||num(i.price))*i.quantity)}</strong></div>`).join("");q("#cartSubtotal").textContent=money(c.reduce((a,i)=>a+(i.numericPrice||num(i.price))*i.quantity,0))}
+function renderWish(){let b=q("#wishlistItems");if(!b)return;let w=read(WK);if(!w.length){b.innerHTML='<div class="flex h-full min-h-64 flex-col items-center justify-center text-center"><i data-lucide="heart" class="mb-4 h-10 w-10 text-slate-300"></i><h3 class="font-black text-faga-navy">Your wishlist is empty</h3><p class="mt-1 text-sm text-slate-500">Tap a product heart to save it here.</p></div>';window.lucide?.createIcons();return}b.innerHTML=w.map(i=>`<div class="faga-drawer-item"><img src="${esc(i.image)}" alt="${esc(i.name)}"><div class="min-w-0"><p class="faga-drawer-item-title truncate">${esc(i.name)}</p><p class="faga-drawer-item-meta">${esc(i.price)}</p><button data-wremove="${esc(i.id)}" class="mt-2 text-xs font-bold text-red-600">Remove</button></div><button data-wcart="${esc(i.id)}" class="rounded-lg bg-faga-navy px-3 py-2 text-xs font-bold text-white">Cart</button></div>`).join("")}
+function layer(id,on){let e=q("#"+id);if(!e)return;e.classList.toggle("hidden",!on);if(id==="dispatchModal")e.classList.toggle("flex",on);e.setAttribute("aria-hidden",!on);let any=["dispatchModal","cartDrawer","wishlistDrawer"].some(x=>{let z=q("#"+x);return z&&!z.classList.contains("hidden")});document.body.classList.toggle("faga-modal-open",any)}
+function search(v){let t=String(v||"").trim().toLowerCase(),n=0;qa(".product-card").forEach(c=>{let ok=!t||[c.dataset.productName,c.dataset.productSeller,c.dataset.productCategory].join(" ").toLowerCase().includes(t);c.classList.toggle("faga-search-hidden",!ok);c.classList.toggle("faga-search-match",!!t&&ok);if(ok)n++});q("#productSearchEmpty")?.classList.toggle("show",!!t&&!n);if(t)q(".products-section")?.scrollIntoView({behavior:"smooth"});return n}
+document.addEventListener("DOMContentLoaded",()=>{
+window.lucide?.createIcons();
+[["desktopSearchInput","desktopSearchButton"],["mobileSearchInput","mobileSearchButton"]].forEach(([i,b])=>{let x=q("#"+i),y=q("#"+b);if(!x||!y)return;y.onclick=()=>{let n=search(x.value);toast(x.value.trim()?(n+" matching product"+(n===1?"":"s")+" found on this page."):"Enter a search term.")};x.oninput=()=>search(x.value);x.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();y.click()}}});
+document.addEventListener("click",e=>{
+let c=e.target.closest('[data-action="add-cart"]');if(c){let x=c.closest(".product-card");x&&add(prod(x));return}
+let w=e.target.closest('[data-action="toggle-wishlist"]');if(w){let x=w.closest(".product-card");x&&wish(prod(x));return}
+if(e.target.closest('#headerCartButton,[data-action="open-cart"]')){renderCart();layer("cartDrawer",true);return}
+if(e.target.closest('#headerWishlistButton,[data-action="open-wishlist"]')){renderWish();layer("wishlistDrawer",true);return}
+let d=e.target.closest("[data-close-drawer]");if(d){layer(d.dataset.closeDrawer,false);return}
+let ca=e.target.closest("[data-cart]");if(ca){let c=read(CK),i=c.find(x=>x.id===ca.dataset.id);if(!i)return;if(ca.dataset.cart==="plus")i.quantity++;if(ca.dataset.cart==="minus")i.quantity--;if(ca.dataset.cart==="remove"||i.quantity<=0)c.splice(c.indexOf(i),1);write(CK,c);counts();renderCart();return}
+let wr=e.target.closest("[data-wremove]");if(wr){write(WK,read(WK).filter(i=>i.id!==wr.dataset.wremove));counts();renderWish();return}
+let wc=e.target.closest("[data-wcart]");if(wc){let i=read(WK).find(x=>x.id===wc.dataset.wcart);i&&add(i);return}
+let od=e.target.closest('[data-open="dispatchModal"]');if(od){e.preventDefault();layer("dispatchModal",true);q("#dispatchPickup")?.focus();return}
+let cd=e.target.closest('[data-close="dispatchModal"]');if(cd){layer("dispatchModal",false);return}
+});
+q("#accountButton")?.addEventListener("click",()=>location.href="../user-portal/login.html");
+let mb=q("#mobileMenuButton"),mn=q("#mobileNav");mb?.addEventListener("click",()=>{let open=!mn.classList.contains("hidden");mn.classList.toggle("hidden",open);mb.setAttribute("aria-expanded",!open);mb.innerHTML=`<i data-lucide="${open?"menu":"x"}" class="h-5 w-5"></i>`;window.lucide?.createIcons()});
+q("#dispatchQuickForm")?.addEventListener("submit",e=>{e.preventDefault();let p=q("#dispatchPickup").value.trim(),d=q("#dispatchDestination").value.trim(),pk=q("#dispatchPackage").value.trim();if(!p||!d){q("#dispatchFormMessage").textContent="Please enter both pickup and destination.";q("#dispatchFormMessage").classList.remove("hidden");return}sessionStorage.setItem("faga_dispatch_request",JSON.stringify({pickup:p,destination:d,package:pk,createdAt:new Date().toISOString()}));location.href="./delivery-booking.html?mode=dispatch&pickup="+encodeURIComponent(p)+"&destination="+encodeURIComponent(d)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")["dispatchModal","cartDrawer","wishlistDrawer"].forEach(x=>layer(x,false))});
+counts();renderCart();renderWish();
+if(window.FagaAPI?.isLoggedIn?.())FagaAPI.me().then(r=>console.log("FAGA backend connection successful:",r)).catch(e=>console.error("FAGA backend connection failed:",e));else console.log("FAGA frontend is ready. No user is logged in yet.");
+});
+})();
 </script>
-
-
 </body>
 </html>
