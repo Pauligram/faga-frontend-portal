@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAGA Console Command Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../js/faga-api.js"></script>
+</head>
+<body class="bg-slate-900 flex min-h-screen items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-slate-800 p-6 md:p-8 shadow-2xl border border-slate-700 text-slate-100">
+        <div class="mb-6 text-center">
+            <h1 class="text-3xl font-black tracking-tight text-blue-500">FAGA Command Console</h1>
+            <p class="mt-1 text-sm text-slate-400">Administrative Gatehouse Link</p>
+        </div>
+        <div id="error-box" class="hidden mb-4 rounded-xl bg-red-950 p-4 text-xs font-semibold text-red-400 border border-red-900"></div>
+        <form id="admin-form" class="space-y-4">
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">Root Operator Email</label>
+                <input type="email" id="email" required class="w-full bg-slate-900 rounded-xl border border-slate-700 p-3 text-sm focus:border-blue-500 focus:outline-none text-white transition" placeholder="admin@faga.com">
+            </div>
+            <div>
+                <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">Master Password Key</label>
+                <input type="password" id="password" required class="w-full bg-slate-900 rounded-xl border border-slate-700 p-3 text-sm focus:border-blue-500 focus:outline-none text-white transition" placeholder="••••••••">
+            </div>
+            <button type="submit" id="submit-btn" class="w-full rounded-xl bg-blue-600 p-3 text-sm font-bold text-white shadow-lg shadow-blue-900/50 hover:bg-blue-700 transition">
+                Access Core Framework
+            </button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('admin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorBox = document.getElementById('error-box');
+            errorBox.classList.add('hidden');
+            try {
+                const res = await FagaAPI.login(document.getElementById('email').value, document.getElementById('password').value);
+                window.location.href="../admin-portal/index.html";
+            } catch (err) {
+                errorBox.classList.remove('hidden');
+                errorBox.innerText = "Access Denied: Invalid clearance keys.";
+            }
+        });
+    </script>
+</body>
+</html>
