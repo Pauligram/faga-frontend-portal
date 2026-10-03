@@ -3,51 +3,1178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAGA Authentication Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../js/faga-api.js"></script>
+
+    <title>Login | FAGA</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =====================================
+           HEADER
+        ====================================== */
+
+        .header {
+            height: 72px;
+            background: #071a33;
+            color: #fff;
+
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 1450px;
+            margin: auto;
+
+            padding: 0 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .logo span {
+            color: #ff7a18;
+        }
+
+        .back-home {
+            color: #d8e0eb;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .back-home:hover {
+            color: #ff7a18;
+        }
+
+
+        /* =====================================
+           PAGE
+        ====================================== */
+
+        .page {
+            min-height: calc(100vh - 72px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 45px 20px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 1000px;
+
+            display: grid;
+            grid-template-columns: 43% 57%;
+
+            background: #fff;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 45px rgba(7, 26, 51, .12);
+        }
+
+
+        /* =====================================
+           LEFT PANEL
+        ====================================== */
+
+        .login-intro {
+            background:
+                linear-gradient(
+                    145deg,
+                    #071a33,
+                    #102b4c
+                );
+
+            color: #fff;
+
+            padding: 55px 45px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .intro-small {
+            color: #ff7a18;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 15px;
+        }
+
+        .login-intro h1 {
+            font-size: 40px;
+
+            line-height: 1.1;
+
+            margin-bottom: 20px;
+        }
+
+        .login-intro h1 span {
+            color: #ff7a18;
+        }
+
+        .login-intro > p {
+            color: #c8d3e0;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            max-width: 370px;
+        }
+
+
+        /* =====================================
+           PLATFORM FEATURES
+        ====================================== */
+
+        .features {
+            margin-top: 35px;
+        }
+
+        .feature {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 13px;
+
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 8px;
+
+            background:
+                rgba(255, 122, 24, .14);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            font-size: 18px;
+        }
+
+        .feature h3 {
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+        .feature p {
+            color: #aebdce;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================
+           FORM AREA
+        ====================================== */
+
+        .login-form {
+            padding: 55px 55px;
+        }
+
+        .form-header {
+            margin-bottom: 28px;
+        }
+
+        .form-header h2 {
+            font-size: 29px;
+
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #6d7788;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================
+           MESSAGE
+        ====================================== */
+
+        .message {
+            display: none;
+
+            padding: 12px 14px;
+
+            border-radius: 6px;
+
+            margin-bottom: 18px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+
+            color: #b42318;
+
+            background: #fff0f0;
+
+            border: 1px solid #f5c2c0;
+        }
+
+        .message.success {
+            display: block;
+
+            color: #067647;
+
+            background: #ecfdf3;
+
+            border: 1px solid #abefc6;
+        }
+
+
+        /* =====================================
+           FORM GROUP
+        ====================================== */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            height: 48px;
+
+            border: 1px solid #d8dde5;
+
+            border-radius: 6px;
+
+            padding: 0 14px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            background: #fff;
+        }
+
+        .form-group input:focus {
+            border-color: #ff7a18;
+
+            box-shadow:
+                0 0 0 3px rgba(255, 122, 24, .10);
+        }
+
+
+        /* =====================================
+           PASSWORD
+        ====================================== */
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 65px;
+        }
+
+        .show-password {
+            position: absolute;
+
+            right: 12px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #e96508;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        /* =====================================
+           OPTIONS
+        ====================================== */
+
+        .login-options {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin: 8px 0 22px;
+
+            font-size: 12px;
+        }
+
+        .remember {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #6d7788;
+        }
+
+        .remember input {
+            accent-color: #ff7a18;
+        }
+
+        .forgot {
+            color: #e96508;
+
+            font-weight: 700;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =====================================
+           LOGIN BUTTON
+        ====================================== */
+
+        .login-button {
+            width: 100%;
+
+            height: 49px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #ff7a18;
+
+            color: #fff;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .login-button:hover {
+            background: #e96708;
+        }
+
+        .login-button:disabled {
+            background: #c8cdd5;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================
+           DIVIDER
+        ====================================== */
+
+        .divider {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 27px 0;
+
+            color: #98a1af;
+
+            font-size: 11px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            height: 1px;
+
+            flex: 1;
+
+            background: #e4e7ec;
+        }
+
+
+        /* =====================================
+           SOCIAL LOGIN
+        ====================================== */
+
+        .social-login {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+        }
+
+        .social-button {
+            height: 44px;
+
+            border: 1px solid #d9dee6;
+
+            background: #fff;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: #3e4858;
+        }
+
+        .social-button:hover {
+            border-color: #ff7a18;
+
+            color: #e96508;
+        }
+
+
+        /* =====================================
+           REGISTER
+        ====================================== */
+
+        .register-link {
+            text-align: center;
+
+            margin-top: 24px;
+
+            color: #697386;
+
+            font-size: 13px;
+        }
+
+        .register-link a {
+            color: #e96508;
+
+            font-weight: 800;
+        }
+
+
+        /* =====================================
+           SECURITY
+        ====================================== */
+
+        .security-note {
+            text-align: center;
+
+            margin-top: 18px;
+
+            color: #9099a8;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================
+           FOOTER
+        ====================================== */
+
+        .footer {
+            text-align: center;
+
+            padding: 20px;
+
+            color: #8a94a4;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================
+           RESPONSIVE
+        ====================================== */
+
+        @media (max-width: 850px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .login-intro {
+                padding: 35px;
+            }
+
+            .login-intro h1 {
+                font-size: 32px;
+            }
+
+            .features {
+                display: grid;
+
+                grid-template-columns: 1fr 1fr;
+
+                gap: 12px;
+            }
+
+            .feature {
+                margin-bottom: 0;
+            }
+
+        }
+
+
+        /* Prevent horizontal overflow on small screens */
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        img,
+        input,
+        button {
+            max-width: 100%;
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                height: 62px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .back-home {
+                font-size: 12px;
+            }
+
+            .header-inner {
+                padding: 0 15px;
+            }
+
+            .page {
+                padding: 20px 12px;
+            }
+
+            .login-intro {
+                padding: 30px 24px;
+            }
+
+            .features {
+                display: block;
+            }
+
+            .feature {
+                margin-bottom: 15px;
+            }
+
+            .login-form {
+                padding: 30px 18px;
+            }
+
+            .form-header h2 {
+                font-size: 25px;
+            }
+
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+
+        @media (max-width: 380px) {
+            .header-inner {
+                padding: 0 12px;
+            }
+
+            .logo {
+                font-size: 25px;
+            }
+
+            .back-home {
+                font-size: 11px;
+            }
+
+            .login-intro {
+                padding: 25px 18px;
+            }
+
+            .login-form {
+                padding: 26px 16px;
+            }
+
+            .login-intro h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-slate-50 flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white p-6 md:p-8 shadow-xl border border-slate-100">
-        <div class="mb-6 text-center">
-            <h1 class="text-3xl font-black tracking-tight text-blue-600">FA GA Hub</h1>
-            <p class="mt-1 text-sm text-slate-500">Sign in to manage logistics configurations</p>
+
+
+<body>
+
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header class="header">
+
+        <div class="header-inner">
+
+            <a href="../Public website/index.html" class="logo">
+                FA<span>GA</span>
+            </a>
+
+            <a href="../Public website/index.html" class="back-home">
+                ← Back to FAGA
+            </a>
+
         </div>
-        <div id="error-box" class="hidden mb-4 rounded-xl bg-red-50 p-4 text-xs font-semibold text-red-600 border border-red-100"></div>
-        <form id="login-form" class="space-y-4">
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Email Address</label>
-                <input type="email" id="email" required class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 transition" placeholder="driver@faga.com">
-            </div>
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Password</label>
-                <input type="password" id="password" required class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 transition" placeholder="••••••••">
-            </div>
-            <button type="submit" id="submit-btn" class="w-full rounded-xl bg-blue-600 p-3 text-sm font-bold text-white shadow-lg shadow-blue-100 hover:bg-blue-700 transition">
-                Authenticate Session
-            </button>
-        </form>
-        <p class="mt-4 text-center text-xs text-slate-400">New around here? <a href="register.html" class="font-bold text-blue-500 hover:underline">Create an Account</a></p>
+
+    </header>
+
+
+
+    <!-- =====================================
+         LOGIN PAGE
+    ====================================== -->
+
+    <main class="page">
+
+        <div class="login-wrapper">
+
+
+            <!-- =====================================
+                 LEFT INTRO
+            ====================================== -->
+
+            <section class="login-intro">
+
+                <div>
+
+                    <div class="intro-small">
+                        WELCOME BACK
+                    </div>
+
+                    <h1>
+                        Everything FAGA.<br>
+                        <span>One Account.</span>
+                    </h1>
+
+                    <p>
+                        Sign in to access your orders, deliveries,
+                        shopping, food, services and your FAGA account.
+                    </p>
+
+
+                    <div class="features">
+
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                🛒
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Continue Shopping
+                                </h3>
+
+                                <p>
+                                    Access your products, orders and wishlist.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                🍔
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Order Food
+                                </h3>
+
+                                <p>
+                                    Quickly reorder your favourite meals.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                🚚
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Track Deliveries
+                                </h3>
+
+                                <p>
+                                    See the status of your FAGA deliveries.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                💼
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Manage Your Activities
+                                </h3>
+
+                                <p>
+                                    Manage your seller, rider, service or
+                                    restaurant activities.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 LOGIN FORM
+            ====================================== -->
+
+            <section class="login-form">
+
+
+                <div class="form-header">
+
+                    <h2>
+                        Sign in to FAGA
+                    </h2>
+
+                    <p>
+                        Enter your account details to continue.
+                    </p>
+
+                </div>
+
+
+                <div id="message" class="message"></div>
+
+
+                <form id="fagaLoginForm">
+
+
+                    <!-- EMAIL / PHONE -->
+
+                    <div class="form-group">
+
+                        <label for="loginEmail">
+
+                            Email or Phone Number
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="loginEmail"
+                            name="login"
+                            placeholder="Enter email or phone number"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="passwordToggle"
+                                onclick="togglePassword()"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+ <!-- A hidden red warning label that appears if they fail to login -->
+    <div id="loginErrorBanner" style="display: none; color: red;"></div>
+
+                    <!-- OPTIONS -->
+
+                    <div class="login-options">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                id="remember"
+                            >
+
+                            Remember me
+
+                        </label>
+
+
+                        <a
+                            href="forgot-password.html"
+                            class="forgot"
+                        >
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+
+                    <!-- LOGIN -->
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                        id="loginButton"
+                    >
+                        Sign In
+                    </button>
+
+
+                </form>
+
+                <!-- =====================================
+                     SOCIAL LOGIN
+                ====================================== -->
+
+                <div class="divider">
+                    OR CONTINUE WITH
+                </div>
+
+
+                <div class="social-login">
+
+                    <button
+                        class="social-button"
+                        onclick="socialLogin('Google')"
+                    >
+                        G&nbsp;&nbsp; Continue with Google
+                    </button>
+
+                    <button
+                        class="social-button"
+                        onclick="socialLogin('Apple')"
+                    >
+                        &nbsp;&nbsp; Continue with Apple
+                    </button>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     REGISTER
+                ====================================== -->
+
+                <div class="register-link">
+
+                    Don't have a FAGA account?
+
+                    <a href="register.html">
+                        Create an account
+                    </a>
+
+                </div>
+
+
+                <div class="security-note">
+
+                    🔒 Your login information is securely protected by FAGA.
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================
+         FOOTER
+    ====================================== -->
+
+    <div class="footer">
+
+        © 2026 FAGA. All rights reserved.
+
     </div>
+
+
+
+    <!-- =====================================
+         JAVASCRIPT
+    ====================================== -->
+
+    <!-- FAGA API must load before the login handler -->
+    <script src="../js/faga-api.js"></script>
+
     <script>
-        if (FagaAPI.isLoggedIn()) { window.location.href = "dashboard.html"; }
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const errorBox = document.getElementById('error-box');
-            const submitBtn = document.getElementById('submit-btn');
-            errorBox.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Verifying Token Map...";
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const loginForm = document.getElementById("fagaLoginForm");
+        const loginEmail = document.getElementById("loginEmail");
+        const loginPassword = document.getElementById("loginPassword");
+        const loginButton = document.getElementById("loginButton");
+        const message = document.getElementById("message");
+
+        if (!loginForm) {
+            console.error("FAGA: Login form was not found.");
+            return;
+        }
+
+        function showMessage(text, type) {
+            message.className = "message " + type;
+            message.textContent = text;
+        }
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const login = loginEmail.value.trim();
+            const password = loginPassword.value;
+
+            if (!login || !password) {
+                showMessage(
+                    "Please enter your email or phone number and password.",
+                    "error"
+                );
+                return;
+            }
+
+            if (
+                typeof FagaAPI === "undefined" ||
+                typeof FagaAPI.login !== "function"
+            ) {
+                console.error("FAGA: FagaAPI.login() is not available.");
+                showMessage(
+                    "The FAGA authentication service is not available. Please check faga-api.js.",
+                    "error"
+                );
+                return;
+            }
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Signing in...";
+            message.className = "message";
+            message.textContent = "";
+
             try {
-                await FagaAPI.login(document.getElementById('email').value, document.getElementById('password').value);
-                window.location.href = "dashboard.html";
-            } catch (err) {
-                errorBox.classList.remove('hidden');
-                errorBox.innerText = err.data?.message || "Invalid email parameter or password string.";
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Authenticate Session";
+                console.log("Connecting to FAGA backend...");
+
+                const response = await FagaAPI.login(login, password);
+
+                console.log("FAGA login response:", response);
+
+                showMessage("Login successful. Redirecting...", "success");
+
+                setTimeout(function () {
+                    window.location.href = "dashboard.html";
+                }, 500);
+
+            } catch (error) {
+                console.error("FAGA login error:", error);
+
+                let errorMessage =
+                    "Login failed. Please check your email/phone number and password.";
+
+                if (error && error.data && error.data.message) {
+                    errorMessage = error.data.message;
+                } else if (error && error.data && error.data.error) {
+                    errorMessage = error.data.error;
+                }
+
+                if (error && error.data && error.data.errors) {
+                    const errors = error.data.errors;
+                    const fields = Object.keys(errors);
+
+                    if (
+                        fields.length > 0 &&
+                        errors[fields[0]] &&
+                        errors[fields[0]][0]
+                    ) {
+                        errorMessage = errors[fields[0]][0];
+                    }
+                }
+
+                showMessage(errorMessage, "error");
+
+                loginButton.disabled = false;
+                loginButton.textContent = "Sign In";
             }
         });
+    });
+
+
+    /* =========================================
+       PASSWORD SHOW / HIDE
+    ========================================= */
+
+    function togglePassword() {
+        const password = document.getElementById("loginPassword");
+        const button = document.getElementById("passwordToggle");
+
+        if (!password) {
+            return;
+        }
+
+        if (password.type === "password") {
+            password.type = "text";
+
+            if (button) {
+                button.textContent = "Hide";
+            }
+        } else {
+            password.type = "password";
+
+            if (button) {
+                button.textContent = "Show";
+            }
+        }
+    }
+
+
+    /* =========================================
+       SOCIAL LOGIN
+    ========================================= */
+
+    function socialLogin(provider) {
+        alert(
+            provider +
+            " login will be connected to the FAGA authentication system."
+        );
+    }
     </script>
+
 </body>
 </html>
