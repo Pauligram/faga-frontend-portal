@@ -1131,18 +1131,252 @@
   }
 
 </style>
-
 <style>
-body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:24px;z-index:200;transform:translateX(-50%) translateY(16px);opacity:0;pointer-events:none;max-width:92vw;padding:12px 16px;border-radius:12px;background:#062653;color:#fff;font-size:14px;font-weight:700;box-shadow:0 18px 40px rgba(6,38,83,.22);transition:.25s}.faga-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.product-card.faga-search-hidden{display:none}.product-card.faga-search-match{outline:2px solid rgba(255,121,0,.25)}.faga-search-empty{display:none;grid-column:1/-1;padding:28px;text-align:center;border:1px dashed #cbd5e1;border-radius:16px;color:#64748b;background:#f8fafc}.faga-search-empty.show{display:block}.faga-drawer-item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eef2f7}.faga-drawer-item img{width:64px;height:64px;border-radius:12px;object-fit:cover;background:#f2f5f8}.faga-drawer-item-title{margin:0;color:#123f76;font-size:13px;font-weight:800}.faga-drawer-item-meta{margin:4px 0 0;color:#64748b;font-size:12px}@media(max-width:640px){.faga-drawer-item{grid-template-columns:54px minmax(0,1fr) auto;gap:9px}.faga-drawer-item img{width:54px;height:54px}.faga-toast{bottom:14px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-</style>
-<div id="dispatchModal" class="modal-backdrop fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/60 p-4" aria-hidden="true">
-<div class="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="dispatchModalTitle">
-<div class="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><p class="text-xs font-extrabold uppercase tracking-wider text-faga-orange">FAGA DISPATCH</p><h2 id="dispatchModalTitle" class="text-xl font-black text-faga-navy">Find a dispatch rider</h2></div><button type="button" data-close="dispatchModal" aria-label="Close" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100"><i data-lucide="x"></i></button></div>
-<form id="dispatchQuickForm" class="space-y-4 p-5"><div><label for="dispatchPickup" class="mb-1.5 block text-sm font-bold">Pickup location</label><input id="dispatchPickup" required placeholder="Where should the rider pick up?" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-faga-orange"></div><div><label for="dispatchDestination" class="mb-1.5 block text-sm font-bold">Destination</label><input id="dispatchDestination" required placeholder="Where should the rider deliver?" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-faga-orange"></div><div><label for="dispatchPackage" class="mb-1.5 block text-sm font-bold">Package description</label><input id="dispatchPackage" placeholder="e.g. documents, food, small parcel" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-faga-orange"></div><p id="dispatchFormMessage" class="hidden rounded-xl bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-700"></p><div class="grid gap-3 sm:grid-cols-2"><button type="button" data-close="dispatchModal" class="rounded-xl border px-4 py-3 font-bold">Cancel</button><button type="submit" class="rounded-xl bg-faga-orange px-4 py-3 font-extrabold text-white">Continue to booking</button></div></form></div></div>
-<div id="cartDrawer" class="fixed inset-0 z-[110] hidden" aria-hidden="true"><div class="absolute inset-0 bg-slate-950/50" data-close-drawer="cartDrawer"></div><aside class="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div class="flex items-center justify-between border-b px-5 py-4"><h2 class="text-xl font-black text-faga-navy">Cart</h2><button type="button" data-close-drawer="cartDrawer" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100"><i data-lucide="x"></i></button></div><div id="cartItems" class="flex-1 overflow-y-auto p-5"></div><div class="border-t p-5"><div class="mb-4 flex justify-between"><span class="font-bold">Subtotal</span><strong id="cartSubtotal" class="text-xl font-black text-faga-navy">₦0</strong></div><a href="./marketplace.html" class="block rounded-xl bg-faga-orange px-4 py-3 text-center font-extrabold text-white">Continue to Marketplace</a></div></aside></div>
-<div id="wishlistDrawer" class="fixed inset-0 z-[110] hidden" aria-hidden="true"><div class="absolute inset-0 bg-slate-950/50" data-close-drawer="wishlistDrawer"></div><aside class="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div class="flex items-center justify-between border-b px-5 py-4"><h2 class="text-xl font-black text-faga-navy">Wishlist</h2><button type="button" data-close-drawer="wishlistDrawer" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100"><i data-lucide="x"></i></button></div><div id="wishlistItems" class="flex-1 overflow-y-auto p-5"></div><div class="border-t p-5"><a href="./marketplace.html" class="block rounded-xl bg-faga-navy px-4 py-3 text-center font-extrabold text-white">Browse Marketplace</a></div></aside></div>
+/* =========================================================
+   FAGA — MOBILE POLISH + INTERACTIVE EXPERIENCE
+   ========================================================= */
+.faga-mobile-alert {
+  display: none;
+  width: 100%;
+  overflow: hidden;
+  background: #062653;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  white-space: nowrap;
+  box-shadow: 0 3px 12px rgba(6,38,83,.12);
+}
+.faga-mobile-alert-track {
+  display: inline-flex;
+  min-width: max-content;
+  padding: 8px 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  animation: fagaTicker 18s linear infinite;
+}
+.faga-mobile-alert-track span { padding-left: 32px; }
 
-</head>
+@keyframes fagaTicker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Popup */
+.faga-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2,18,40,.55);
+  backdrop-filter: blur(5px);
+}
+.faga-popup-backdrop.open { display: flex; }
+.faga-popup {
+  position: relative;
+  width: min(520px, 100%);
+  padding: 24px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 25px 70px rgba(0,0,0,.25);
+  animation: fagaPopupIn .35s ease both;
+}
+.faga-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 24px;
+  cursor: pointer;
+}
+.faga-popup-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff3e8;
+  color: #ff7900;
+  font-size: 25px;
+}
+.faga-popup-kicker {
+  margin: 15px 0 5px;
+  color: #ff7900;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+.faga-popup h2 {
+  margin: 0;
+  color: #062653;
+  font-size: clamp(24px, 6vw, 34px);
+  line-height: 1.08;
+  font-weight: 900;
+}
+.faga-popup p:not(.faga-popup-kicker) {
+  margin: 10px 0 0;
+  color: #64748b;
+  line-height: 1.6;
+}
+.faga-popup-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+.faga-popup-primary, .faga-popup-secondary {
+  min-height: 44px;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+.faga-popup-primary {
+  background: #ff7900;
+  color: #fff;
+}
+.faga-popup-secondary {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #062653;
+}
+@keyframes fagaPopupIn {
+  from { opacity: 0; transform: translateY(30px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Reveal animation */
+.faga-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.faga-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating back-to-top */
+.faga-back-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9000;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #062653;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(6,38,83,.22);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: .25s ease;
+}
+.faga-back-top.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Better touch feedback */
+a, button { -webkit-tap-highlight-color: transparent; }
+button:active, a:active { transform: scale(.985); }
+
+/* Mobile layout */
+@media (max-width: 900px) {
+  /* Do not show desktop menu underneath the mobile search/header. */
+  header nav,
+  .desktop-nav {
+    display: none !important;
+  }
+  .faga-mobile-alert {
+    display: block;
+  }
+
+  /* Keep content close to the phone edges without looking cramped. */
+  .container {
+    width: calc(100% - 24px);
+    max-width: none;
+  }
+
+  section {
+    scroll-margin-top: 12px;
+  }
+
+  /* Buttons and cards remain easy to tap. */
+  button, a {
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    width: calc(100% - 20px);
+  }
+
+  main > section,
+  .service-section,
+  .products-section,
+  .why-faga {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .service-container,
+  .products-container,
+  .why-faga-container {
+    width: 100%;
+  }
+
+  .service-card,
+  .product-card,
+  .why-faga-card,
+  .action-card {
+    border-radius: 14px;
+  }
+
+  /* Avoid oversized empty margins on small screens. */
+  h1 { line-height: 1.08; }
+  h2 { line-height: 1.15; }
+
+  .faga-popup-actions {
+    flex-direction: column;
+  }
+
+  .faga-popup {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .faga-back-top {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faga-mobile-alert-track,
+  .faga-popup,
+  .faga-reveal {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style></head>
 <body class="bg-white text-gray-900">
 <!-- =====================================================
          TOP HEADER
@@ -1162,14 +1396,14 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
                     <i class="h-4 w-4" data-lucide="chevron-down"></i>
 </button>
 <!-- Input -->
-<input class="min-w-0 flex-1 px-5 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400" id="desktopSearchInput" placeholder="Search for products, brands and services..." type="search"/>
+<input class="min-w-0 flex-1 px-5 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400" placeholder="Search for products, brands and services..." type="search"/>
 <!-- Search button -->
-<button aria-label="Search" class="flex w-14 items-center justify-center bg-faga-orange transition hover:bg-orange-600" id="desktopSearchButton" type="button">
+<button class="flex w-14 items-center justify-center bg-faga-orange transition hover:bg-orange-600">
 <i class="h-5 w-5" data-lucide="search"></i>
 </button>
 </div>
 <!-- Account -->
-<button aria-label="accountButton" class="hidden items-center gap-2 text-sm lg:flex" id="accountButton" type="button">
+<button class="hidden items-center gap-2 text-sm lg:flex">
 <i class="h-6 w-6" data-lucide="user-round"></i>
 <span>
 <span class="block text-xs text-gray-300">
@@ -1182,44 +1416,33 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <i class="h-4 w-4" data-lucide="chevron-down"></i>
 </button>
 <!-- Wishlist -->
-<button aria-label="headerWishlistButton" class="hidden items-center gap-2 text-sm xl:flex" id="headerWishlistButton" type="button">
+<button class="hidden items-center gap-2 text-sm xl:flex">
 <i class="h-6 w-6" data-lucide="heart"></i>
 
                 Wishlist
 
             </button>
 <!-- Cart -->
-<button aria-label="headerCartButton" class="relative flex items-center gap-2 text-sm" id="headerCartButton" type="button">
+<button class="relative flex items-center gap-2 text-sm">
 <i class="h-6 w-6" data-lucide="shopping-cart"></i>
 <span class="hidden sm:inline">
                     Cart
                 </span>
-<span class="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-faga-orange px-1 text-xs font-bold" id="headerCartCount">0</span>
+<span class="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-faga-orange px-1 text-xs font-bold">
+                    3
+                </span>
 </button>
 </div>
-<button aria-expanded="false" aria-label="Open navigation menu" class="absolute right-4 top-3 flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 text-white md:hidden" id="mobileMenuButton" type="button"><i class="h-5 w-5" data-lucide="menu"></i></button>
 <!-- Mobile search -->
 <div class="px-4 pb-3 md:hidden">
 <div class="flex overflow-hidden rounded-lg bg-white">
-<input class="min-w-0 flex-1 px-4 py-3 text-sm text-gray-900 outline-none" id="mobileSearchInput" placeholder="Search products, brands and services..." type="search"/>
-<button aria-label="Search" class="flex w-12 items-center justify-center bg-faga-orange" id="mobileSearchButton" type="button">
+<input class="min-w-0 flex-1 px-4 py-3 text-sm text-gray-900 outline-none" placeholder="Search products, brands and services..." type="search"/>
+<button class="flex w-12 items-center justify-center bg-faga-orange">
 <i class="h-5 w-5 text-white" data-lucide="search"></i>
 </button>
 </div>
 </div>
 </header>
-<div class="hidden border-b border-gray-200 bg-white shadow-lg md:hidden" id="mobileNav"><nav aria-label="Mobile navigation" class="mx-auto grid max-w-7xl gap-1 px-4 py-3">
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./index.html">Home</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./logistics.html">Logistics</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./services.html">Services</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./marketplace.html">Buy &amp; Sell</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./food.html">Food</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./jobs.html">Jobs</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./help.html">Help</a>
-<a class="rounded-lg px-4 py-3 font-semibold text-faga-navy hover:bg-orange-50" href="./track-order.html">Track Order</a>
-<button class="rounded-lg px-4 py-3 text-left font-semibold text-faga-navy hover:bg-orange-50" data-action="open-cart" type="button">Cart</button>
-<button class="rounded-lg px-4 py-3 text-left font-semibold text-faga-navy hover:bg-orange-50" data-action="open-wishlist" type="button">Wishlist</button>
-</nav></div>
 <!-- =====================================================
          MAIN NAVIGATION
     ====================================================== -->
@@ -1266,7 +1489,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
                 </a>
 </div>
 </div>
-</nav>
+</nav><div aria-label="FAGA welcome announcement" class="faga-mobile-alert" role="status"><div class="faga-mobile-alert-track">WELCOME TO FAGA  •  Everything you need, one app  •  Move. Send. Shop. Get things done.  •  <span>WELCOME TO FAGA  •  Everything you need, one app  •  Move. Send. Shop. Get things done.  •  </span></div></div>
 <!-- ========================= HERO ========================= -->
 <main>
 <section class="relative overflow-hidden bg-faga-navy text-white">
@@ -1314,7 +1537,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </div>
 <div class="grid gap-3 sm:grid-cols-2">
-<a class="action-card rounded-2xl border border-slate-200 bg-white p-4" href="./ride-booking.html">
+<a class="action-card rounded-2xl border border-slate-200 bg-white p-4 faga-reveal" href="./ride-booking.html">
 <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-faga-blue">
 <i data-lucide="car-front"></i>
 </div>
@@ -1322,7 +1545,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <p class="mt-1 text-sm text-slate-500">Go where you need to go.</p>
 <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Book now <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
 </a>
-<button class="action-card text-left rounded-2xl border border-slate-200 bg-white p-4" data-open="dispatchModal" type="button">
+<button class="action-card text-left rounded-2xl border border-slate-200 bg-white p-4 faga-reveal" data-open="dispatchModal" type="button">
 <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-faga-orange">
 <i data-lucide="bike"></i>
 </div>
@@ -1330,7 +1553,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <p class="mt-1 text-sm text-slate-500">Send packages around town.</p>
 <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Find rider <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
 </button>
-<a class="action-card rounded-2xl border border-slate-200 bg-white p-4" href="./marketplace.html">
+<a class="action-card rounded-2xl border border-slate-200 bg-white p-4 faga-reveal" href="./marketplace.html">
 <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
 <i data-lucide="shopping-bag"></i>
 </div>
@@ -1338,7 +1561,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <p class="mt-1 text-sm text-slate-500">Discover products and deals.</p>
 <span class="mt-3 inline-flex items-center gap-1 text-sm font-bold text-faga-orange">Shop now <i class="h-4 w-4" data-lucide="arrow-right"></i></span>
 </a>
-<a class="action-card rounded-2xl border border-slate-200 bg-white p-4" href="./jobs.html">
+<a class="action-card rounded-2xl border border-slate-200 bg-white p-4 faga-reveal" href="./jobs.html">
 <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
 <i data-lucide="briefcase-business"></i>
 </div>
@@ -1373,7 +1596,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <a class="hidden items-center gap-1 font-bold text-faga-navy sm:flex" href="./services.html">View all <i class="h-4 w-4" data-lucide="arrow-right"></i></a>
 </div>
 <div class="grid gap-4 md:grid-cols-3">
-<div class="service-card overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-5">
+<div class="service-card overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-5 faga-reveal">
 <div class="flex items-start justify-between">
 <div class="flex items-center gap-3">
 <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-faga-blue text-white"><i data-lucide="truck"></i></div>
@@ -1388,7 +1611,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <a class="rounded-xl bg-white p-3 text-sm font-bold shadow-sm hover:text-faga-orange" href="./track-order.html">📍 Track Delivery</a>
 </div>
 </div>
-<div class="service-card overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-violet-50 to-white p-5">
+<div class="service-card overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-violet-50 to-white p-5 faga-reveal">
 <div class="flex items-start justify-between">
 <div class="flex items-center gap-3">
 <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-600 text-white"><i data-lucide="wrench"></i></div>
@@ -1404,7 +1627,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <a class="rounded-full bg-white px-3 py-2 text-sm font-bold shadow-sm" href="./services.html">🛡️ Security</a>
 </div>
 </div>
-<div class="service-card overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5">
+<div class="service-card overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5 faga-reveal">
 <div class="flex items-start justify-between">
 <div class="flex items-center gap-3">
 <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white"><i data-lucide="shopping-bag"></i></div>
@@ -1422,6 +1645,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </div>
 </section>
+
 <!-- ========================= RIDE + DISPATCH CTA ========================= -->
 <section class="bg-faga-light py-10 sm:py-14">
 <div class="container">
@@ -1912,7 +2136,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
         }
     }
 </style>
-<section class="products-section">
+<section class="products-section faga-reveal">
 <div class="products-container">
 <!-- Section heading -->
 <div class="products-heading">
@@ -1944,13 +2168,13 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <!-- Product cards -->
 <div class="products-grid">
 <!-- Product 1 -->
-<article class="product-card" data-product-category="Electronics" data-product-id="home-product-1" data-product-image="./assets/product-1.svg" data-product-name="Premium Android Smartphone" data-product-price="₦285,000" data-product-seller="FAGA Verified Seller">
+<article class="product-card faga-reveal">
 <div class="product-image">
 <img alt="Smartphone" src="./assets/product-1.svg"/>
 <span class="product-badge">
                         HOT DEAL
                     </span>
-<button aria-label="Add Premium Android Smartphone to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<button aria-label="Add product to wishlist" class="product-wishlist">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
 </svg>
@@ -1975,7 +2199,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
                                 ₦320,000
                             </span>
 </div>
-<button aria-label="Add Premium Android Smartphone to cart" class="product-cart" data-action="add-cart" type="button">
+<button class="product-cart">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M4 5h2l2 11h10l2-8H7"></path>
 <circle cx="10" cy="20" r="1"></circle>
@@ -1986,10 +2210,10 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </article>
 <!-- Product 2 -->
-<article class="product-card" data-product-category="Fashion" data-product-id="home-product-2" data-product-image="./assets/product-2.svg" data-product-name="Premium Casual Sneakers" data-product-price="₦65,000" data-product-seller="FAGA Fashion Store">
+<article class="product-card faga-reveal">
 <div class="product-image">
 <img alt="Fashion sneakers" src="./assets/product-2.svg"/>
-<button aria-label="Add Premium Casual Sneakers to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<button aria-label="Add product to wishlist" class="product-wishlist">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
 </svg>
@@ -2009,7 +2233,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <span class="product-price">
                             ₦65,000
                         </span>
-<button aria-label="Add Premium Casual Sneakers to cart" class="product-cart" data-action="add-cart" type="button">
+<button class="product-cart">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M4 5h2l2 11h10l2-8H7"></path>
 <circle cx="10" cy="20" r="1"></circle>
@@ -2020,13 +2244,13 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </article>
 <!-- Product 3 -->
-<article class="product-card" data-product-category="Electronics" data-product-id="home-product-3" data-product-image="./assets/product-3.svg" data-product-name='55" Smart LED Television' data-product-price="₦520,000" data-product-seller="FAGA Home Electronics">
+<article class="product-card faga-reveal">
 <div class="product-image">
 <img alt="Smart television" src="./assets/product-3.svg"/>
 <span class="product-badge">
                         12% OFF
                     </span>
-<button aria-label='Add 55" Smart LED Television to wishlist' class="product-wishlist" data-action="toggle-wishlist" type="button">
+<button aria-label="Add product to wishlist" class="product-wishlist">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
 </svg>
@@ -2051,7 +2275,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
                                 ₦590,000
                             </span>
 </div>
-<button aria-label='Add 55" Smart LED Television to cart' class="product-cart" data-action="add-cart" type="button">
+<button class="product-cart">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M4 5h2l2 11h10l2-8H7"></path>
 <circle cx="10" cy="20" r="1"></circle>
@@ -2062,10 +2286,10 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </article>
 <!-- Product 4 -->
-<article class="product-card" data-product-category="Home &amp; Living" data-product-id="home-product-4" data-product-image="./assets/product-4.svg" data-product-name="Modern Living Room Sofa" data-product-price="₦450,000" data-product-seller="FAGA Home Store">
+<article class="product-card faga-reveal">
 <div class="product-image">
 <img alt="Home furniture" src="./assets/product-4.svg"/>
-<button aria-label="Add Modern Living Room Sofa to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<button aria-label="Add product to wishlist" class="product-wishlist">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
 </svg>
@@ -2085,7 +2309,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <span class="product-price">
                             ₦450,000
                         </span>
-<button aria-label="Add Modern Living Room Sofa to cart" class="product-cart" data-action="add-cart" type="button">
+<button class="product-cart">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M4 5h2l2 11h10l2-8H7"></path>
 <circle cx="10" cy="20" r="1"></circle>
@@ -2096,13 +2320,13 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </article>
 <!-- Product 5 -->
-<article class="product-card" data-product-category="Beauty" data-product-id="home-product-5" data-product-image="./assets/product-5.svg" data-product-name="Premium Beauty Collection" data-product-price="₦38,500" data-product-seller="FAGA Beauty Store">
+<article class="product-card faga-reveal">
 <div class="product-image">
 <img alt="Beauty products" src="./assets/product-5.svg"/>
 <span class="product-badge">
                         NEW
                     </span>
-<button aria-label="Add Premium Beauty Collection to wishlist" class="product-wishlist" data-action="toggle-wishlist" type="button">
+<button aria-label="Add product to wishlist" class="product-wishlist">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M20.8 8.7c0 5.5-8.8 10.3-8.8 10.3S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"></path>
 </svg>
@@ -2122,7 +2346,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <span class="product-price">
                             ₦38,500
                         </span>
-<button aria-label="Add Premium Beauty Collection to cart" class="product-cart" data-action="add-cart" type="button">
+<button class="product-cart">
 <svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
 <path d="M4 5h2l2 11h10l2-8H7"></path>
 <circle cx="10" cy="20" r="1"></circle>
@@ -2132,7 +2356,7 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 </div>
 </div>
 </article>
-<div class="faga-search-empty" id="productSearchEmpty">No matching products found on this page. Try another search or browse the full marketplace.</div></div>
+</div>
 </div>
 </section>
 <!-- =========================
@@ -2670,46 +2894,141 @@ body.faga-modal-open{overflow:hidden}.faga-toast{position:fixed;left:50%;bottom:
 <!-- =====================================================
          JAVASCRIPT
     ====================================================== -->
-
 <script src="../js/faga-api.js"></script>
 <script>
-(function(){
-"use strict";
-const CK="faga_cart",WK="faga_wishlist",q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
-const read=k=>{try{let v=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(v)?v:[]}catch(e){return[]}},write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-const num=v=>Number(String(v||"").replace(/[^\d.]/g,""))||0,money=v=>"₦"+Number(v||0).toLocaleString("en-NG"),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const toast=m=>{let x=q("#fagaToast");if(!x){x=document.createElement("div");x.id="fagaToast";x.className="faga-toast";document.body.append(x)}x.textContent=m;x.classList.add("show");clearTimeout(window.__ft);window.__ft=setTimeout(()=>x.classList.remove("show"),2500)};
-const prod=c=>({id:c.dataset.productId,name:c.dataset.productName,price:c.dataset.productPrice,numericPrice:num(c.dataset.productPrice),seller:c.dataset.productSeller,category:c.dataset.productCategory,image:c.dataset.productImage});
-function counts(){let c=read(CK),w=read(WK),n=c.reduce((a,i)=>a+(Number(i.quantity)||1),0);q("#headerCartCount")&&(q("#headerCartCount").textContent=n);qa(".product-wishlist").forEach(b=>{let c=b.closest(".product-card"),on=c&&w.some(i=>i.id===c.dataset.productId);b.classList.toggle("text-faga-orange",!!on);b.classList.toggle("bg-orange-50",!!on);b.setAttribute("aria-pressed",on);let s=b.querySelector("svg");s&&s.setAttribute("fill",on?"currentColor":"none")})}
-function add(i){let c=read(CK),f=c.find(x=>x.id===i.id);f?f.quantity=(Number(f.quantity)||1)+1:c.push({...i,quantity:1});write(CK,c);counts();renderCart();toast(i.name+" added to cart.")}
-function wish(i){let w=read(WK),n=w.findIndex(x=>x.id===i.id);n>=0?(w.splice(n,1),toast(i.name+" removed from wishlist.")):(w.push(i),toast(i.name+" saved to wishlist."));write(WK,w);counts();renderWish()}
-function renderCart(){let b=q("#cartItems");if(!b)return;let c=read(CK);if(!c.length){b.innerHTML='<div class="flex h-full min-h-64 flex-col items-center justify-center text-center"><i data-lucide="shopping-cart" class="mb-4 h-10 w-10 text-slate-300"></i><h3 class="font-black text-faga-navy">Your cart is empty</h3><p class="mt-1 text-sm text-slate-500">Add products from the homepage or marketplace.</p></div>';q("#cartSubtotal").textContent="₦0";window.lucide?.createIcons();return}b.innerHTML=c.map(i=>`<div class="faga-drawer-item"><img src="${esc(i.image)}" alt="${esc(i.name)}"><div class="min-w-0"><p class="faga-drawer-item-title truncate">${esc(i.name)}</p><p class="faga-drawer-item-meta">${esc(i.price)} · Qty ${i.quantity}</p><div class="mt-2 flex gap-1"><button data-cart="minus" data-id="${esc(i.id)}" class="rounded bg-slate-100 px-2 py-1 text-xs">−</button><button data-cart="plus" data-id="${esc(i.id)}" class="rounded bg-slate-100 px-2 py-1 text-xs">+</button><button data-cart="remove" data-id="${esc(i.id)}" class="px-2 py-1 text-xs text-red-600">Remove</button></div></div><strong class="text-sm">${money((i.numericPrice||num(i.price))*i.quantity)}</strong></div>`).join("");q("#cartSubtotal").textContent=money(c.reduce((a,i)=>a+(i.numericPrice||num(i.price))*i.quantity,0))}
-function renderWish(){let b=q("#wishlistItems");if(!b)return;let w=read(WK);if(!w.length){b.innerHTML='<div class="flex h-full min-h-64 flex-col items-center justify-center text-center"><i data-lucide="heart" class="mb-4 h-10 w-10 text-slate-300"></i><h3 class="font-black text-faga-navy">Your wishlist is empty</h3><p class="mt-1 text-sm text-slate-500">Tap a product heart to save it here.</p></div>';window.lucide?.createIcons();return}b.innerHTML=w.map(i=>`<div class="faga-drawer-item"><img src="${esc(i.image)}" alt="${esc(i.name)}"><div class="min-w-0"><p class="faga-drawer-item-title truncate">${esc(i.name)}</p><p class="faga-drawer-item-meta">${esc(i.price)}</p><button data-wremove="${esc(i.id)}" class="mt-2 text-xs font-bold text-red-600">Remove</button></div><button data-wcart="${esc(i.id)}" class="rounded-lg bg-faga-navy px-3 py-2 text-xs font-bold text-white">Cart</button></div>`).join("")}
-function layer(id,on){let e=q("#"+id);if(!e)return;e.classList.toggle("hidden",!on);if(id==="dispatchModal")e.classList.toggle("flex",on);e.setAttribute("aria-hidden",!on);let any=["dispatchModal","cartDrawer","wishlistDrawer"].some(x=>{let z=q("#"+x);return z&&!z.classList.contains("hidden")});document.body.classList.toggle("faga-modal-open",any)}
-function search(v){let t=String(v||"").trim().toLowerCase(),n=0;qa(".product-card").forEach(c=>{let ok=!t||[c.dataset.productName,c.dataset.productSeller,c.dataset.productCategory].join(" ").toLowerCase().includes(t);c.classList.toggle("faga-search-hidden",!ok);c.classList.toggle("faga-search-match",!!t&&ok);if(ok)n++});q("#productSearchEmpty")?.classList.toggle("show",!!t&&!n);if(t)q(".products-section")?.scrollIntoView({behavior:"smooth"});return n}
-document.addEventListener("DOMContentLoaded",()=>{
-window.lucide?.createIcons();
-[["desktopSearchInput","desktopSearchButton"],["mobileSearchInput","mobileSearchButton"]].forEach(([i,b])=>{let x=q("#"+i),y=q("#"+b);if(!x||!y)return;y.onclick=()=>{let n=search(x.value);toast(x.value.trim()?(n+" matching product"+(n===1?"":"s")+" found on this page."):"Enter a search term.")};x.oninput=()=>search(x.value);x.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();y.click()}}});
-document.addEventListener("click",e=>{
-let c=e.target.closest('[data-action="add-cart"]');if(c){let x=c.closest(".product-card");x&&add(prod(x));return}
-let w=e.target.closest('[data-action="toggle-wishlist"]');if(w){let x=w.closest(".product-card");x&&wish(prod(x));return}
-if(e.target.closest('#headerCartButton,[data-action="open-cart"]')){renderCart();layer("cartDrawer",true);return}
-if(e.target.closest('#headerWishlistButton,[data-action="open-wishlist"]')){renderWish();layer("wishlistDrawer",true);return}
-let d=e.target.closest("[data-close-drawer]");if(d){layer(d.dataset.closeDrawer,false);return}
-let ca=e.target.closest("[data-cart]");if(ca){let c=read(CK),i=c.find(x=>x.id===ca.dataset.id);if(!i)return;if(ca.dataset.cart==="plus")i.quantity++;if(ca.dataset.cart==="minus")i.quantity--;if(ca.dataset.cart==="remove"||i.quantity<=0)c.splice(c.indexOf(i),1);write(CK,c);counts();renderCart();return}
-let wr=e.target.closest("[data-wremove]");if(wr){write(WK,read(WK).filter(i=>i.id!==wr.dataset.wremove));counts();renderWish();return}
-let wc=e.target.closest("[data-wcart]");if(wc){let i=read(WK).find(x=>x.id===wc.dataset.wcart);i&&add(i);return}
-let od=e.target.closest('[data-open="dispatchModal"]');if(od){e.preventDefault();layer("dispatchModal",true);q("#dispatchPickup")?.focus();return}
-let cd=e.target.closest('[data-close="dispatchModal"]');if(cd){layer("dispatchModal",false);return}
-});
-q("#accountButton")?.addEventListener("click",()=>location.href="../user-portal/login.html");
-let mb=q("#mobileMenuButton"),mn=q("#mobileNav");mb?.addEventListener("click",()=>{let open=!mn.classList.contains("hidden");mn.classList.toggle("hidden",open);mb.setAttribute("aria-expanded",!open);mb.innerHTML=`<i data-lucide="${open?"menu":"x"}" class="h-5 w-5"></i>`;window.lucide?.createIcons()});
-q("#dispatchQuickForm")?.addEventListener("submit",e=>{e.preventDefault();let p=q("#dispatchPickup").value.trim(),d=q("#dispatchDestination").value.trim(),pk=q("#dispatchPackage").value.trim();if(!p||!d){q("#dispatchFormMessage").textContent="Please enter both pickup and destination.";q("#dispatchFormMessage").classList.remove("hidden");return}sessionStorage.setItem("faga_dispatch_request",JSON.stringify({pickup:p,destination:d,package:pk,createdAt:new Date().toISOString()}));location.href="./delivery-booking.html?mode=dispatch&pickup="+encodeURIComponent(p)+"&destination="+encodeURIComponent(d)});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")["dispatchModal","cartDrawer","wishlistDrawer"].forEach(x=>layer(x,false))});
-counts();renderCart();renderWish();
-if(window.FagaAPI?.isLoggedIn?.())FagaAPI.me().then(r=>console.log("FAGA backend connection successful:",r)).catch(e=>console.error("FAGA backend connection failed:",e));else console.log("FAGA frontend is ready. No user is logged in yet.");
-});
-})();
+    lucide.createIcons();
+
+
+    // ==========================================
+    // FAGA BACKEND CONNECTION TEST
+    // ==========================================
+
+    async function testFagaBackendConnection() {
+
+        console.log("Connecting to FAGA backend...");
+
+        if (!FagaAPI.isLoggedIn()) {
+
+            console.log(
+                "FAGA frontend is ready. No user is logged in yet."
+            );
+
+            return;
+        }
+
+        try {
+
+            const response = await FagaAPI.me();
+
+            console.log(
+                "FAGA backend connection successful:",
+                response
+            );
+
+        } catch (error) {
+
+            console.error(
+                "FAGA backend connection failed:",
+                error
+            );
+        }
+    }
+
+
+    testFagaBackendConnection();
 </script>
-</body>
+
+<div aria-hidden="true" class="faga-popup-backdrop" id="fagaWelcomePopup">
+<div aria-labelledby="fagaPopupTitle" aria-modal="true" class="faga-popup" role="dialog">
+<button aria-label="Close" class="faga-popup-close" data-faga-popup-close="" type="button">×</button>
+<div class="faga-popup-icon">✦</div>
+<p class="faga-popup-kicker">WELCOME TO FAGA</p>
+<h2 id="fagaPopupTitle">Everything you need, one app.</h2>
+<p>Book a ride, send a package, shop, order food, find services and discover opportunities on FAGA.</p>
+<div class="faga-popup-actions">
+<a class="faga-popup-primary" href="./ride-booking.html">Book a Ride</a>
+<button class="faga-popup-secondary" data-faga-popup-close="" type="button">Continue Exploring</button>
+</div>
+</div>
+</div>
+<button aria-label="Back to top" class="faga-back-top" id="fagaBackTop" type="button">↑</button><script>
+(function () {
+  "use strict";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Re-render Lucide icons after all dynamic markup is present.
+    if (window.lucide && typeof lucide.createIcons === "function") {
+      lucide.createIcons();
+    }
+
+    // Reveal sections/cards as they enter the viewport.
+    const revealItems = document.querySelectorAll(".faga-reveal");
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealItems.forEach(function (el) { observer.observe(el); });
+    } else {
+      revealItems.forEach(function (el) { el.classList.add("is-visible"); });
+    }
+
+    // Welcome popup — once per browser session.
+    const popup = document.getElementById("fagaWelcomePopup");
+    const popupCloseButtons = document.querySelectorAll("[data-faga-popup-close]");
+
+    function closePopup() {
+      if (!popup) return;
+      popup.classList.remove("open");
+      popup.setAttribute("aria-hidden", "true");
+    }
+
+    popupCloseButtons.forEach(function (button) {
+      button.addEventListener("click", closePopup);
+    });
+
+    if (popup) {
+      popup.addEventListener("click", function (event) {
+        if (event.target === popup) closePopup();
+      });
+
+      if (!sessionStorage.getItem("fagaWelcomeShown")) {
+        setTimeout(function () {
+          popup.classList.add("open");
+          popup.setAttribute("aria-hidden", "false");
+          sessionStorage.setItem("fagaWelcomeShown", "1");
+        }, 1400);
+      }
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closePopup();
+    });
+
+    // Back-to-top control.
+    const backTop = document.getElementById("fagaBackTop");
+    if (backTop) {
+      window.addEventListener("scroll", function () {
+        backTop.classList.toggle("show", window.scrollY > 500);
+      }, { passive: true });
+
+      backTop.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    // Small feedback animation for primary interactive cards.
+    document.querySelectorAll(".action-card, .service-link, .product-cart, .product-wishlist").forEach(function (el) {
+      el.addEventListener("click", function () {
+        el.classList.add("faga-clicked");
+        setTimeout(function () { el.classList.remove("faga-clicked"); }, 220);
+      });
+    });
+  });
+})();
+</script></body>
 </html>
