@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
     {
@@ -8,8 +8,8 @@
       "destination": "/Public-website/index.html"
     },
     {
-      "source": "/(.*)",
-      "destination": "/Public-website/$1"
+      "source": "/:path*",
+      "destination": "/Public-website/:path*"
     }
   ]
 }
