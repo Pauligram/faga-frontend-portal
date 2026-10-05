@@ -300,19 +300,27 @@
     }
 
     function showSection(name) {
-        if (name !== 'overview' && routes[name]) {
-            window.location.href = routes[name];
-            return;
+    const routes = {
+        merchants: './sellers.html',
+        operations: './logistics.html',
+        riders: './riders.html',
+        users: './users.html',
+        finance: './payments.html',
+        settings: './settings.html'
+    };
+
+    if (name === 'overview') {
+        $$('.section').forEach(section => section.classList.add('hidden'));
+
+        const target = $('#section-overview');
+        if (target) {
+            target.classList.remove('hidden');
         }
 
-        $$('.section').forEach(section => section.classList.add('hidden'));
-        const target = $('#section-' + name);
-        if (target) target.classList.remove('hidden');
-
-        $('#pageTitle').textContent = sections[name] || 'FAGA Admin Console';
+        $('#pageTitle').textContent = 'Command Overview';
 
         $$('.nav-item').forEach(item => {
-            const active = item.dataset.section === name;
+            const active = item.dataset.section === 'overview';
             item.classList.toggle('bg-blue-600', active);
             item.classList.toggle('text-white', active);
             item.classList.toggle('text-slate-400', !active);
@@ -321,7 +329,14 @@
 
         $('#sidebar').classList.add('-translate-x-full');
         $('#sidebarOverlay').classList.add('hidden');
+
+        return;
     }
+
+    if (routes[name]) {
+        window.location.href = routes[name];
+    }
+}
 
     async function loadProfile() {
         const user = await FagaAPI.getProfile();
