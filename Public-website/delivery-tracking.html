@@ -996,7 +996,7 @@
             <a href="../user-portal/dashboard.html" class="btn btn-orange">My Account</a>
         </div>
 
-        <button class="mobile-menu" onclick="toggleMenu()">☰</button>
+        <button class="mobile-menu" onclick="toggleMenu()"></button>
 
     </div>
 </header>
@@ -1034,7 +1034,7 @@
 
 <section class="page-header">
 
-    <span class="badge">📦 LIVE DELIVERY TRACKING</span>
+    <span class="badge"> LIVE DELIVERY TRACKING</span>
 
     <h1>Track Your Package</h1>
 
@@ -1063,8 +1063,8 @@
             <input
                 type="text"
                 id="trackingInput"
-                placeholder="e.g. FAGA-DEL-847291"
-                value="FAGA-DEL-847291"
+                placeholder="Enter delivery ID e.g. 2"
+
             >
 
             <button class="btn btn-orange" onclick="trackDelivery()">
@@ -1095,7 +1095,7 @@
                 <h2>Live Delivery Location</h2>
 
                 <span class="status-badge" id="statusBadge">
-                    ● In Transit
+                     In Transit
                 </span>
 
             </div>
@@ -1108,7 +1108,7 @@
                 <div class="route" id="route"></div>
 
                 <div class="map-marker pickup-marker">
-                    <span>📍</span>
+                    <span></span>
                 </div>
 
                 <div class="map-label pickup-label">
@@ -1116,20 +1116,20 @@
                 </div>
 
                 <div class="map-marker destination-marker">
-                    <span>🏁</span>
+                    <span></span>
                 </div>
 
                 <div class="map-label destination-label">
                     Destination
                 </div>
 
-                <div class="map-marker rider-marker" id="riderMarker">
-                    <span>🏍️</span>
-                </div>
+              <div class="map-marker rider-marker" id="riderMarker" style="display: none;">
 
-                <div class="map-label rider-label">
-                    Dispatch Rider
-                </div>
+</div>
+
+<div class="map-label rider-label" id="riderLabel" style="display: none;">
+    Dispatch Rider
+</div>
 
                 <div class="map-controls">
 
@@ -1138,11 +1138,11 @@
                     </button>
 
                     <button class="map-control" onclick="zoomMap('-')">
-                        −
+
                     </button>
 
                     <button class="map-control" onclick="centerMap()">
-                        ◎
+
                     </button>
 
                 </div>
@@ -1150,8 +1150,8 @@
                 <div class="map-info">
 
                     <strong id="mapStatus">
-                        Rider is on the way
-                    </strong>
+    Waiting for rider assignment
+</strong>
 
                     <span>
                         Live location updates enabled
@@ -1170,7 +1170,7 @@
 
             <div class="card-header">
                 <h2>Dispatch Rider</h2>
-                <span class="status-badge">Online</span>
+                <span class="status-badge" id="riderStatus">Awaiting rider</span>
             </div>
 
             <div class="card-body">
@@ -1200,14 +1200,14 @@
 
                     <div class="rider-info">
 
-                        <h3>Ahmed Musa</h3>
+                        <h3 id="riderName">Awaiting rider</h3>
 
-                        <p>
+                        <p id="riderRole">
                             Dispatch Rider
                         </p>
 
                         <div class="rating">
-                            ★ 4.9
+                             4.9
                         </div>
 
                     </div>
@@ -1219,17 +1219,17 @@
 
                     <div class="vehicle-row">
                         <span>Vehicle</span>
-                        <strong>Honda Motorcycle</strong>
+                        <strong id="riderVehicle">Not assigned</strong>
                     </div>
 
                     <div class="vehicle-row">
                         <span>Colour</span>
-                        <strong>Black</strong>
+                        <strong id="riderColour">Not assigned</strong>
                     </div>
 
                     <div class="vehicle-row">
                         <span>Plate Number</span>
-                        <strong class="plate">ABC 245 XY</strong>
+                        <strong class="plate" id="riderPlate">Not assigned</strong>
                     </div>
 
                 </div>
@@ -1241,14 +1241,14 @@
                         class="contact-btn"
                         onclick="callRider()"
                     >
-                        📞 Call
+                         Call
                     </button>
 
                     <button
                         class="contact-btn"
                         onclick="messageRider()"
                     >
-                        💬 Message
+                         Message
                     </button>
 
                 </div>
@@ -1278,94 +1278,92 @@
 
         <div class="card-body">
 
-            <div class="timeline">
+           <div class="timeline">
 
-                <div class="timeline-item completed">
+    <div class="timeline-item active" id="timelineCreated">
+        <div class="timeline-line"></div>
 
-                    <div class="timeline-line"></div>
+        <div class="timeline-dot" id="timelineCreatedDot"></div>
 
-                    <div class="timeline-dot">✓</div>
-
-                    <div class="timeline-content">
-                        <strong>Request Created</strong>
-                        <span>12:15 PM • Delivery request received</span>
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-item completed">
-
-                    <div class="timeline-line"></div>
-
-                    <div class="timeline-dot">✓</div>
-
-                    <div class="timeline-content">
-                        <strong>Rider Assigned</strong>
-                        <span>12:17 PM • Ahmed accepted the delivery</span>
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-item completed">
-
-                    <div class="timeline-line"></div>
-
-                    <div class="timeline-dot">✓</div>
-
-                    <div class="timeline-content">
-                        <strong>Rider Arriving</strong>
-                        <span>12:19 PM • Rider is heading to pickup</span>
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-item completed">
-
-                    <div class="timeline-line"></div>
-
-                    <div class="timeline-dot">✓</div>
-
-                    <div class="timeline-content">
-                        <strong>Package Picked Up</strong>
-                        <span>12:29 PM • Package collected from sender</span>
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-item active">
-
-                    <div class="timeline-line"></div>
-
-                    <div class="timeline-dot"></div>
-
-                    <div class="timeline-content">
-                        <strong>In Transit</strong>
-                        <span id="timelineTransit">
-                            12:31 PM • Package is on the way
-                        </span>
-                    </div>
-
-                </div>
-
-
-                <div class="timeline-item">
-
-                    <div class="timeline-dot"></div>
-
-                    <div class="timeline-content">
-                        <strong>Delivered</strong>
-                        <span>Waiting for final delivery</span>
-                    </div>
-
-                </div>
-
-            </div>
-
+        <div class="timeline-content">
+            <strong>Request Created</strong>
+            <span id="timelineCreatedText">
+                Delivery request received
+            </span>
         </div>
+    </div>
+
+
+    <div class="timeline-item" id="timelineAssigned">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-dot" id="timelineAssignedDot"></div>
+
+        <div class="timeline-content">
+            <strong>Rider Assigned</strong>
+            <span id="timelineAssignedText">
+                Waiting for rider assignment
+            </span>
+        </div>
+    </div>
+
+
+    <div class="timeline-item" id="timelineArriving">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-dot" id="timelineArrivingDot"></div>
+
+        <div class="timeline-content">
+            <strong>Rider Arriving</strong>
+            <span id="timelineArrivingText">
+                Waiting for rider assignment
+            </span>
+        </div>
+    </div>
+
+
+    <div class="timeline-item" id="timelinePickedUp">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-dot" id="timelinePickedUpDot"></div>
+
+        <div class="timeline-content">
+            <strong>Package Picked Up</strong>
+            <span id="timelinePickedUpText">
+                Waiting for package pickup
+            </span>
+        </div>
+    </div>
+
+
+    <div class="timeline-item" id="timelineTransit">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-dot" id="timelineTransitDot"></div>
+
+        <div class="timeline-content">
+            <strong>In Transit</strong>
+            <span id="timelineTransitText">
+                Waiting for package pickup
+            </span>
+        </div>
+    </div>
+
+
+    <div class="timeline-item" id="timelineDelivered">
+        <div class="timeline-dot" id="timelineDeliveredDot"></div>
+
+        <div class="timeline-content">
+            <strong>Delivered</strong>
+            <span id="timelineDeliveredText">
+                Waiting for final delivery
+            </span>
+        </div>
+    </div>
+
+</div>
+
+</div>
 
     </section>
 
@@ -1389,12 +1387,12 @@
                 <div class="detail-row">
 
                     <div class="detail-icon">
-                        📦
+
                     </div>
 
                     <div>
                         <small>Package Type</small>
-                        <strong>Small Parcel</strong>
+                        <strong id="packageType">Not specified</strong>
                     </div>
 
                 </div>
@@ -1403,12 +1401,12 @@
                 <div class="detail-row">
 
                     <div class="detail-icon">
-                        📝
+
                     </div>
 
                     <div>
                         <small>Description</small>
-                        <strong>Electronics accessories</strong>
+                        <strong id="packageDescription">Not specified</strong>
                     </div>
 
                 </div>
@@ -1417,12 +1415,12 @@
                 <div class="detail-row">
 
                     <div class="detail-icon">
-                        ⚖️
+                        ï¸
                     </div>
 
                     <div>
                         <small>Estimated Weight</small>
-                        <strong>2.5 kg</strong>
+                        <strong id="packageWeight">Not specified</strong>
                     </div>
 
                 </div>
@@ -1431,12 +1429,12 @@
                 <div class="detail-row">
 
                     <div class="detail-icon">
-                        💰
+
                     </div>
 
                     <div>
                         <small>Delivery Fee</small>
-                        <strong>₦2,950</strong>
+                        <strong id="deliveryFee">Not available</strong>
                     </div>
 
                 </div>
@@ -1464,7 +1462,7 @@
 
                     <div>
                         <small>Pickup Location</small>
-                        <strong>
+                        <strong id="pickupAddress">
                             Ikeja City Mall, Lagos
                         </strong>
                     </div>
@@ -1480,7 +1478,7 @@
 
                     <div>
                         <small>Delivery Location</small>
-                        <strong>
+                        <strong id="dropoffAddress">
                             Victoria Island, Lagos
                         </strong>
                     </div>
@@ -1491,7 +1489,7 @@
                 <div class="detail-row">
 
                     <div class="detail-icon">
-                        🕐
+
                     </div>
 
                     <div>
@@ -1507,7 +1505,7 @@
                 <div class="detail-row">
 
                     <div class="detail-icon">
-                        🚚
+
                     </div>
 
                     <div>
@@ -1531,19 +1529,19 @@
     <section class="card action-card">
 
         <button class="action-btn" onclick="shareTracking()">
-            🔗 Share Tracking
+             Share Tracking
         </button>
 
         <button class="action-btn" onclick="contactSupport()">
-            💬 Contact Support
+             Contact Support
         </button>
 
         <button class="action-btn" onclick="reportIssue()">
-            ⚠️ Report Issue
+            ï¸ Report Issue
         </button>
 
         <button class="action-btn danger" onclick="cancelDelivery()">
-            ✕ Cancel Delivery
+             Cancel Delivery
         </button>
 
     </section>
@@ -1575,7 +1573,7 @@
                 <div>
 
                     <div class="proof-icon">
-                        📷
+
                     </div>
 
                     <strong>
@@ -1662,7 +1660,7 @@
 
 
     <div class="footer-bottom">
-        © 2026 FAGA. All rights reserved.
+        Â© 2026 FAGA. All rights reserved.
     </div>
 
 </footer>
@@ -1719,7 +1717,13 @@
 <div class="toast" id="toast"></div>
 
 
+<script src="../js/faga-api.js"></script>
+
 <script>
+
+    let activeDeliveryId = null;
+    let trackingPollTimer = null;
+    let latestTracking = null;
 
     /* =========================
        MOBILE MENU
@@ -1759,50 +1763,470 @@
        TRACK DELIVERY
     ========================= */
 
-    function trackDelivery() {
 
-        const trackingNumber =
-            document.getElementById("trackingInput").value.trim();
+async function trackDelivery() {
 
-        if (!trackingNumber) {
+    const trackingNumber =
+        document.getElementById("trackingInput").value.trim();
 
-            showToast(
-                "Please enter your delivery tracking number."
+    if (!trackingNumber) {
+        showToast("Please enter your delivery ID.");
+        return;
+    }
+
+    if (!FagaAPI.isLoggedIn()) {
+        showToast("Please log in to track your delivery.");
+
+        setTimeout(() => {
+            window.location.href = "../user-portal/login.html";
+        }, 900);
+
+        return;
+    }
+
+    const deliveryId = Number(trackingNumber);
+
+    if (!Number.isInteger(deliveryId) || deliveryId <= 0) {
+        showToast("Enter a valid numeric delivery ID.");
+        return;
+    }
+
+    try {
+        showToast("Loading delivery #" + deliveryId + "...");
+
+        activeDeliveryId = deliveryId;
+
+        const trackingData =
+            await FagaAPI.getDeliveryTracking(deliveryId);
+
+        latestTracking = trackingData;
+
+        updateDeliveryUI(
+            trackingData.delivery || trackingData
+        );
+
+        startTrackingPolling();
+
+        showToast("Live delivery tracking updated.");
+
+    } catch (error) {
+
+        console.error("Delivery tracking error:", error);
+
+        const message =
+            error?.data?.message ||
+            error?.data?.error ||
+            (
+                error?.status === 404
+                    ? "Delivery not found."
+                    : error?.status === 403
+                        ? "You are not authorized to view this delivery."
+                        : error?.status === 401
+                            ? "Your session has expired. Please log in again."
+                            : "Unable to load delivery tracking."
             );
 
+        showToast(message);
+    }
+}
+
+
+    function formatStatus(status) {
+        return String(status || "UNKNOWN")
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, letter => letter.toUpperCase());
+    }
+
+
+    function formatMoney(value) {
+        const amount = Number(value);
+        if (!Number.isFinite(amount)) return "";
+        return new Intl.NumberFormat("en-NG", {
+            style: "currency",
+            currency: "NGN",
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
+
+    function formatDateTime(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        return date.toLocaleString("en-NG", {
+            dateStyle: "medium",
+            timeStyle: "short"
+        });
+    }
+
+
+    function updateDeliveryUI(delivery) {
+        const status = String(delivery.status || "UNKNOWN").toUpperCase();
+
+        const statusBadge = document.getElementById("statusBadge");
+        if (statusBadge) {
+            statusBadge.textContent = formatStatus(status);
+        }
+
+        const pickup = document.getElementById("pickupAddress");
+        const dropoff = document.getElementById("dropoffAddress");
+        const riderName = document.getElementById("riderName");
+        const riderRole = document.getElementById("riderRole");
+        const riderStatus = document.getElementById("riderStatus");
+        const packageType = document.getElementById("packageType");
+        const packageDescription = document.getElementById("packageDescription");
+        const packageWeight = document.getElementById("packageWeight");
+        const deliveryFee = document.getElementById("deliveryFee");
+        const distance = document.getElementById("distance");
+        const mapStatus = document.getElementById("mapStatus");
+        const eta = document.getElementById("eta");
+
+        if (pickup) {
+            pickup.textContent = delivery.pickup_address || "Not available";
+        }
+
+        if (dropoff) {
+            dropoff.textContent = delivery.dropoff_address || "Not available";
+        }
+
+        if (riderName) {
+            riderName.textContent = delivery.riderName || "Awaiting rider";
+        }
+
+        if (riderRole) {
+            riderRole.textContent = delivery.riderName
+                ? "Dispatch Rider"
+                : "Rider not assigned";
+        }
+
+        if (riderStatus) {
+    if (!delivery.riderName) {
+        riderStatus.textContent = "Awaiting rider";
+    } else if (latestTracking?.currentLocation) {
+        riderStatus.textContent = "Online";
+    } else {
+        riderStatus.textContent = "Assigned";
+    }
+}
+
+        if (packageType) {
+            packageType.textContent = delivery.package_type || "Not specified";
+        }
+
+        if (packageDescription) {
+            packageDescription.textContent =
+                delivery.package_description || "Not specified";
+        }
+
+        if (packageWeight) {
+            packageWeight.textContent = delivery.package_weight != null
+                ? `${delivery.package_weight} kg`
+                : "Not specified";
+        }
+
+        if (deliveryFee) {
+            deliveryFee.textContent = delivery.delivery_fee != null
+                ? formatMoney(delivery.delivery_fee)
+                : "Not available";
+        }
+
+        if (distance) {
+            distance.textContent = delivery.distance_km != null
+                ? `${delivery.distance_km} km delivery distance`
+                : "Distance unavailable";
+        }
+
+        if (mapStatus) {
+            mapStatus.textContent =
+                latestTracking?.currentLocation
+                    ? `${formatStatus(status)}  Live location`
+                    : `${formatStatus(status)}  Waiting for rider location`;
+        }
+
+        if (eta) {
+            if (status === "DELIVERED" && delivery.delivered_at) {
+                eta.textContent = `Delivered ${formatDateTime(delivery.delivered_at)}`;
+            } else if (status === "IN_TRANSIT") {
+                eta.textContent = "In transit";
+            } else if (status === "PICKED_UP") {
+                eta.textContent = "Package picked up";
+            } else if (status === "ASSIGNED") {
+                eta.textContent = "Rider assigned";
+            } else if (status === "PENDING") {
+                eta.textContent = "Awaiting rider assignment";
+            } else if (status === "CANCELLED") {
+                eta.textContent = "Delivery cancelled";
+            } else {
+                eta.textContent = "ETA unavailable";
+            }
+        }
+
+        updateDeliveryTimeline(delivery, status);
+
+        updateTimelineState(status);
+
+        if (latestTracking?.currentLocation) {
+            updateRiderMarker(latestTracking.currentLocation, delivery);
+        }
+    }
+function updateDeliveryTimeline(delivery, status) {
+    const createdText = document.getElementById("timelineCreatedText");
+    const assignedText = document.getElementById("timelineAssignedText");
+    const arrivingText = document.getElementById("timelineArrivingText");
+    const pickedUpText = document.getElementById("timelinePickedUpText");
+    const transitText = document.getElementById("timelineTransitText");
+    const deliveredText = document.getElementById("timelineDeliveredText");
+
+    if (createdText) {
+        createdText.textContent = delivery.created_at
+            ? `Created  ${formatDateTime(delivery.created_at)}`
+            : "Delivery request received";
+    }
+
+    if (assignedText) {
+        if (delivery.accepted_at) {
+            assignedText.textContent =
+                `Rider assigned  ${formatDateTime(delivery.accepted_at)}`;
+        } else {
+            assignedText.textContent = "Waiting for rider assignment";
+        }
+    }
+
+    if (arrivingText) {
+        if (status === "ASSIGNED" || status === "PICKED_UP" ||
+            status === "IN_TRANSIT" || status === "DELIVERED") {
+            arrivingText.textContent = "Rider assigned and preparing for pickup";
+        } else {
+            arrivingText.textContent = "Waiting for rider assignment";
+        }
+    }
+
+    if (pickedUpText) {
+        if (delivery.picked_up_at) {
+            pickedUpText.textContent =
+                `Picked up  ${formatDateTime(delivery.picked_up_at)}`;
+        } else {
+            pickedUpText.textContent = "Waiting for package pickup";
+        }
+    }
+
+    if (transitText) {
+        if (status === "IN_TRANSIT") {
+            transitText.textContent = delivery.updated_at
+                ? `Status updated  ${formatDateTime(delivery.updated_at)}`
+                : "Package is in transit";
+        } else if (status === "DELIVERED") {
+            transitText.textContent = "Package completed its journey";
+        } else {
+            transitText.textContent = "Waiting for package pickup";
+        }
+    }
+
+    if (deliveredText) {
+        if (delivery.delivered_at) {
+            deliveredText.textContent =
+                `Delivered  ${formatDateTime(delivery.delivered_at)}`;
+        } else {
+            deliveredText.textContent = "Waiting for final delivery";
+        }
+    }
+}
+
+
+    function updateTimelineState(status) {
+        const items = document.querySelectorAll(".timeline-item");
+        if (!items.length) return;
+
+        const order = {
+            PENDING: 0,
+            ASSIGNED: 1,
+            PICKED_UP: 3,
+            IN_TRANSIT: 4,
+            DELIVERED: 5
+        };
+
+        if (status === "CANCELLED") {
+            items.forEach(item => {
+                item.classList.remove("completed", "active");
+            });
             return;
         }
 
-        showToast(
-            "Searching for " + trackingNumber + "..."
-        );
+        const current = order[status] ?? 0;
+
+        items.forEach((item, index) => {
+            item.classList.remove("completed", "active");
+
+            if (index < current) {
+                item.classList.add("completed");
+            }
+
+            if (index === current) {
+                item.classList.add("active");
+            }
+        });
+    }
+
+function updateRiderMarker(location, delivery) {
+    const rider = document.getElementById("riderMarker");
+    const riderLabel = document.getElementById("riderLabel");
+
+    // No live GPS = no rider marker.
+    if (!location || !delivery) {
+        if (rider) rider.style.display = "none";
+        if (riderLabel) riderLabel.style.display = "none";
+        return;
+    }
+
+    const latitude = Number(location.latitude);
+    const longitude = Number(location.longitude);
+
+    const pickupLat = Number(delivery.pickup_latitude);
+    const pickupLng = Number(delivery.pickup_longitude);
+
+    const dropoffLat = Number(delivery.dropoff_latitude);
+    const dropoffLng = Number(delivery.dropoff_longitude);
+
+    if (
+        ![
+            latitude,
+            longitude,
+            pickupLat,
+            pickupLng,
+            dropoffLat,
+            dropoffLng
+        ].every(Number.isFinite)
+    ) {
+        if (rider) rider.style.display = "none";
+        if (riderLabel) riderLabel.style.display = "none";
+        return;
+    }
+
+    const minLat = Math.min(pickupLat, dropoffLat);
+    const maxLat = Math.max(pickupLat, dropoffLat);
+
+    const minLng = Math.min(pickupLng, dropoffLng);
+    const maxLng = Math.max(pickupLng, dropoffLng);
+
+    const latRange = Math.max(maxLat - minLat, 0.0001);
+    const lngRange = Math.max(maxLng - minLng, 0.0001);
+
+    const left = Math.max(
+        8,
+        Math.min(
+            88,
+            ((longitude - minLng) / lngRange) * 80 + 8
+        )
+    );
+
+    const top = Math.max(
+        8,
+        Math.min(
+            82,
+            ((maxLat - latitude) / latRange) * 74 + 8
+        )
+    );
+
+    if (rider) {
+        rider.style.left = `${left}%`;
+        rider.style.top = `${top}%`;
+        rider.style.display = "flex";
+    }
+
+    if (riderLabel) {
+        riderLabel.style.left = `${Math.max(5, left - 3)}%`;
+        riderLabel.style.top = `${Math.max(3, top - 10)}%`;
+        riderLabel.style.display = "block";
+    }
+}
+
+async function refreshDeliveryTracking() {
+        if (!activeDeliveryId) return;
+
+        const tracking =
+            await FagaAPI.getDeliveryTracking(activeDeliveryId);
+
+        latestTracking = tracking;
+
+        const delivery = tracking.delivery || null;
+
+        if (!delivery) {
+            updateRiderMarker(null, null);
+            return;
+        }
+
+        updateDeliveryUI(delivery);
 
         /*
-            PRODUCTION API:
+         * The backend is authoritative.
+         *
+         * No GPS location:
+         * hide rider marker.
+         *
+         * GPS location available:
+         * show the rider at the real coordinates.
+         */
+        updateRiderMarker(
+            tracking.currentLocation || null,
+            delivery
+        );
 
-            GET /api/deliveries/:deliveryId
+        const distance =
+            document.getElementById("distance");
 
-            Example:
+        if (distance) {
+            if (tracking.currentLocation) {
+                const latitude =
+                    Number(tracking.currentLocation.latitude);
 
-            fetch(`/api/deliveries/${trackingNumber}`)
-                .then(response => response.json())
-                .then(data => {
-                    updateDeliveryUI(data);
-                });
+                const longitude =
+                    Number(tracking.currentLocation.longitude);
 
-            The backend must verify that the tracking number
-            exists and that the user is authorized to view
-            the delivery information.
-        */
-
-        setTimeout(() => {
-
-            showToast(
-                "Delivery found. Live tracking updated."
-            );
-
-        }, 1200);
+                if (
+                    Number.isFinite(latitude) &&
+                    Number.isFinite(longitude)
+                ) {
+                    distance.textContent =
+                        `GPS: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                } else if (delivery.distance_km != null) {
+                    distance.textContent =
+                        `${delivery.distance_km} km delivery distance`;
+                }
+            } else if (delivery.distance_km != null) {
+                distance.textContent =
+                    `${delivery.distance_km} km delivery distance`;
+            } else {
+                distance.textContent =
+                    "Distance unavailable";
+            }
+        }
     }
+
+    function startTrackingPolling() {
+    if (trackingPollTimer) {
+        clearInterval(trackingPollTimer);
+    }
+
+    trackingPollTimer = setInterval(async () => {
+        if (!activeDeliveryId) return;
+
+        try {
+            await refreshDeliveryTracking();
+
+            const status =
+                String(latestTracking?.delivery?.status || "").toUpperCase();
+
+            if (status === "DELIVERED" || status === "CANCELLED") {
+                clearInterval(trackingPollTimer);
+                trackingPollTimer = null;
+            }
+
+        } catch (error) {
+            console.error("Tracking refresh failed:", error);
+        }
+    }, 10000);
+}
+
 
 
     /* =========================
@@ -1811,9 +2235,17 @@
 
     function callRider() {
 
-        showToast(
-            "Calling Ahmed..."
-        );
+        const riderName =
+    document.getElementById("riderName")?.textContent?.trim();
+
+if (!riderName || riderName === "Awaiting rider") {
+    showToast("No rider has been assigned yet.");
+    return;
+}
+
+showToast(
+    `Calling ${riderName}...`
+);
 
         /*
             PRODUCTION:
@@ -2079,67 +2511,6 @@
 
 
     /* =========================
-       DEMO LIVE RIDER MOVEMENT
-    ========================= */
-
-    let riderPosition = 48;
-
-    function simulateRiderMovement() {
-
-        const rider =
-            document.getElementById("riderMarker");
-
-        riderPosition += .18;
-
-        if (riderPosition > 67) {
-            riderPosition = 48;
-        }
-
-        rider.style.left =
-            riderPosition + "%";
-
-        /*
-            IMPORTANT:
-
-            This is only a FRONTEND DEMO.
-
-            In production, NEVER generate rider GPS
-            coordinates in the browser.
-
-            The actual flow should be:
-
-            RIDER APP
-                 ↓
-            GPS LOCATION
-                 ↓
-            FAGA BACKEND
-                 ↓
-            AUTHENTICATION + VALIDATION
-                 ↓
-            WebSocket / SSE
-                 ↓
-            CUSTOMER TRACKING PAGE
-
-            Example:
-
-            wss://api.faga.com/deliveries/:deliveryId
-
-            or
-
-            GET /api/deliveries/:deliveryId/tracking
-
-            The customer should receive only the location
-            information they are authorized to see.
-        */
-    }
-
-    setInterval(
-        simulateRiderMovement,
-        5000
-    );
-
-
-    /* =========================
        BACKEND DATA MODEL
     ========================= */
 
@@ -2225,11 +2596,14 @@
     document.addEventListener(
         "DOMContentLoaded",
         () => {
+            const params = new URLSearchParams(window.location.search);
+            const deliveryId = params.get("delivery");
 
-            showToast(
-                "Live delivery tracking is active."
-            );
+            if (deliveryId) {
+                document.getElementById("trackingInput").value = deliveryId;
+                trackDelivery();
 
+            }
         }
     );
 

@@ -1,11 +1,9 @@
 // frontend/js/faga-api.js
 
-// Live FAGA Laravel backend on Railway
-const FAGA_API_BASE_URL = "https://faga-backend-engine-production.up.railway.app";
+// Live FAGA Node/Express backend on Railway
+const FAGA_API_BASE_URL =
+    "https://faga-backend-engine-production.up.railway.app";
 
-/**
- * Global HTTP Fetch Wrapper for authenticated requests
- */
 const FagaAPI = {
     getToken() {
         return localStorage.getItem("faga_auth_token");
@@ -28,7 +26,9 @@ const FagaAPI = {
 
         const headers = {
             "Accept": "application/json",
-            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.body
+                ? { "Content-Type": "application/json" }
+                : {}),
             ...(options.headers || {})
         };
 
@@ -67,25 +67,42 @@ const FagaAPI = {
             return data;
 
         } catch (networkError) {
-            console.error("FAGA API network error:", networkError);
+            console.error(
+                "FAGA API network error:",
+                networkError
+            );
 
-            // Preserve API errors thrown above
-            if (networkError && networkError.status !== undefined) {
+            if (
+                networkError &&
+                networkError.status !== undefined
+            ) {
                 throw networkError;
             }
 
             throw {
                 status: 0,
                 data: {
-                    message: "Unable to reach the FAGA operational server."
+                    message:
+                        "Unable to reach the FAGA operational server."
                 }
             };
         }
     },
 
-    async register(name, email, password, phone = "") {
+
+    // =========================================================
+    // AUTHENTICATION
+    // =========================================================
+
+    async register(
+        name,
+        email,
+        password,
+        phone = ""
+    ) {
         return this.request("/api/register", {
             method: "POST",
+
             body: JSON.stringify({
                 name,
                 email,
@@ -95,9 +112,11 @@ const FagaAPI = {
         });
     },
 
+
     async login(email, password) {
         const data = await this.request("/api/login", {
             method: "POST",
+
             body: JSON.stringify({
                 email,
                 password
@@ -111,11 +130,26 @@ const FagaAPI = {
         return data;
     },
 
+
+    logout() {
+        this.removeToken();
+    },
+
+
+    // =========================================================
+    // USER PROFILE
+    // =========================================================
+
     async getProfile() {
         return this.request("/api/profile", {
             method: "GET"
         });
     },
+
+
+    // =========================================================
+    // DELIVERIES
+    // =========================================================
 
     async getDeliveries() {
         return this.request("/api/deliveries", {
@@ -123,9 +157,28 @@ const FagaAPI = {
         });
     },
 
-    async createDelivery(pickupAddress, dropoffAddress) {
+
+    async getDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/deliveries/${encodeURIComponent(deliveryId)}`,
+            {
+                method: "GET"
+            }
+        );
+    },
+
+
+    async createDelivery(
+        pickupAddress,
+        dropoffAddress
+    ) {
         return this.request("/api/deliveries", {
             method: "POST",
+
             body: JSON.stringify({
                 pickupAddress,
                 dropoffAddress
@@ -133,16 +186,169 @@ const FagaAPI = {
         });
     },
 
-    async updateTelemetry(ride_id, latitude, longitude) {
-        return this.request("/api/telemetry/update", {
-            method: "POST",
-            body: JSON.stringify({
-                ride_id,
-                latitude,
-                longitude
-            })
-        });
+
+    async getDeliveryTracking(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/deliveries/${encodeURIComponent(deliveryId)}/tracking`,
+            {
+                method: "GET"
+            }
+        );
     },
+
+
+    async cancelDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/deliveries/${encodeURIComponent(deliveryId)}/cancel`,
+            {
+                method: "POST"
+            }
+        );
+    },
+
+
+    // =========================================================
+    // RIDER / DELIVERY TRACKING
+    // =========================================================
+
+    async updateDeliveryLocation(
+        deliveryId,
+        latitude,
+        longitude
+    ) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/rider/deliveries/${encodeURIComponent(deliveryId)}/location`,
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+                    latitude,
+                    longitude
+                })
+            }
+        );
+    },
+
+
+    async pickupDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/rider/deliveries/${encodeURIComponent(deliveryId)}/pickup`,
+            {
+                method: "POST"
+            }
+        );
+    },
+
+
+    async startDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/rider/deliveries/${encodeURIComponent(deliveryId)}/start`,
+            {
+                method: "POST"
+            }
+        );
+    },
+
+
+    async completeDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/rider/deliveries/${encodeURIComponent(deliveryId)}/complete`,
+            {
+                method: "POST"
+            }
+        );
+    },
+
+
+    async getRiderDeliveryOffers() {
+        return this.request(
+            "/api/rider/delivery-offers",
+            {
+                method: "GET"
+            }
+        );
+    },
+
+
+    async acceptDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/rider/deliveries/${encodeURIComponent(deliveryId)}/accept`,
+            {
+                method: "POST"
+            }
+        );
+    },
+
+
+    async declineDelivery(deliveryId) {
+        if (!deliveryId) {
+            throw new Error("Delivery ID is required.");
+        }
+
+        return this.request(
+            `/api/rider/deliveries/${encodeURIComponent(deliveryId)}/decline`,
+            {
+                method: "POST"
+            }
+        );
+    },
+
+
+    // =========================================================
+    // LEGACY TELEMETRY
+    // =========================================================
+
+    async updateTelemetry(
+        ride_id,
+        latitude,
+        longitude
+    ) {
+        return this.request(
+            "/api/telemetry/update",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+                    ride_id,
+                    latitude,
+                    longitude
+                })
+            }
+        );
+    },
+
+
+    // =========================================================
+    // JOBS
+    // =========================================================
 
     async getJobs() {
         return this.request("/api/jobs", {
@@ -150,28 +356,52 @@ const FagaAPI = {
         });
     },
 
-    async submitSellerApplication(storeName, businessAddress) {
-        return this.request("/api/seller-applications", {
-            method: "POST",
-            body: JSON.stringify({
-                storeName,
-                businessAddress
-            })
-        });
+
+    // =========================================================
+    // SELLER
+    // =========================================================
+
+    async submitSellerApplication(
+        storeName,
+        businessAddress
+    ) {
+        return this.request(
+            "/api/seller-applications",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+                    storeName,
+                    businessAddress
+                })
+            }
+        );
     },
 
+
     async getAdminSellers() {
-        return this.request("/api/admin/seller-applications", {
-            method: "GET"
-        });
+        return this.request(
+            "/api/admin/seller-applications",
+            {
+                method: "GET"
+            }
+        );
     },
+
 
     async approveSeller(id) {
         return this.request(
-            `/api/admin/seller-applications/${id}/approve`,
+            `/api/admin/seller-applications/${encodeURIComponent(id)}/approve`,
             {
                 method: "POST"
             }
         );
     }
 };
+
+
+// =============================================================
+// MAKE AVAILABLE GLOBALLY
+// =============================================================
+
+window.FagaAPI = FagaAPI;
