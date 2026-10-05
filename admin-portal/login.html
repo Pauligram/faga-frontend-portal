@@ -35,7 +35,7 @@
             errorBox.classList.add('hidden');
             try {
                 const res = await FagaAPI.login(document.getElementById('email').value, document.getElementById('password').value);
-                window.location.href="../admin-portal/index.html";
+                window.location.href="index.html";
             } catch (err) {
                 errorBox.classList.remove('hidden');
                 errorBox.innerText = "Access Denied: Invalid clearance keys.";

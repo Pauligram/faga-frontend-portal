@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="../js/faga-api.js"></script>
-<script>
-    async function enforceAdmin() {
-        if (!FagaAPI.isLoggedIn()) { window.location.href="../admin-portal/login.html"; return; }
-        try {
-            const user = await FagaAPI.getProfile();
-            if (user.role !== 'admin') { window.location.href="./login.html"; }
-        } catch { window.location.href="../admin-portal/login.html"; }
-    }
-    enforceAdmin();
-</script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FAGA Admin — Orders</title>
@@ -973,6 +961,28 @@ tbody tr:hover{background:#fafbfd}
     }
 }
 </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -987,7 +997,7 @@ tbody tr:hover{background:#fafbfd}
         ☰
     </div>
 
-    <a href="../Public-website/index.html" class="logo">
+    <a href="index.html" class="logo">
         FA<span>GA</span>
         <span class="admin-label">Admin</span>
     </a>
@@ -1051,7 +1061,7 @@ tbody tr:hover{background:#fafbfd}
         Overview
     </div>
 
-    <a class="sidebar-link" href="../Public-website/index.html">
+    <a class="sidebar-link" href="index.html">
         <span class="sidebar-icon">📊</span>
         Dashboard
     </a>
@@ -1061,50 +1071,50 @@ tbody tr:hover{background:#fafbfd}
         Platform
     </div>
 
-    <a class="sidebar-link" href="../admin-portal/users.html">
+    <a class="sidebar-link" href="users.html">
         <span class="sidebar-icon">👥</span>
         Users
         <span class="sidebar-badge">24</span>
     </a>
 
-    <a class="sidebar-link active" href="../admin-portal/orders.html">
+    <a class="sidebar-link active" href="orders.html">
         <span class="sidebar-icon">📦</span>
         Orders
         <span class="sidebar-badge">18</span>
     </a>
 
-    <a class="sidebar-link" href="../Public-website/logistics.html">
+    <a class="sidebar-link" href="logistics.html">
         <span class="sidebar-icon">🚚</span>
         Logistics
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/riders.html">
+    <a class="sidebar-link" href="riders.html">
         <span class="sidebar-icon">🏍️</span>
         Riders
         <span class="sidebar-badge">7</span>
     </a>
 
-    <a class="sidebar-link" href="../Public-website/marketplace.html">
+    <a class="sidebar-link" href="marketplace.html">
         <span class="sidebar-icon">🛍️</span>
         Marketplace
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/sellers.html">
+    <a class="sidebar-link" href="sellers.html">
         <span class="sidebar-icon">🏪</span>
         Sellers
     </a>
 
-    <a class="sidebar-link" href="../Public-website/services.html">
+    <a class="sidebar-link" href="service-providers.html">
         <span class="sidebar-icon">🛠️</span>
         Services
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/service-providers.html">
+    <a class="sidebar-link" href="service-providers.html">
         <span class="sidebar-icon">👨‍🔧</span>
         Service Providers
     </a>
 
-    <a class="sidebar-link" href="../Public-website/food.html">
+    <a class="sidebar-link" href="marketplace.html">
         <span class="sidebar-icon">🍽️</span>
         Food & Restaurants
     </a>
@@ -1114,17 +1124,17 @@ tbody tr:hover{background:#fafbfd}
         Finance
     </div>
 
-    <a class="sidebar-link" href="../admin-portal/payments.html">
+    <a class="sidebar-link" href="payments.html">
         <span class="sidebar-icon">💳</span>
         Payments
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/wallets.html">
+    <a class="sidebar-link" href="wallets.html">
         <span class="sidebar-icon">💰</span>
         Wallets
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/payouts.html">
+    <a class="sidebar-link" href="payouts.html">
         <span class="sidebar-icon">🏦</span>
         Payouts
     </a>
@@ -1134,18 +1144,18 @@ tbody tr:hover{background:#fafbfd}
         Management
     </div>
 
-    <a class="sidebar-link" href="../admin-portal/reports.html">
+    <a class="sidebar-link" href="reports.html">
         <span class="sidebar-icon">📈</span>
         Reports
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/support.html">
+    <a class="sidebar-link" href="support.html">
         <span class="sidebar-icon">🎧</span>
         Support
         <span class="sidebar-badge">9</span>
     </a>
 
-    <a class="sidebar-link" href="../admin-portal/disputes.html">
+    <a class="sidebar-link" href="disputes.html">
         <span class="sidebar-icon">⚠️</span>
         Disputes
         <span class="sidebar-badge">3</span>
@@ -1156,7 +1166,7 @@ tbody tr:hover{background:#fafbfd}
         System
     </div>
 
-    <a class="sidebar-link" href="../admin-portal/settings.html">
+    <a class="sidebar-link" href="settings.html">
         <span class="sidebar-icon">⚙️</span>
         Settings
     </a>
@@ -1173,7 +1183,7 @@ tbody tr:hover{background:#fafbfd}
 
     <div class="sidebar-bottom">
 
-        <a class="sidebar-link" href="./index.html">
+        <a class="sidebar-link" href="index.html">
             <span class="sidebar-icon">↩</span>
             User Portal
         </a>
@@ -3836,7 +3846,8 @@ function logout(){
         POST /api/admin/logout
     */
 
-    window.location.href="./login.html";
+    window.location.href =
+        "../login.html";
 
 }
 

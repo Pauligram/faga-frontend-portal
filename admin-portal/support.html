@@ -1278,6 +1278,28 @@ tr:hover td{
 
 }
 </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -1361,7 +1383,7 @@ tr:hover td{
         Overview
     </div>
 
-    <a class="side-link" href="../Public-website/index.html">
+    <a class="side-link" href="index.html">
         <span class="side-icon">▦</span>
         Dashboard
     </a>
@@ -1371,48 +1393,48 @@ tr:hover td{
         Management
     </div>
 
-    <a class="side-link" href="../admin-portal/users.html">
+    <a class="side-link" href="users.html">
         <span class="side-icon">♙</span>
         Users
         <span class="side-count">48K</span>
     </a>
 
-    <a class="side-link" href="../admin-portal/orders.html">
+    <a class="side-link" href="orders.html">
         <span class="side-icon">▤</span>
         Orders
     </a>
 
-    <a class="side-link" href="../Public-website/logistics.html">
+    <a class="side-link" href="logistics.html">
         <span class="side-icon">▰</span>
         Logistics
     </a>
 
-    <a class="side-link" href="../admin-portal/riders.html">
+    <a class="side-link" href="riders.html">
         <span class="side-icon">♟</span>
         Riders
     </a>
 
-    <a class="side-link" href="../Public-website/marketplace.html">
+    <a class="side-link" href="marketplace.html">
         <span class="side-icon">▥</span>
         Marketplace
     </a>
 
-    <a class="side-link" href="../admin-portal/sellers.html">
+    <a class="side-link" href="sellers.html">
         <span class="side-icon">◫</span>
         Sellers
     </a>
 
-    <a class="side-link" href="../Public-website/services.html">
+    <a class="side-link" href="service-providers.html">
         <span class="side-icon">⚒</span>
         Services
     </a>
 
-    <a class="side-link" href="../admin-portal/service-providers.html">
+    <a class="side-link" href="service-providers.html">
         <span class="side-icon">♙</span>
         Service Providers
     </a>
 
-    <a class="side-link" href="../Public-website/food.html">
+    <a class="side-link" href="marketplace.html">
         <span class="side-icon">♨</span>
         Food & Restaurants
     </a>
@@ -1422,23 +1444,23 @@ tr:hover td{
         Finance
     </div>
 
-    <a class="side-link" href="../admin-portal/payments.html">
+    <a class="side-link" href="payments.html">
         <span class="side-icon">₦</span>
         Payments
     </a>
 
-    <a class="side-link" href="../admin-portal/wallets.html">
+    <a class="side-link" href="wallets.html">
         <span class="side-icon">▣</span>
         Wallets
     </a>
 
-    <a class="side-link" href="../admin-portal/payouts.html">
+    <a class="side-link" href="payouts.html">
         <span class="side-icon">⇧</span>
         Payouts
         <span class="side-count">214</span>
     </a>
 
-    <a class="side-link" href="../admin-portal/reports.html">
+    <a class="side-link" href="reports.html">
         <span class="side-icon">▥</span>
         Reports
     </a>
@@ -1448,24 +1470,24 @@ tr:hover td{
         Operations
     </div>
 
-    <a class="side-link active" href="../admin-portal/support.html">
+    <a class="side-link active" href="support.html">
         <span class="side-icon">?</span>
         Support
         <span class="side-count">36</span>
     </a>
 
-    <a class="side-link" href="../admin-portal/disputes.html">
+    <a class="side-link" href="disputes.html">
         <span class="side-icon">⚠</span>
         Disputes
         <span class="side-count">12</span>
     </a>
 
-    <a class="side-link" href="../admin-portal/settings.html">
+    <a class="side-link" href="settings.html">
         <span class="side-icon">⚙</span>
         Settings
     </a>
 
-    <a class="side-link" href="../admin-portal/audit-logs.html">
+    <a class="side-link" href="audit-logs.html">
         <span class="side-icon">◷</span>
         Audit Logs
     </a>

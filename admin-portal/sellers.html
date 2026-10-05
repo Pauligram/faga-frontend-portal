@@ -1170,6 +1170,28 @@
             }
         }
     </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -1352,7 +1374,7 @@
 
         <div class="sidebar-title">Portal</div>
 
-        <button class="side-link" onclick="navigate('../dashboard.html')">
+        <button class="side-link" onclick="navigate('index.html')">
             <span class="side-icon">↗</span>
             User Portal
         </button>

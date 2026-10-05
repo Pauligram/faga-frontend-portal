@@ -1294,6 +1294,28 @@
 
         }
     </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -1375,7 +1397,7 @@
         </div>
 
         <a class="side-link"
-           href="../Public-website/index.html">
+           href="index.html">
             <span class="side-icon">▦</span>
             Dashboard
         </a>
@@ -1386,56 +1408,56 @@
         </div>
 
         <a class="side-link"
-           href="../admin-portal/users.html">
+           href="users.html">
             <span class="side-icon">♙</span>
             Users
             <span class="side-count">48K</span>
         </a>
 
         <a class="side-link"
-           href="../admin-portal/orders.html">
+           href="orders.html">
             <span class="side-icon">▤</span>
             Orders
         </a>
 
         <a class="side-link"
-           href="../Public-website/logistics.html">
+           href="logistics.html">
             <span class="side-icon">▰</span>
             Logistics
         </a>
 
         <a class="side-link"
-           href="../admin-portal/riders.html">
+           href="riders.html">
             <span class="side-icon">♟</span>
             Riders
         </a>
 
         <a class="side-link"
-           href="../Public-website/marketplace.html">
+           href="marketplace.html">
             <span class="side-icon">▥</span>
             Marketplace
         </a>
 
         <a class="side-link"
-           href="../admin-portal/sellers.html">
+           href="sellers.html">
             <span class="side-icon">◫</span>
             Sellers
         </a>
 
         <a class="side-link"
-           href="../Public-website/services.html">
+           href="service-providers.html">
             <span class="side-icon">⚒</span>
             Services
         </a>
 
         <a class="side-link"
-           href="../admin-portal/service-providers.html">
+           href="service-providers.html">
             <span class="side-icon">♙</span>
             Service Providers
         </a>
 
         <a class="side-link"
-           href="../Public-website/food.html">
+           href="marketplace.html">
             <span class="side-icon">♨</span>
             Food & Restaurants
         </a>
@@ -1446,26 +1468,26 @@
         </div>
 
         <a class="side-link"
-           href="../admin-portal/payments.html">
+           href="payments.html">
             <span class="side-icon">₦</span>
             Payments
         </a>
 
         <a class="side-link"
-           href="../admin-portal/wallets.html">
+           href="wallets.html">
             <span class="side-icon">▣</span>
             Wallets
         </a>
 
         <a class="side-link active"
-           href="../admin-portal/payouts.html">
+           href="payouts.html">
             <span class="side-icon">⇧</span>
             Payouts
             <span class="side-count">214</span>
         </a>
 
         <a class="side-link"
-           href="../admin-portal/reports.html">
+           href="reports.html">
             <span class="side-icon">▥</span>
             Reports
         </a>
@@ -1476,26 +1498,26 @@
         </div>
 
         <a class="side-link"
-           href="../admin-portal/support.html">
+           href="support.html">
             <span class="side-icon">?</span>
             Support
         </a>
 
         <a class="side-link"
-           href="../admin-portal/disputes.html">
+           href="disputes.html">
             <span class="side-icon">⚠</span>
             Disputes
             <span class="side-count">12</span>
         </a>
 
         <a class="side-link"
-           href="../admin-portal/settings.html">
+           href="settings.html">
             <span class="side-icon">⚙</span>
             Settings
         </a>
 
         <a class="side-link"
-           href="../admin-portal/audit-logs.html">
+           href="audit-logs.html">
             <span class="side-icon">◷</span>
             Audit Logs
         </a>

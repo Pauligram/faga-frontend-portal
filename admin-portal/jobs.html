@@ -1284,6 +1284,28 @@
 
     }
   </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -1303,7 +1325,7 @@
         ☰
       </button>
 
-      <a href="../Public-website/index.html" class="brand">
+      <a href="index.html" class="brand">
         <span class="brand-mark">F</span>
         <span>FAGA</span>
       </a>
@@ -1326,7 +1348,7 @@
       <button
         class="top-icon"
         title="Notifications"
-        onclick="window.location.href='../admin-portal/notifications.html'">
+        onclick="window.location.href='notifications.html'">
         ♢
         <span class="notification-dot"></span>
       </button>
@@ -1361,18 +1383,18 @@
         Overview
       </div>
 
-      <a href="../Public-website/index.html" class="nav-link">
+      <a href="index.html" class="nav-link">
         <span class="nav-icon">▦</span>
         Dashboard
       </a>
 
-      <a href="../admin-portal/users.html" class="nav-link">
+      <a href="users.html" class="nav-link">
         <span class="nav-icon">♙</span>
         Users
         <span class="nav-badge">12.4k</span>
       </a>
 
-      <a href="../admin-portal/orders.html" class="nav-link">
+      <a href="orders.html" class="nav-link">
         <span class="nav-icon">▤</span>
         Orders
         <span class="nav-badge">284</span>
@@ -1387,37 +1409,37 @@
         Operations
       </div>
 
-      <a href="../Public-website/logistics.html" class="nav-link">
+      <a href="logistics.html" class="nav-link">
         <span class="nav-icon">▱</span>
         Logistics
       </a>
 
-      <a href="../admin-portal/riders.html" class="nav-link">
+      <a href="riders.html" class="nav-link">
         <span class="nav-icon">♟</span>
         Riders
       </a>
 
-      <a href="../Public-website/marketplace.html" class="nav-link">
+      <a href="marketplace.html" class="nav-link">
         <span class="nav-icon">▧</span>
         Marketplace
       </a>
 
-      <a href="../admin-portal/sellers.html" class="nav-link">
+      <a href="sellers.html" class="nav-link">
         <span class="nav-icon">◫</span>
         Sellers
       </a>
 
-      <a href="../Public-website/services.html" class="nav-link">
+      <a href="service-providers.html" class="nav-link">
         <span class="nav-icon">⚙</span>
         Services
       </a>
 
-      <a href="../admin-portal/service-providers.html" class="nav-link">
+      <a href="service-providers.html" class="nav-link">
         <span class="nav-icon">♙</span>
         Service Providers
       </a>
 
-      <a href="../Public-website/food.html" class="nav-link">
+      <a href="marketplace.html" class="nav-link">
         <span class="nav-icon">◉</span>
         Food
       </a>
@@ -1431,22 +1453,22 @@
         Finance
       </div>
 
-      <a href="../admin-portal/payments.html" class="nav-link">
+      <a href="payments.html" class="nav-link">
         <span class="nav-icon">₦</span>
         Payments
       </a>
 
-      <a href="../admin-portal/wallets.html" class="nav-link">
+      <a href="wallets.html" class="nav-link">
         <span class="nav-icon">▣</span>
         Wallets
       </a>
 
-      <a href="../admin-portal/payouts.html" class="nav-link">
+      <a href="payouts.html" class="nav-link">
         <span class="nav-icon">↗</span>
         Payouts
       </a>
 
-      <a href="../admin-portal/reports.html" class="nav-link">
+      <a href="reports.html" class="nav-link">
         <span class="nav-icon">▥</span>
         Reports
       </a>
@@ -1460,29 +1482,29 @@
         Jobs
       </div>
 
-      <a href="../Public-website/jobs.html" class="nav-link active">
+      <a href="jobs.html" class="nav-link active">
         <span class="nav-icon">▤</span>
         Jobs
       </a>
 
-      <a href="../admin-portal/job-applicants.html" class="nav-link">
+      <a href="job-applicants.html" class="nav-link">
         <span class="nav-icon">♙</span>
         Applicants
         <span class="nav-badge">682</span>
       </a>
 
-      <a href="../Public-website/job-applications.html" class="nav-link">
+      <a href="job-applications.html" class="nav-link">
         <span class="nav-icon">▧</span>
         Applications
         <span class="nav-badge">184</span>
       </a>
 
-      <a href="../admin-portal/job-payments.html" class="nav-link">
+      <a href="job-payments.html" class="nav-link">
         <span class="nav-icon">₦</span>
         Job Payments
       </a>
 
-      <a href="../admin-portal/job-settings.html" class="nav-link">
+      <a href="job-settings.html" class="nav-link">
         <span class="nav-icon">⚙</span>
         Job Settings
       </a>
@@ -1496,28 +1518,28 @@
         Administration
       </div>
 
-      <a href="../admin-portal/support.html" class="nav-link">
+      <a href="support.html" class="nav-link">
         <span class="nav-icon">?</span>
         Support
       </a>
 
-      <a href="../admin-portal/disputes.html" class="nav-link">
+      <a href="disputes.html" class="nav-link">
         <span class="nav-icon">!</span>
         Disputes
       </a>
 
-      <a href="../admin-portal/notifications.html" class="nav-link">
+      <a href="notifications.html" class="nav-link">
         <span class="nav-icon">♢</span>
         Notifications
         <span class="nav-badge">47</span>
       </a>
 
-      <a href="../admin-portal/audit-logs.html" class="nav-link">
+      <a href="audit-logs.html" class="nav-link">
         <span class="nav-icon">≡</span>
         Audit Logs
       </a>
 
-      <a href="../admin-portal/settings.html" class="nav-link">
+      <a href="settings.html" class="nav-link">
         <span class="nav-icon">⚙</span>
         System Settings
       </a>
@@ -1566,7 +1588,7 @@
 
         <button
           class="btn"
-          onclick="window.location.href='../Public-website/job-applications.html'">
+          onclick="window.location.href='job-applications.html'">
           ▧ Applications
         </button>
 
@@ -5054,7 +5076,7 @@
       */
 
 
-      window.location.href="../Public-website/job-applications.html?job=" +
+      window.location.href="job-applications.html?job=" +
         encodeURIComponent(id);
 
     }

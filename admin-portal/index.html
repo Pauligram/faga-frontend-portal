@@ -274,6 +274,15 @@
         settings: 'Security & Settings'
     };
 
+    const routes = {
+        merchants: 'sellers.html',
+        operations: 'logistics.html',
+        riders: 'riders.html',
+        users: 'users.html',
+        finance: 'payments.html',
+        settings: 'settings.html'
+    };
+
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
@@ -291,6 +300,11 @@
     }
 
     function showSection(name) {
+        if (name !== 'overview' && routes[name]) {
+            window.location.href = routes[name];
+            return;
+        }
+
         $$('.section').forEach(section => section.classList.add('hidden'));
         const target = $('#section-' + name);
         if (target) target.classList.remove('hidden');

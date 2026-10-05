@@ -1251,6 +1251,28 @@
             }
         }
     </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -1265,7 +1287,7 @@
         <i class="fa-solid fa-bars"></i>
     </button>
 
-    <a href="../Public-website/index.html" class="brand">
+    <a href="index.html" class="brand">
         <div class="brand-mark">
             <i class="fa-solid fa-truck-fast"></i>
         </div>
@@ -1324,12 +1346,12 @@
 
         <div class="sidebar-label">Overview</div>
 
-        <a href="../Public-website/index.html" class="nav-item">
+        <a href="index.html" class="nav-item">
             <i class="fa-solid fa-chart-pie"></i>
             Dashboard
         </a>
 
-        <a href="../admin-portal/reports.html" class="nav-item">
+        <a href="reports.html" class="nav-item">
             <i class="fa-solid fa-chart-line"></i>
             Reports
         </a>
@@ -1341,22 +1363,22 @@
 
         <div class="sidebar-label">Operations</div>
 
-        <a href="../admin-portal/users.html" class="nav-item">
+        <a href="users.html" class="nav-item">
             <i class="fa-solid fa-users"></i>
             Users
         </a>
 
-        <a href="../admin-portal/orders.html" class="nav-item">
+        <a href="orders.html" class="nav-item">
             <i class="fa-solid fa-box"></i>
             Orders
         </a>
 
-        <a href="../Public-website/logistics.html" class="nav-item">
+        <a href="logistics.html" class="nav-item">
             <i class="fa-solid fa-truck"></i>
             Logistics
         </a>
 
-        <a href="../admin-portal/riders.html" class="nav-item">
+        <a href="riders.html" class="nav-item">
             <i class="fa-solid fa-motorcycle"></i>
             Riders
         </a>
@@ -1368,22 +1390,22 @@
 
         <div class="sidebar-label">Marketplace</div>
 
-        <a href="../Public-website/marketplace.html" class="nav-item">
+        <a href="marketplace.html" class="nav-item">
             <i class="fa-solid fa-store"></i>
             Marketplace
         </a>
 
-        <a href="../admin-portal/sellers.html" class="nav-item">
+        <a href="sellers.html" class="nav-item">
             <i class="fa-solid fa-shop"></i>
             Sellers
         </a>
 
-        <a href="../Public-website/food.html" class="nav-item">
+        <a href="marketplace.html" class="nav-item">
             <i class="fa-solid fa-utensils"></i>
             Food
         </a>
 
-        <a href="../admin-portal/service-providers.html" class="nav-item">
+        <a href="service-providers.html" class="nav-item">
             <i class="fa-solid fa-user-gear"></i>
             Service Providers
         </a>
@@ -1395,29 +1417,29 @@
 
         <div class="sidebar-label">Jobs</div>
 
-        <a href="../Public-website/jobs.html" class="nav-item">
+        <a href="jobs.html" class="nav-item">
             <i class="fa-solid fa-briefcase"></i>
             Jobs
         </a>
 
-        <a href="../admin-portal/job-applicants.html" class="nav-item">
+        <a href="job-applicants.html" class="nav-item">
             <i class="fa-solid fa-user-tie"></i>
             Applicants
             <span class="nav-badge">24</span>
         </a>
 
-        <a href="../Public-website/job-applications.html" class="nav-item">
+        <a href="job-applications.html" class="nav-item">
             <i class="fa-solid fa-file-signature"></i>
             Applications
             <span class="nav-badge">18</span>
         </a>
 
-        <a href="../admin-portal/job-payments.html" class="nav-item active">
+        <a href="job-payments.html" class="nav-item active">
             <i class="fa-solid fa-credit-card"></i>
             Job Payments
         </a>
 
-        <a href="../admin-portal/job-settings.html" class="nav-item">
+        <a href="job-settings.html" class="nav-item">
             <i class="fa-solid fa-sliders"></i>
             Job Settings
         </a>
@@ -1429,17 +1451,17 @@
 
         <div class="sidebar-label">Finance</div>
 
-        <a href="../admin-portal/payments.html" class="nav-item">
+        <a href="payments.html" class="nav-item">
             <i class="fa-solid fa-credit-card"></i>
             Payments
         </a>
 
-        <a href="../admin-portal/wallets.html" class="nav-item">
+        <a href="wallets.html" class="nav-item">
             <i class="fa-solid fa-wallet"></i>
             Wallets
         </a>
 
-        <a href="../admin-portal/payouts.html" class="nav-item">
+        <a href="payouts.html" class="nav-item">
             <i class="fa-solid fa-money-bill-transfer"></i>
             Payouts
         </a>
@@ -1451,27 +1473,27 @@
 
         <div class="sidebar-label">Management</div>
 
-        <a href="../admin-portal/support.html" class="nav-item">
+        <a href="support.html" class="nav-item">
             <i class="fa-solid fa-headset"></i>
             Support
         </a>
 
-        <a href="../admin-portal/disputes.html" class="nav-item">
+        <a href="disputes.html" class="nav-item">
             <i class="fa-solid fa-scale-balanced"></i>
             Disputes
         </a>
 
-        <a href="../admin-portal/notifications.html" class="nav-item">
+        <a href="notifications.html" class="nav-item">
             <i class="fa-regular fa-bell"></i>
             Notifications
         </a>
 
-        <a href="../admin-portal/audit-logs.html" class="nav-item">
+        <a href="audit-logs.html" class="nav-item">
             <i class="fa-solid fa-list-check"></i>
             Audit Logs
         </a>
 
-        <a href="../admin-portal/settings.html" class="nav-item">
+        <a href="settings.html" class="nav-item">
             <i class="fa-solid fa-gear"></i>
             Settings
         </a>

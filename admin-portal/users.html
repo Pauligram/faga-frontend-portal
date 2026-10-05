@@ -1129,6 +1129,28 @@
             }
         }
     </style>
+<script>
+(function () {
+    async function requireAdminAccess() {
+        if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+            window.location.href = './login.html';
+            return;
+        }
+        try {
+            const user = await FagaAPI.getProfile();
+            if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
+                FagaAPI.removeToken();
+                window.location.href = './login.html';
+            }
+        } catch (error) {
+            if (window.FagaAPI) FagaAPI.removeToken();
+            window.location.href = './login.html';
+        }
+    }
+    requireAdminAccess();
+})();
+</script>
+    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -1146,7 +1168,7 @@
         ☰
     </div>
 
-    <a href="../Public-website/index.html" class="logo">
+    <a href="index.html" class="logo">
         FA<span>GA</span>
         <span class="admin-label">Admin</span>
     </a>
@@ -1213,7 +1235,7 @@
 
     <a
         class="sidebar-link"
-        href="../Public-website/index.html">
+        href="index.html">
 
         <span class="sidebar-icon">📊</span>
         Dashboard
@@ -1227,7 +1249,7 @@
 
     <a
         class="sidebar-link active"
-        href="../admin-portal/users.html">
+        href="users.html">
 
         <span class="sidebar-icon">👥</span>
         Users
@@ -1241,7 +1263,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/orders.html">
+        href="orders.html">
 
         <span class="sidebar-icon">📦</span>
         Orders
@@ -1255,7 +1277,7 @@
 
     <a
         class="sidebar-link"
-        href="../Public-website/logistics.html">
+        href="logistics.html">
 
         <span class="sidebar-icon">🚚</span>
         Logistics
@@ -1265,7 +1287,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/riders.html">
+        href="riders.html">
 
         <span class="sidebar-icon">🏍️</span>
         Riders
@@ -1279,7 +1301,7 @@
 
     <a
         class="sidebar-link"
-        href="../Public-website/marketplace.html">
+        href="marketplace.html">
 
         <span class="sidebar-icon">🛍️</span>
         Marketplace
@@ -1289,7 +1311,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/sellers.html">
+        href="sellers.html">
 
         <span class="sidebar-icon">🏪</span>
         Sellers
@@ -1299,7 +1321,7 @@
 
     <a
         class="sidebar-link"
-        href="../Public-website/services.html">
+        href="service-providers.html">
 
         <span class="sidebar-icon">🛠️</span>
         Services
@@ -1309,7 +1331,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/service-providers.html">
+        href="service-providers.html">
 
         <span class="sidebar-icon">👨‍🔧</span>
         Service Providers
@@ -1319,7 +1341,7 @@
 
     <a
         class="sidebar-link"
-        href="../Public-website/food.html">
+        href="marketplace.html">
 
         <span class="sidebar-icon">🍽️</span>
         Food & Restaurants
@@ -1334,7 +1356,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/payments.html">
+        href="payments.html">
 
         <span class="sidebar-icon">💳</span>
         Payments
@@ -1344,7 +1366,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/wallets.html">
+        href="wallets.html">
 
         <span class="sidebar-icon">💰</span>
         Wallets
@@ -1354,7 +1376,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/payouts.html">
+        href="payouts.html">
 
         <span class="sidebar-icon">🏦</span>
         Payouts
@@ -1369,7 +1391,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/reports.html">
+        href="reports.html">
 
         <span class="sidebar-icon">📈</span>
         Reports
@@ -1379,7 +1401,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/support.html">
+        href="support.html">
 
         <span class="sidebar-icon">🎧</span>
         Support
@@ -1393,7 +1415,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/disputes.html">
+        href="disputes.html">
 
         <span class="sidebar-icon">⚠️</span>
         Disputes
@@ -1412,7 +1434,7 @@
 
     <a
         class="sidebar-link"
-        href="../admin-portal/settings.html">
+        href="settings.html">
 
         <span class="sidebar-icon">⚙️</span>
         Settings
