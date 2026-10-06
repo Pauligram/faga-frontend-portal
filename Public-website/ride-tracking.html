@@ -1333,18 +1333,18 @@
                     <div class="map-status">
 
                         <strong id="mapStatus">
-                            Driver is on the way
+                            Loading ride status
                         </strong>
 
                         <span id="mapStatusText">
-                            Heading to your pickup location
+                            Loading your live FAGA ride information.
                         </span>
 
-                        <div class="live-badge">
+                        <div class="live-badge" id="trackingBadge">
 
                             <span class="live-dot"></span>
 
-                            LIVE TRACKING
+                            STATUS UPDATES
 
                         </div>
 
@@ -1385,11 +1385,11 @@
                     <div class="map-bottom">
 
                         <strong id="mapDistance">
-                            1.8 km away
+                            --
                         </strong>
 
-                        <span>
-                            Updated just now
+                        <span id="mapUpdated">
+                            Waiting for live location
                         </span>
 
                     </div>
@@ -1422,7 +1422,7 @@
                                 class="status-title"
                                 id="rideStatus"
                             >
-                                Driver arriving
+                                Loading ride status
                             </div>
 
                         </div>
@@ -1430,7 +1430,7 @@
                         <div class="eta">
 
                             <strong id="eta">
-                                4 min
+                                --
                             </strong>
 
                             <span>
@@ -1462,22 +1462,22 @@
 
                     <div class="driver-info">
 
-                        <div class="driver-avatar">
-                            CO
+                        <div class="driver-avatar" id="driverAvatar">
+                            F
                         </div>
 
                         <div class="driver-details">
 
-                            <strong>
-                                Chinedu Okafor
+                            <strong id="driverName">
+                                Driver not assigned
                             </strong>
 
-                            <span>
-                                FAGA Ride Driver
+                            <span id="driverRole">
+                                Waiting for driver assignment
                             </span>
 
-                            <div class="rating">
-                                ★ 4.9 · 326 trips
+                            <div class="rating" id="driverRating">
+                                Driver details will appear after assignment.
                             </div>
 
                         </div>
@@ -2066,13 +2066,18 @@
     ></div>
 
 
+    <script src="../js/faga-api.js"></script>
+
     <script>
 
         /* ==========================================
            FAGA RIDE TRACKING
-           PUBLIC / CUSTOMER FRONTEND
+           REAL CUSTOMER FRONTEND
+           Uses the live FAGA Ride API.
         ========================================== */
 
+        const API_BASE =
+            "https://faga-backend-engine-production.up.railway.app";
 
         const driverMarker =
             document.getElementById("driverMarker");
@@ -2095,354 +2100,501 @@
         const mapDistance =
             document.getElementById("mapDistance");
 
+        const mapUpdated =
+            document.getElementById("mapUpdated");
+
+        const trackingBadge =
+            document.getElementById("trackingBadge");
+
+        const driverCard =
+            document.querySelector(".driver-card");
+
+        const driverName =
+            document.getElementById("driverName");
+
+        const driverRole =
+            document.getElementById("driverRole");
+
+        const driverRating =
+            document.getElementById("driverRating");
+
+        const driverAvatar =
+            document.getElementById("driverAvatar");
+
         const toast =
             document.getElementById("toast");
 
+        const rideId =
+            new URLSearchParams(window.location.search).get("rideId");
 
-        /* ==========================================
-           DEMO RIDE STATE
-        ========================================== */
+        let latestRide = null;
+        let latestTracking = null;
+        let pollingTimer = null;
+        let mapScale = 1;
 
-        let currentStage = 0;
+        const statusProgress = {
+            REQUESTED: 10,
+            PENDING: 10,
+            SEARCHING: 20,
+            DRIVER_ASSIGNED: 35,
+            ACCEPTED: 35,
+            DRIVER_ARRIVING: 50,
+            EN_ROUTE: 50,
+            DRIVER_ARRIVED: 65,
+            IN_PROGRESS: 80,
+            STARTED: 80,
+            COMPLETED: 100,
+            CANCELLED: 0
+        };
 
-        const rideStages = [
+        const statusText = {
+            REQUESTED: "Ride requested",
+            PENDING: "Ride requested",
+            SEARCHING: "Searching for a driver",
+            DRIVER_ASSIGNED: "Driver assigned",
+            ACCEPTED: "Driver assigned",
+            DRIVER_ARRIVING: "Driver arriving",
+            EN_ROUTE: "Driver arriving",
+            DRIVER_ARRIVED: "Driver arrived",
+            IN_PROGRESS: "Trip started",
+            STARTED: "Trip started",
+            COMPLETED: "Trip completed",
+            CANCELLED: "Ride cancelled"
+        };
 
-            {
-                status: "Driver arriving",
-                mapStatus: "Driver is on the way",
-                mapText: "Heading to your pickup location",
-                eta: "4 min",
-                distance: "1.8 km away",
-                progress: "42%"
-            },
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("show");
 
-            {
-                status: "Driver arriving",
-                mapStatus: "Driver is getting closer",
-                mapText: "Your driver is approaching pickup",
-                eta: "2 min",
-                distance: "0.9 km away",
-                progress: "56%"
-            },
+            window.clearTimeout(showToast.timer);
 
-            {
-                status: "Driver arrived",
-                mapStatus: "Driver has arrived",
-                mapText: "Your driver is waiting at pickup",
-                eta: "Now",
-                distance: "At pickup",
-                progress: "68%"
-            },
-
-            {
-                status: "Trip started",
-                mapStatus: "Trip in progress",
-                mapText: "You are on your way to the destination",
-                eta: "18 min",
-                distance: "6.2 km remaining",
-                progress: "78%"
-            },
-
-            {
-                status: "Trip completed",
-                mapStatus: "You have arrived",
-                mapText: "Trip completed successfully",
-                eta: "Arrived",
-                distance: "Destination reached",
-                progress: "100%"
-            }
-
-        ];
-
-
-        /* ==========================================
-           DEMO DRIVER MOVEMENT
-        ========================================== */
-
-        const driverPositions = [
-
-            {
-                left: "43%",
-                top: "29%"
-            },
-
-            {
-                left: "47%",
-                top: "36%"
-            },
-
-            {
-                left: "51%",
-                top: "43%"
-            },
-
-            {
-                left: "55%",
-                top: "53%"
-            },
-
-            {
-                left: "64%",
-                top: "67%"
-            }
-
-        ];
-
-
-        function updateRideStage() {
-
-            const stage =
-                rideStages[currentStage];
-
-            rideStatus.textContent =
-                stage.status;
-
-            eta.textContent =
-                stage.eta;
-
-            progressBar.style.width =
-                stage.progress;
-
-            mapStatus.textContent =
-                stage.mapStatus;
-
-            mapStatusText.textContent =
-                stage.mapText;
-
-            mapDistance.textContent =
-                stage.distance;
-
-
-            if (driverPositions[currentStage]) {
-
-                driverMarker.style.left =
-                    driverPositions[currentStage].left;
-
-                driverMarker.style.top =
-                    driverPositions[currentStage].top;
-
-            }
-
-
-            updateTimeline();
-
+            showToast.timer = window.setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3500);
         }
 
+        function redirectToLogin() {
+            const redirect =
+                window.location.pathname +
+                window.location.search;
 
-        /* ==========================================
-           TIMELINE
-        ========================================== */
+            window.location.href =
+                "../user-portal/login.html?redirect=" +
+                encodeURIComponent(redirect);
+        }
 
-        function updateTimeline() {
+        function getRideStatus(ride) {
+            return String(ride?.status || "REQUESTED")
+                .trim()
+                .toUpperCase();
+        }
 
+        function updateTimeline(status) {
             const items =
                 document.querySelectorAll(".timeline-item");
 
+            if (!items.length) return;
+
+            let activeIndex = 0;
+
+            if (["DRIVER_ASSIGNED", "ACCEPTED"].includes(status)) {
+                activeIndex = 1;
+            } else if (["DRIVER_ARRIVING", "EN_ROUTE"].includes(status)) {
+                activeIndex = 2;
+            } else if (status === "DRIVER_ARRIVED") {
+                activeIndex = 3;
+            } else if (["IN_PROGRESS", "STARTED"].includes(status)) {
+                activeIndex = 4;
+            } else if (status === "COMPLETED") {
+                activeIndex = 5;
+            } else if (status === "CANCELLED") {
+                activeIndex = 0;
+            }
+
             items.forEach((item, index) => {
+                item.classList.remove("completed", "active");
 
-                item.classList.remove("completed");
-                item.classList.remove("active");
+                const span = item.querySelector("span");
 
-                if (index < currentStage + 2) {
-
+                if (index < activeIndex) {
                     item.classList.add("completed");
+                    if (span) span.textContent = "Completed";
+                } else if (index === activeIndex) {
+                    item.classList.add("active");
 
+                    if (span) {
+                        if (status === "SEARCHING" && index === 0) {
+                            span.textContent = "Searching for driver";
+                        } else if (status === "CANCELLED") {
+                            span.textContent = "Cancelled";
+                        } else if (status === "COMPLETED") {
+                            span.textContent = "Completed";
+                        } else {
+                            span.textContent = "Current";
+                        }
+                    }
+                } else {
+                    if (span) span.textContent = "Waiting";
                 }
-
             });
-
-
-            const activeIndex =
-                Math.min(currentStage + 2, items.length - 1);
-
-            items[activeIndex]
-                .classList.remove("completed");
-
-            items[activeIndex]
-                .classList.add("active");
-
         }
 
+        function updateDriverCard(ride) {
+            const assigned = Number.isInteger(Number(ride?.driverId)) &&
+                Number(ride.driverId) > 0;
 
-        /* ==========================================
-           DEMO LIVE UPDATE
+            if (!assigned) {
+                driverName.textContent = "Driver not assigned";
+                driverRole.textContent = "FAGA is searching for an available driver.";
+                driverRating.textContent =
+                    "Driver name, rating and contact details will appear here after assignment.";
+                driverAvatar.textContent = "F";
+                driverCard.style.display = "";
+                return;
+            }
 
-           This simulates GPS movement.
+            driverName.textContent = "Driver assigned";
+            driverRole.textContent =
+                `FAGA driver • Driver ID ${ride.driverId}`;
+            driverRating.textContent =
+                "Contact and profile details will appear when the driver profile service is connected.";
+            driverAvatar.textContent = "F";
+        }
 
-           Production should NOT use this timer.
+        function updateMapFromTracking(tracking) {
+            const location = tracking?.driverLocation;
 
-           Replace with WebSocket/SSE updates from
-           your backend.
-        ========================================== */
+            if (location &&
+                Number.isFinite(Number(location.latitude)) &&
+                Number.isFinite(Number(location.longitude))) {
 
-        let demoTimer =
-            setInterval(() => {
+                driverMarker.style.display = "flex";
+                trackingBadge.innerHTML =
+                    '<span class="live-dot"></span> LIVE LOCATION';
 
-                if (currentStage < rideStages.length - 1) {
+                mapStatus.textContent =
+                    "Driver location received";
 
-                    currentStage++;
+                mapStatusText.textContent =
+                    "The latest driver GPS location is shown on the map.";
 
-                    updateRideStage();
+                mapDistance.textContent =
+                    "Live GPS location available";
 
+                if (location.createdAt) {
+                    const updatedAt =
+                        new Date(location.createdAt);
+
+                    mapUpdated.textContent =
+                        Number.isNaN(updatedAt.getTime())
+                            ? "Location updated"
+                            : `Updated ${updatedAt.toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            })}`;
                 } else {
-
-                    clearInterval(demoTimer);
-
+                    mapUpdated.textContent =
+                        "Location updated";
                 }
 
-            }, 8000);
+                /*
+                 * The current backend provides latitude/longitude but
+                 * the existing page does not yet include a real map SDK.
+                 * Do not fake movement or invent map coordinates.
+                 */
+                return;
+            }
 
+            driverMarker.style.display = "none";
+            trackingBadge.innerHTML =
+                '<span class="live-dot"></span> STATUS UPDATES';
+
+            mapStatus.textContent =
+                latestRide?.driverId
+                    ? "Waiting for driver location"
+                    : "Waiting for driver assignment";
+
+            mapStatusText.textContent =
+                latestRide?.driverId
+                    ? "The driver is assigned. Live GPS will appear when the driver app sends a location."
+                    : "FAGA is processing your ride request. No driver GPS is available yet.";
+
+            mapDistance.textContent = "--";
+            mapUpdated.textContent =
+                "Waiting for live location";
+        }
+
+        function updateRideUI(ride, tracking) {
+            latestRide = ride;
+            latestTracking = tracking;
+
+            const status = getRideStatus(ride);
+
+            rideStatus.textContent =
+                statusText[status] || status.replaceAll("_", " ");
+
+            const progress =
+                statusProgress[status] ?? 10;
+
+            progressBar.style.width =
+                `${progress}%`;
+
+            const etaMinutes =
+                Number(ride?.driverEtaMinutes);
+
+            if (Number.isFinite(etaMinutes) && etaMinutes >= 0) {
+                eta.textContent =
+                    etaMinutes === 0
+                        ? "Now"
+                        : `${etaMinutes} min`;
+            } else if (["COMPLETED"].includes(status)) {
+                eta.textContent = "Arrived";
+            } else if (["CANCELLED"].includes(status)) {
+                eta.textContent = "--";
+            } else {
+                eta.textContent = "--";
+            }
+
+            updateDriverCard(ride);
+            updateMapFromTracking(tracking);
+            updateTimeline(status);
+
+            if (status === "CANCELLED") {
+                document.getElementById("cancelRide").disabled = true;
+                document.getElementById("cancelRide").textContent =
+                    "Ride Cancelled";
+            } else if (status === "COMPLETED") {
+                document.getElementById("cancelRide").disabled = true;
+                document.getElementById("cancelRide").textContent =
+                    "Ride Completed";
+            } else {
+                document.getElementById("cancelRide").disabled = false;
+                document.getElementById("cancelRide").textContent =
+                    "Cancel Ride";
+            }
+        }
+
+        async function loadRide() {
+            if (!rideId) {
+                showToast("Ride ID is missing.");
+                rideStatus.textContent = "Ride not found";
+                mapStatus.textContent = "No ride selected";
+                mapStatusText.textContent =
+                    "Open this page from a successful FAGA ride booking.";
+                return false;
+            }
+
+            if (typeof FagaAPI === "undefined" ||
+                typeof FagaAPI.request !== "function") {
+                showToast("FAGA connection is unavailable. Please refresh.");
+                return false;
+            }
+
+            if (!FagaAPI.isLoggedIn()) {
+                redirectToLogin();
+                return false;
+            }
+
+            try {
+                const response =
+                    await FagaAPI.request(
+                        `/api/rides/${encodeURIComponent(rideId)}`
+                    );
+
+                const ride =
+                    response?.ride || response;
+
+                if (!ride?.id) {
+                    throw new Error("Invalid ride response.");
+                }
+
+                latestRide = ride;
+
+                const trackingResponse =
+                    await FagaAPI.request(
+                        `/api/rides/${encodeURIComponent(rideId)}/tracking`
+                    );
+
+                const tracking =
+                    trackingResponse?.driverLocation !== undefined
+                        ? trackingResponse
+                        : {
+                            ride,
+                            driverLocation:
+                                trackingResponse?.driverLocation || null
+                        };
+
+                updateRideUI(
+                    ride,
+                    tracking
+                );
+
+                return true;
+
+            } catch (error) {
+                console.error(
+                    "FAGA ride tracking error:",
+                    error
+                );
+
+                const message =
+                    error?.data?.message ||
+                    "Unable to load this ride.";
+
+                rideStatus.textContent =
+                    "Unable to load ride";
+
+                mapStatus.textContent =
+                    "Tracking unavailable";
+
+                mapStatusText.textContent =
+                    message;
+
+                showToast(message);
+
+                return false;
+            }
+        }
+
+        async function refreshTracking() {
+            if (!rideId ||
+                !latestRide ||
+                !FagaAPI.isLoggedIn()) {
+                return;
+            }
+
+            try {
+                const response =
+                    await FagaAPI.request(
+                        `/api/rides/${encodeURIComponent(rideId)}/tracking`
+                    );
+
+                const tracking =
+                    response?.driverLocation !== undefined
+                        ? response
+                        : {
+                            ride: latestRide,
+                            driverLocation:
+                                response?.driverLocation || null
+                        };
+
+                latestTracking = tracking;
+
+                updateRideUI(
+                    response?.ride || latestRide,
+                    tracking
+                );
+
+            } catch (error) {
+                console.warn(
+                    "FAGA tracking refresh failed:",
+                    error
+                );
+            }
+        }
 
         /* ==========================================
            MAP CONTROLS
         ========================================== */
 
-        let mapScale = 1;
-
         const mapArea =
             document.getElementById("mapArea");
 
-
         document.getElementById("zoomIn")
             .addEventListener("click", () => {
-
                 mapScale =
-                    Math.min(mapScale + .1, 1.5);
+                    Math.min(mapScale + 0.1, 1.5);
 
                 mapArea.style.transform =
                     `scale(${mapScale})`;
-
             });
-
 
         document.getElementById("zoomOut")
             .addEventListener("click", () => {
-
                 mapScale =
-                    Math.max(mapScale - .1, .8);
+                    Math.max(mapScale - 0.1, 0.8);
 
                 mapArea.style.transform =
                     `scale(${mapScale})`;
-
             });
-
 
         document.getElementById("centerMap")
             .addEventListener("click", () => {
-
                 mapScale = 1;
-
-                mapArea.style.transform =
-                    "scale(1)";
-
-                showToast(
-                    "Map centered on your ride."
-                );
-
+                mapArea.style.transform = "scale(1)";
+                showToast("Map centered.");
             });
 
-
         /* ==========================================
-           CALL DRIVER
+           DRIVER ACTIONS
+           Do not pretend these are connected until
+           the backend exposes protected contact/message
+           endpoints.
         ========================================== */
 
         document.getElementById("callDriver")
             .addEventListener("click", () => {
-
-                /*
-                Production:
-
-                The backend should return a protected
-                communication channel or masked phone
-                number.
-
-                Never expose private driver information
-                unnecessarily.
-                */
+                if (!latestRide?.driverId) {
+                    showToast("A driver has not been assigned yet.");
+                    return;
+                }
 
                 showToast(
-                    "Calling your FAGA driver..."
+                    "Driver calling is not available until the secure driver contact service is connected."
                 );
-
             });
-
-
-        /* ==========================================
-           MESSAGE DRIVER
-        ========================================== */
 
         document.getElementById("messageDriver")
             .addEventListener("click", () => {
-
-                /*
-                Production:
-
-                Open FAGA's secure ride messaging system.
-
-                POST /api/rides/:rideId/messages
-                GET  /api/rides/:rideId/messages
-                */
-
-                showToast(
-                    "Opening secure driver messaging..."
-                );
-
-            });
-
-
-        /* ==========================================
-           SHARE TRIP
-        ========================================== */
-
-        async function shareTrip() {
-
-            /*
-            Production:
-
-            POST /api/rides/:rideId/share
-
-            Backend should generate a temporary,
-            permission-controlled tracking link.
-
-            Never expose permanent ride IDs or
-            sensitive customer information.
-            */
-
-            const shareData = {
-                title: "My FAGA Ride",
-                text: "Track my FAGA ride in real time."
-            };
-
-            if (navigator.share) {
-
-                try {
-
-                    await navigator.share(shareData);
-
-                } catch (error) {
-
-                    console.log("Share cancelled.");
-
+                if (!latestRide?.driverId) {
+                    showToast("A driver has not been assigned yet.");
+                    return;
                 }
 
-            } else {
-
                 showToast(
-                    "Trip sharing link will be generated by FAGA."
+                    "Driver messaging is not available until the secure messaging service is connected."
                 );
+            });
 
-            }
-
-        }
-
+        /* ==========================================
+           SHARE
+        ========================================== */
 
         document.getElementById("shareTrip")
-            .addEventListener("click", shareTrip);
+            .addEventListener("click", async () => {
+                const shareData = {
+                    title: "My FAGA Ride",
+                    text:
+                        "Track my FAGA ride: " +
+                        window.location.href
+                };
 
+                try {
+                    if (navigator.share) {
+                        await navigator.share(shareData);
+                    } else if (navigator.clipboard) {
+                        await navigator.clipboard.writeText(
+                            window.location.href
+                        );
+                        showToast("Ride tracking link copied.");
+                    } else {
+                        showToast(
+                            "Copy this page address to share your ride."
+                        );
+                    }
+                } catch (error) {
+                    if (error?.name !== "AbortError") {
+                        showToast("Unable to share the ride.");
+                    }
+                }
+            });
 
         document.getElementById("shareSafety")
-            .addEventListener("click", shareTrip);
-
+            .addEventListener("click", () => {
+                showToast(
+                    "Safety support is not connected to the ride API yet."
+                );
+            });
 
         /* ==========================================
            CANCEL RIDE
@@ -2453,64 +2605,85 @@
 
         document.getElementById("cancelRide")
             .addEventListener("click", () => {
+                if (!latestRide) {
+                    showToast("Ride information is still loading.");
+                    return;
+                }
+
+                const status =
+                    getRideStatus(latestRide);
+
+                if (["COMPLETED", "CANCELLED"].includes(status)) {
+                    showToast(
+                        `This ride is already ${status.toLowerCase()}.`
+                    );
+                    return;
+                }
 
                 cancelModal.classList.add("show");
-
             });
-
 
         document.getElementById("keepRide")
             .addEventListener("click", () => {
-
                 cancelModal.classList.remove("show");
-
             });
-
 
         document.getElementById("confirmCancel")
             .addEventListener("click", async () => {
+                if (!rideId || !latestRide) return;
 
-                /*
-                Production:
+                const button =
+                    document.getElementById("confirmCancel");
 
-                POST /api/rides/:rideId/cancel
+                button.disabled = true;
+                button.textContent = "Cancelling...";
 
-                Backend determines:
+                try {
+                    const response =
+                        await FagaAPI.request(
+                            `/api/rides/${encodeURIComponent(rideId)}/cancel`,
+                            {
+                                method: "POST"
+                            }
+                        );
 
-                - Whether cancellation is allowed
-                - Whether a cancellation fee applies
-                - Current ride state
-                - Payment/refund consequences
+                    cancelModal.classList.remove("show");
 
-                Never calculate cancellation fees
-                only in the browser.
-                */
+                    const cancelledRide =
+                        response?.ride || {
+                            ...latestRide,
+                            status: "CANCELLED"
+                        };
 
-                cancelModal.classList.remove("show");
+                    updateRideUI(
+                        cancelledRide,
+                        {
+                            ride: cancelledRide,
+                            driverLocation: null
+                        }
+                    );
 
-                clearInterval(demoTimer);
+                    showToast(
+                        response?.message ||
+                        "Ride cancelled successfully."
+                    );
 
-                rideStatus.textContent =
-                    "Ride cancelled";
+                } catch (error) {
+                    console.error(
+                        "FAGA ride cancellation error:",
+                        error
+                    );
 
-                mapStatus.textContent =
-                    "Ride cancelled";
+                    showToast(
+                        error?.data?.message ||
+                        "Unable to cancel this ride."
+                    );
 
-                mapStatusText.textContent =
-                    "Your ride request has been cancelled.";
-
-                eta.textContent =
-                    "--";
-
-                progressBar.style.width =
-                    "0%";
-
-                showToast(
-                    "Your ride has been cancelled."
-                );
-
+                } finally {
+                    button.disabled = false;
+                    button.textContent = "Confirm Cancellation";
+                }
             });
-
 
         /* ==========================================
            EMERGENCY
@@ -2519,94 +2692,37 @@
         const emergencyModal =
             document.getElementById("emergencyModal");
 
-
         document.getElementById("emergencyBtn")
             .addEventListener("click", () => {
-
                 emergencyModal.classList.add("show");
-
             });
-
 
         document.getElementById("closeEmergency")
             .addEventListener("click", () => {
-
                 emergencyModal.classList.remove("show");
-
             });
 
-
         document.getElementById("reportEmergency")
-            .addEventListener("click", async () => {
-
-                /*
-                Production:
-
-                POST /api/rides/:rideId/safety-report
-
-                Example:
-
-                {
-                    "type": "emergency",
-                    "ride_id": "...",
-                    "location": {
-                        "latitude": 0,
-                        "longitude": 0
-                    }
-                }
-
-                Backend should securely process the
-                safety report and maintain an audit trail.
-                */
-
+            .addEventListener("click", () => {
                 emergencyModal.classList.remove("show");
 
                 showToast(
-                    "Safety report submitted to FAGA."
+                    "Emergency reporting is not connected to the FAGA backend yet. If you are in immediate danger, contact local emergency services."
                 );
-
             });
 
-
         /* ==========================================
-           CLOSE MODALS ON BACKDROP
+           CLOSE MODALS
         ========================================== */
 
         document.querySelectorAll(".modal")
             .forEach(modal => {
-
                 modal.addEventListener("click", event => {
-
                     if (event.target === modal) {
-
                         modal.classList.remove("show");
-
                     }
-
                 });
-
             });
-
-
-        /* ==========================================
-           TOAST
-        ========================================== */
-
-        function showToast(message) {
-
-            toast.textContent =
-                message;
-
-            toast.classList.add("show");
-
-            setTimeout(() => {
-
-                toast.classList.remove("show");
-
-            }, 3000);
-
-        }
-
 
         /* ==========================================
            MOBILE MENU
@@ -2614,146 +2730,55 @@
 
         document.getElementById("mobileMenu")
             .addEventListener("click", () => {
-
                 const nav =
                     document.querySelector(".nav-links");
 
                 if (nav.style.display === "flex") {
-
                     nav.style.display = "none";
-
-                } else {
-
-                    nav.style.display = "flex";
-
-                    nav.style.position = "absolute";
-                    nav.style.top = "72px";
-                    nav.style.left = "0";
-                    nav.style.right = "0";
-                    nav.style.background = "#071a33";
-                    nav.style.padding = "20px";
-                    nav.style.flexDirection = "column";
-                    nav.style.alignItems = "flex-start";
-
+                    return;
                 }
 
+                nav.style.display = "flex";
+                nav.style.position = "absolute";
+                nav.style.top = "72px";
+                nav.style.left = "0";
+                nav.style.right = "0";
+                nav.style.background = "#071a33";
+                nav.style.padding = "20px";
+                nav.style.flexDirection = "column";
+                nav.style.alignItems = "flex-start";
             });
 
-
         /* ==========================================
-           PRODUCTION API ARCHITECTURE
-        ==========================================
+           INITIAL LOAD + POLLING
+           Current backend supports authenticated
+           ride snapshots, cancellation and the latest
+           driver GPS location when available.
 
-        When backend is ready, the page should receive
-        the ride ID from ride-booking.html.
-
-        Example:
-
-        ride-tracking.html?rideId=RID-1000284
-
-
-        Then load:
-
-        GET
-        /api/rides/:rideId
-
-
-        GET
-        /api/rides/:rideId/driver
-
-
-        GET
-        /api/rides/:rideId/tracking
-
-
-        Cancel:
-
-        POST
-        /api/rides/:rideId/cancel
-
-
-        Share:
-
-        POST
-        /api/rides/:rideId/share
-
-
-        Safety:
-
-        POST
-        /api/rides/:rideId/safety-report
-
-
-        ==========================================
-
-        REAL-TIME LOCATION
-
-        Recommended architecture:
-
-        Customer Browser
-                ↓
-        FAGA Backend
-                ↓
-        Driver Mobile App
-                ↓
-        GPS Coordinates
-                ↓
-        FAGA Backend
-                ↓
-        WebSocket / SSE
-                ↓
-        Customer Browser
-
-
-        Example WebSocket:
-
-        wss://api.faga.com/rides/:rideId
-
-
-        Driver sends:
-
-        {
-            "latitude": 6.4281,
-            "longitude": 3.4219,
-            "heading": 120,
-            "speed": 28,
-            "timestamp": "..."
-        }
-
-
-        Backend should validate and broadcast only
-        authorized ride information.
-
-        NEVER trust location data directly from
-        another browser.
-
-        NEVER put private map/payment/backend
-        secrets in this HTML.
-
-        ==========================================
-
-        MAP PROVIDER
-
-        This demo intentionally uses a CSS map.
-
-        Production options:
-
-        - Google Maps
-        - Mapbox
-        - OpenStreetMap + Leaflet
-
-        The map should display:
-
-        ✓ Pickup
-        ✓ Destination
-        ✓ Driver's current GPS location
-        ✓ Route
-        ✓ ETA
-        ✓ Driver direction/heading
-
+           It does NOT yet support driver matching,
+           driver profile lookup, WebSocket/SSE, or a
+           real map provider, so this page never fakes
+           those features.
         ========================================== */
 
-        updateRideStage();
+        (async () => {
+            const loaded =
+                await loadRide();
+
+            if (!loaded) return;
+
+            pollingTimer =
+                window.setInterval(
+                    refreshTracking,
+                    5000
+                );
+        })();
+
+        window.addEventListener("beforeunload", () => {
+            if (pollingTimer) {
+                window.clearInterval(pollingTimer);
+            }
+        });
 
     </script>
 
