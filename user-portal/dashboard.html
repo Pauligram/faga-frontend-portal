@@ -1390,7 +1390,7 @@
       <div class="sidebar-user-inner">
         <div class="avatar">JD</div>
         <div>
-          <strong>John Doe</strong>
+          <strong>FAGA Member</strong>
           <span>FAGA Member</span>
         </div>
       </div>
@@ -1404,12 +1404,12 @@
         <span>Dashboard</span>
       </a>
 
-      <a href="#">
+      <a href="#accountSection">
         <i class="fa-solid fa-user"></i>
         <span>My Profile</span>
       </a>
 
-      <a href="#">
+      <a href="#ordersSection">
         <i class="fa-solid fa-bag-shopping"></i>
         <span>My Orders</span>
         <span class="nav-badge">3</span>
@@ -1425,18 +1425,18 @@
         <span>Wallet</span>
       </a>
 
-      <a href="#">
+      <a href="#walletSection">
         <i class="fa-solid fa-receipt"></i>
         <span>Transactions</span>
       </a>
 
-      <a href="#">
+      <a href="#notificationsSection">
         <i class="fa-solid fa-bell"></i>
         <span>Notifications</span>
         <span class="nav-badge">5</span>
       </a>
 
-      <a href="#">
+      <a href="#activitySection">
         <i class="fa-solid fa-message"></i>
         <span>Messages</span>
       </a>
@@ -1474,22 +1474,22 @@
     <div class="nav-section">My Roles</div>
 
     <nav class="nav">
-      <a href="#">
+      <a href="#rolesSection">
         <i class="fa-solid fa-store"></i>
         <span>Seller Center</span>
       </a>
 
-      <a href="#">
+      <a href="../Public-website/ride-booking.html">
         <i class="fa-solid fa-motorcycle"></i>
         <span>Rider Center</span>
       </a>
 
-      <a href="#">
+      <a href="../Public-website/services.html">
         <i class="fa-solid fa-user-gear"></i>
         <span>Provider Center</span>
       </a>
 
-      <a href="#">
+      <a href="../Public-website/food.html">
         <i class="fa-solid fa-shop"></i>
         <span>Restaurant</span>
       </a>
@@ -1498,12 +1498,12 @@
     <div class="nav-section">Account</div>
 
     <nav class="nav">
-      <a href="#">
+      <a href="../Public-website/help.html">
         <i class="fa-solid fa-headset"></i>
         <span>Help & Support</span>
       </a>
 
-      <a href="#">
+      <a href="#accountSection">
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
       </a>
@@ -1539,19 +1539,19 @@
 
       <div class="top-actions">
 
-        <button class="icon-btn" onclick="showToast('Opening messages...')">
+        <button class="icon-btn" onclick="navigateDashboard('#activitySection')">
           <i class="fa-regular fa-comment-dots"></i>
         </button>
 
-        <button class="icon-btn" onclick="showToast('You have 5 unread notifications')">
+        <button class="icon-btn" onclick="navigateDashboard('#notificationsSection')">
           <i class="fa-regular fa-bell"></i>
           <span class="notification-dot"></span>
         </button>
 
-        <div class="top-profile">
+        <div class="top-profile" id="accountSection">
           <div class="avatar">JD</div>
           <div class="top-profile-info">
-            <strong>John Doe</strong>
+            <strong>FAGA Member</strong>
             <span>Customer</span>
           </div>
         </div>
@@ -1579,7 +1579,7 @@
             New Order
           </button>
 
-          <button class="btn btn-light" onclick="showToast('Opening marketplace...')">
+          <button class="btn btn-light" onclick="navigateTo('../Public-website/marketplace.html')">
             <i class="fa-solid fa-store"></i>
             Marketplace
           </button>
@@ -1594,7 +1594,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Total Orders</div>
-              <div class="stat-value">24</div>
+              <div class="stat-value">0</div>
               <div class="stat-change positive">
                 <i class="fa-solid fa-arrow-up"></i>
                 12% this month
@@ -1611,7 +1611,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Wallet Balance</div>
-              <div class="stat-value">₦48,500</div>
+              <div class="stat-value">₦0</div>
               <div class="stat-change neutral">
                 Available balance
               </div>
@@ -1627,7 +1627,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Active Deliveries</div>
-              <div class="stat-value">2</div>
+              <div class="stat-value">0</div>
               <div class="stat-change positive">
                 Currently in transit
               </div>
@@ -1643,7 +1643,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Saved Items</div>
-              <div class="stat-value">17</div>
+              <div class="stat-value">0</div>
               <div class="stat-change neutral">
                 Wishlist & saved
               </div>
@@ -1658,7 +1658,7 @@
       </section>
 
       <!-- ORDERS + QUICK ACTIONS -->
-      <section class="grid-2-1">
+      <section class="grid-2-1" id="ordersSection">
 
         <div class="card">
 
@@ -1668,111 +1668,15 @@
               <div class="card-subtitle">Your latest FAGA activities</div>
             </div>
 
-            <a href="#" class="view-link">View all</a>
+            <a href="#ordersSection" class="view-link">View all</a>
           </div>
 
           <div class="order-list">
-
-            <div class="order-item">
-
-              <div class="order-icon">
-                <i class="fa-solid fa-store"></i>
-              </div>
-
-              <div class="order-main">
-                <strong>Wireless Headphones</strong>
-                <span>Order #FGA-10294 · Marketplace</span>
-              </div>
-
-              <div class="order-price">
-                ₦38,500
-              </div>
-
-              <div class="order-date">
-                Today, 10:24 AM
-              </div>
-
-              <div>
-                <span class="status progress">In Transit</span>
-              </div>
-
+            <div class="empty-state">
+              <i class="fa-solid fa-box-open"></i>
+              <strong>Loading your orders...</strong>
+              <p>Your live FAGA delivery activity will appear here.</p>
             </div>
-
-            <div class="order-item">
-
-              <div class="order-icon">
-                <i class="fa-solid fa-utensils"></i>
-              </div>
-
-              <div class="order-main">
-                <strong>Chicken & Rice Meal</strong>
-                <span>Order #FGA-10287 · Food</span>
-              </div>
-
-              <div class="order-price">
-                ₦8,700
-              </div>
-
-              <div class="order-date">
-                Yesterday
-              </div>
-
-              <div>
-                <span class="status success">Delivered</span>
-              </div>
-
-            </div>
-
-            <div class="order-item">
-
-              <div class="order-icon">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-              </div>
-
-              <div class="order-main">
-                <strong>Home Cleaning Service</strong>
-                <span>Booking #FGA-10275 · Services</span>
-              </div>
-
-              <div class="order-price">
-                ₦15,000
-              </div>
-
-              <div class="order-date">
-                Sep 13, 2026
-              </div>
-
-              <div>
-                <span class="status pending">Scheduled</span>
-              </div>
-
-            </div>
-
-            <div class="order-item">
-
-              <div class="order-icon">
-                <i class="fa-solid fa-box"></i>
-              </div>
-
-              <div class="order-main">
-                <strong>Office Supplies</strong>
-                <span>Order #FGA-10241 · Marketplace</span>
-              </div>
-
-              <div class="order-price">
-                ₦21,400
-              </div>
-
-              <div class="order-date">
-                Sep 11, 2026
-              </div>
-
-              <div>
-                <span class="status success">Delivered</span>
-              </div>
-
-            </div>
-
           </div>
 
         </div>
@@ -1789,25 +1693,25 @@
 
           <div class="quick-grid">
 
-            <button class="quick-action" onclick="showToast('Opening marketplace...')">
+            <button class="quick-action" onclick="navigateTo('../Public-website/marketplace.html')">
               <i class="fa-solid fa-cart-shopping"></i>
               <strong>Shop</strong>
               <span>Buy products</span>
             </button>
 
-            <button class="quick-action" onclick="showToast('Opening food ordering...')">
+            <button class="quick-action" onclick="navigateTo('../Public-website/food.html')">
               <i class="fa-solid fa-utensils"></i>
               <strong>Order Food</strong>
               <span>Find restaurants</span>
             </button>
 
-            <button class="quick-action" onclick="showToast('Opening logistics...')">
+            <button class="quick-action" onclick="navigateTo('../Public-website/logistics.html')">
               <i class="fa-solid fa-truck"></i>
               <strong>Send Package</strong>
               <span>Book delivery</span>
             </button>
 
-            <button class="quick-action" onclick="showToast('Opening services...')">
+            <button class="quick-action" onclick="navigateTo('../Public-website/services.html')">
               <i class="fa-solid fa-screwdriver-wrench"></i>
               <strong>Book Service</strong>
               <span>Find a provider</span>
@@ -1855,7 +1759,7 @@
               <span>Add money</span>
             </button>
 
-            <button class="quick-action" onclick="showToast('Opening support...')">
+            <button class="quick-action" onclick="navigateTo('../Public-website/help.html')">
               <i class="fa-solid fa-headset"></i>
               <strong>Get Help</strong>
               <span>Contact support</span>
@@ -1879,14 +1783,14 @@
               <div class="card-subtitle">Manage your FAGA funds</div>
             </div>
 
-            <a href="#" class="view-link">History</a>
+            <a href="#walletSection" class="view-link">History</a>
           </div>
 
           <div class="wallet-card">
 
             <div class="wallet-label">Available Balance</div>
 
-            <div class="wallet-balance">₦48,500.00</div>
+            <div class="wallet-balance">₦0.00</div>
 
             <div class="wallet-actions">
               <button onclick="openModal('walletModal')">
@@ -1894,7 +1798,7 @@
                 Fund Wallet
               </button>
 
-              <button onclick="showToast('Withdrawal request started')">
+              <button onclick="navigateDashboard('#walletSection')">
                 <i class="fa-solid fa-arrow-up"></i>
                 Withdraw
               </button>
@@ -1921,7 +1825,7 @@
                 type="text"
                 id="trackingNumber"
                 placeholder="Enter tracking number"
-                value="FGA-10294"
+                value=""
               >
 
               <button onclick="trackOrder()">
@@ -1953,7 +1857,7 @@
         </div>
 
         <!-- ROLES -->
-        <div class="card">
+        <div class="card" id="rolesSection">
 
           <div class="card-header">
             <div>
@@ -1961,7 +1865,7 @@
               <div class="card-subtitle">Services available to you</div>
             </div>
 
-            <a href="#" class="view-link" onclick="showToast('Role management opened'); return false;">
+            <a href="#" class="view-link" onclick="navigateDashboard('#rolesSection'); return false;">
               Manage
             </a>
           </div>
@@ -1977,25 +1881,25 @@
             <div class="role-card">
               <div class="role-icon"><i class="fa-solid fa-store"></i></div>
               <div class="role-info"><strong>Seller</strong><span>Sell products on FAGA</span></div>
-              <button class="role-action" onclick="showToast('Opening seller onboarding')">Activate</button>
+              <button class="role-action" onclick="navigateTo('../Public-website/seller-register.html')">Activate</button>
             </div>
 
             <div class="role-card">
               <div class="role-icon"><i class="fa-solid fa-motorcycle"></i></div>
               <div class="role-info"><strong>Rider</strong><span>Deliver packages & earn</span></div>
-              <button class="role-action" onclick="showToast('Opening rider onboarding')">Activate</button>
+              <button class="role-action" onclick="navigateTo('../Public-website/rider-register.html')">Activate</button>
             </div>
 
             <div class="role-card">
               <div class="role-icon"><i class="fa-solid fa-user-gear"></i></div>
               <div class="role-info"><strong>Service Provider</strong><span>Offer services to customers</span></div>
-              <button class="role-action" onclick="showToast('Opening provider onboarding')">Activate</button>
+              <button class="role-action" onclick="navigateTo('../Public-website/provider-register.html')">Activate</button>
             </div>
 
             <div class="role-card">
               <div class="role-icon"><i class="fa-solid fa-utensils"></i></div>
               <div class="role-info"><strong>Restaurant</strong><span>Sell meals through FAGA Food</span></div>
-              <button class="role-action" onclick="showToast('Opening restaurant onboarding')">Activate</button>
+              <button class="role-action" onclick="navigateTo('../Public-website/restaurant-register.html')">Activate</button>
             </div>
 
             <div class="role-card">
@@ -2011,7 +1915,7 @@
       </section>
 
       <!-- ACTIVITY / NOTIFICATIONS -->
-      <section class="grid-2-1">
+      <section class="grid-2-1" id="activitySection">
 
         <div class="card">
 
@@ -2021,83 +1925,28 @@
               <div class="card-subtitle">Your latest account activity</div>
             </div>
 
-            <a href="#" class="view-link">View all</a>
+            <a href="#activitySection" class="view-link">View all</a>
           </div>
 
           <div class="activity-list">
-
-            <div class="activity">
-
-              <div class="activity-icon">
-                <i class="fa-solid fa-truck-fast"></i>
-              </div>
-
-              <div class="activity-content">
-                <strong>Your order is out for delivery</strong>
-                <p>Order #FGA-10294 has been assigned to a rider.</p>
-              </div>
-
-              <div class="activity-time">12 min</div>
-
-            </div>
-
-            <div class="activity">
-
-              <div class="activity-icon">
-                <i class="fa-solid fa-wallet"></i>
-              </div>
-
-              <div class="activity-content">
-                <strong>Wallet funded successfully</strong>
-                <p>₦25,000 was added to your FAGA wallet.</p>
-              </div>
-
-              <div class="activity-time">2 hrs</div>
-
-            </div>
-
-            <div class="activity">
-
-              <div class="activity-icon">
-                <i class="fa-solid fa-check"></i>
-              </div>
-
-              <div class="activity-content">
-                <strong>Food order delivered</strong>
-                <p>Order #FGA-10287 was successfully delivered.</p>
-              </div>
-
-              <div class="activity-time">Yesterday</div>
-
-            </div>
-
-            <div class="activity">
-
-              <div class="activity-icon">
-                <i class="fa-solid fa-calendar-check"></i>
-              </div>
-
-              <div class="activity-content">
-                <strong>Service booking confirmed</strong>
-                <p>Your home cleaning appointment is confirmed.</p>
-              </div>
-
-              <div class="activity-time">2 days</div>
-
+            <div class="empty-state">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <strong>Live activity will appear here</strong>
+              <p>Activity is populated from connected FAGA services.</p>
             </div>
 
           </div>
 
         </div>
 
-        <div class="card">
+        <div class="card" id="notificationsSection">
 
           <div class="card-header">
             <div>
               <div class="card-title">Notifications</div>
               <div class="card-subtitle">Stay updated with your FAGA account</div>
             </div>
-            <a href="#" class="view-link" onclick="showToast('Notifications opened'); return false;">View all</a>
+            <a href="#" class="view-link" onclick="navigateDashboard('#notificationsSection'); return false;">View all</a>
           </div>
 
           <div class="notification-list">
@@ -2209,14 +2058,14 @@
         <input id="walletAmount" type="number" min="100" step="100" placeholder="e.g. 10000">
       </div>
       <p class="card-subtitle">
-        Wallet funding is left as a UI action until the wallet/payment endpoint is connected to FagaAPI.
+        Wallet funding will open the FAGA payment flow when a payment provider is connected.
       </p>
     </div>
 
     <div class="modal-footer">
       <button type="button" class="btn btn-outline" onclick="closeModal('walletModal')">Cancel</button>
       <button type="button" class="btn btn-primary"
-              onclick="showToast('Connect the wallet payment endpoint in FagaAPI first.'); closeModal('walletModal');">
+              onclick="showToast('Wallet funding is not yet connected to a payment provider.');">
         Continue
       </button>
     </div>
@@ -2422,11 +2271,33 @@
 
       renderOrders(dashboardOrders);
       updateDeliveryStats(dashboardOrders);
+
+      try {
+        const finance = await FagaAPI.request("/api/finance/wallet");
+        const balance = Number(finance?.balance || 0);
+        document.querySelectorAll(".wallet-balance").forEach(el => {
+          el.textContent = `₦${balance.toLocaleString("en-NG", {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        });
+        const statValues = document.querySelectorAll(".stat-value");
+        if (statValues.length >= 2) {
+          statValues[1].textContent = `₦${balance.toLocaleString("en-NG", {maximumFractionDigits: 0})}`;
+        }
+      } catch (walletError) {
+        console.error("FAGA wallet sync failed:", walletError);
+      }
     } catch (error) {
       console.error("FAGA dashboard sync failed:", error);
       showToast("Could not load live dashboard data.");
     }
   }
+
+  window.navigateTo = function (path) {
+    window.location.href = path;
+  };
+
+  window.navigateDashboard = function (hash) {
+    window.location.href = "./dashboard.html" + (hash || "");
+  };
 
   window.showToast = function (message) {
     const toast = document.getElementById("toast");
@@ -2488,6 +2359,11 @@
       String(order?.trackingNumber ?? "") === trackingNumber
     );
 
+    if (/^\\d+$/.test(trackingNumber)) {
+      window.location.href = `../Public-website/delivery-tracking.html?delivery=${encodeURIComponent(trackingNumber)}`;
+      return;
+    }
+
     if (!match) {
       showToast("Tracking information was not found in your current deliveries.");
       result.classList.add("show");
@@ -2521,20 +2397,8 @@
     const message = document.getElementById("quickOrderMessage");
 
     try {
-      await FagaAPI.createDelivery(pickup, dropoff);
-
-      message.className =
-        "mb-3 p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100";
-      message.textContent = "Delivery created successfully.";
-      message.classList.remove("hidden");
-
-      this.reset();
-
-      await loadDashboard();
-
-      setTimeout(() => {
-        closeModal("quickOrderModal");
-      }, 900);
+      closeModal("quickOrderModal");
+      window.location.href = "../Public-website/delivery-booking.html";
     } catch (error) {
       console.error("Delivery creation failed:", error);
 
