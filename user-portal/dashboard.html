@@ -2443,7 +2443,7 @@
       : '<i class="fa-solid fa-lock"></i> Continue to Paystack';
   }
 
-  async function loadTransactionHistory() {
+  window.loadTransactionHistory = async function () {
     const message = document.getElementById("transactionHistoryMessage");
     const list = document.getElementById("transactionHistoryList");
     if (!message || !list) return;
