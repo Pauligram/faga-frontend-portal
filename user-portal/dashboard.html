@@ -1412,7 +1412,7 @@
       <a href="#ordersSection">
         <i class="fa-solid fa-bag-shopping"></i>
         <span>My Orders</span>
-        <span class="nav-badge" id="ordersBadge" hidden>0</span>
+        <span class="nav-badge">3</span>
       </a>
 
       <a href="../Public-website/delivery-tracking.html">
@@ -1433,7 +1433,7 @@
       <a href="#notificationsSection">
         <i class="fa-solid fa-bell"></i>
         <span>Notifications</span>
-        <span class="nav-badge" id="notificationsBadge" hidden>0</span>
+        <span class="nav-badge">5</span>
       </a>
 
       <a href="#activitySection">
@@ -1503,7 +1503,7 @@
         <span>Help & Support</span>
       </a>
 
-      <a href="#" onclick="openModal('settingsModal'); return false;">
+      <a href="#accountSection">
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
       </a>
@@ -1548,7 +1548,7 @@
           <span class="notification-dot"></span>
         </button>
 
-        <button type="button" class="top-profile" id="accountSection" onclick="openProfileModal()" aria-label="Open profile">
+        <div class="top-profile" id="accountSection">
           <div class="avatar">JD</div>
           <div class="top-profile-info">
             <strong>FAGA Member</strong>
@@ -1566,7 +1566,7 @@
 
         <div class="welcome-content">
           <div class="eyebrow">FAGA User Portal</div>
-          <h2>Welcome back, FAGA Member 👋</h2>
+          <h2>Welcome back, John 👋</h2>
           <p>
             Everything you need for shopping, deliveries, services and more —
             all from one FAGA account.
@@ -1991,43 +1991,13 @@
           <div class="empty-state">
             <i class="fa-solid fa-location-dot"></i>
             <strong>No saved addresses yet</strong>
-            <p>Add your frequently used addresses for faster bookings and deliveries.</p>
+            <p>The address interface is ready; connect the address API when that endpoint is available.</p>
           </div>
         </div>
       </section>
 
     </div>
   </main>
-</div>
-
-<!-- PROFILE MODAL -->
-<div class="modal-overlay" id="profileModal">
-  <div class="modal" style="max-width:560px;">
-    <div class="modal-header"><h3>My Profile</h3><button class="close-modal" onclick="closeModal('profileModal')" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-    <form id="profileForm">
-      <div class="modal-body">
-        <div class="form-group"><label for="profileName">Full Name</label><input id="profileName" required></div>
-        <div class="form-group"><label for="profileEmail">Email</label><input id="profileEmail" type="email" required></div>
-        <div class="form-group"><label for="profilePhone">Phone</label><input id="profilePhone" type="tel" placeholder="Phone number"></div>
-        <div class="form-group"><label>Role</label><input id="profileRole" disabled></div>
-        <div class="form-group"><label>Account Status</label><input id="profileStatus" disabled></div>
-        <div id="profileMessage" class="card-subtitle"></div>
-      </div>
-      <div class="modal-footer"><button type="button" class="btn btn-outline" onclick="closeModal('profileModal')">Close</button><button type="submit" class="btn btn-primary" id="profileSaveButton">Save Changes</button></div>
-    </form>
-  </div>
-</div>
-
-<!-- SETTINGS MODAL -->
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal" style="max-width:560px;">
-    <div class="modal-header"><h3>Settings</h3><button class="close-modal" onclick="closeModal('settingsModal')" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="modal-body">
-      <div class="notification"><div class="notification-icon"><i class="fa-solid fa-user"></i></div><div><strong>Profile</strong><p>Update your name, email and phone number.</p><button type="button" class="btn btn-outline" onclick="closeModal('settingsModal'); openProfileModal();">Manage Profile</button></div></div>
-      <div class="notification"><div class="notification-icon"><i class="fa-solid fa-lock"></i></div><div><strong>Security</strong><p>For password changes, use the secure account recovery/password flow.</p><button type="button" class="btn btn-outline" onclick="navigateTo('./login.html')">Go to Login</button></div></div>
-    </div>
-    <div class="modal-footer"><button type="button" class="btn btn-outline" onclick="closeModal('settingsModal')">Close</button></div>
-  </div>
 </div>
 
 <!-- TOAST -->
@@ -2331,73 +2301,6 @@
     }
   }
 
-  function renderSavedAddresses() {
-    const grid = document.getElementById("savedAddressesGrid");
-    if (!grid) return;
-    const addresses = JSON.parse(localStorage.getItem("faga_saved_addresses") || "[]");
-    if (!addresses.length) {
-      grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-location-dot"></i><strong>No saved addresses yet</strong><p>Add your frequently used addresses for faster bookings and deliveries.</p></div>';
-      return;
-    }
-    grid.innerHTML = addresses.map((a, index) => `
-      <div class="notification" style="position:relative;">
-        <div class="notification-icon"><i class="fa-solid fa-location-dot"></i></div>
-        <div style="padding-right:36px;"><strong>${escapeHtml(a.label)}</strong><p>${escapeHtml(a.address)}, ${escapeHtml(a.city)}, ${escapeHtml(a.state)}${a.postalCode ? ', '+escapeHtml(a.postalCode) : ''}</p><small>${escapeHtml(a.phone)}</small></div>
-        <button type="button" aria-label="Delete address" style="position:absolute;right:10px;top:10px;border:0;background:none;cursor:pointer;" onclick="deleteSavedAddress(${index})"><i class="fa-solid fa-trash"></i></button>
-      </div>`).join('');
-  }
-
-  window.deleteSavedAddress = function(index) {
-    const addresses = JSON.parse(localStorage.getItem("faga_saved_addresses") || "[]");
-    addresses.splice(index, 1);
-    localStorage.setItem("faga_saved_addresses", JSON.stringify(addresses));
-    renderSavedAddresses();
-    showToast("Address removed.");
-  };
-
-  window.openProfileModal = async function() {
-    try {
-      const user = await FagaAPI.getProfile();
-      document.getElementById("profileName").value = user?.name || user?.fullName || "";
-      document.getElementById("profileEmail").value = user?.email || "";
-      document.getElementById("profilePhone").value = user?.phone || user?.phoneNumber || "";
-      document.getElementById("profileRole").value = user?.role || "customer";
-      document.getElementById("profileStatus").value = user?.isActive === false ? "Inactive" : "Active";
-      document.getElementById("profileMessage").textContent = "";
-      openModal("profileModal");
-    } catch (error) {
-      console.error("Profile load failed:", error);
-      showToast(error?.data?.message || error?.data?.error || "Unable to load your profile.");
-    }
-  };
-
-  document.getElementById("profileForm")?.addEventListener("submit", async function(event) {
-    event.preventDefault();
-    const button = document.getElementById("profileSaveButton");
-    const message = document.getElementById("profileMessage");
-    button.disabled = true;
-    button.textContent = "Saving...";
-    try {
-      const response = await FagaAPI.request("/api/profile", {
-        method: "PATCH",
-        body: JSON.stringify({
-          name: document.getElementById("profileName").value.trim(),
-          email: document.getElementById("profileEmail").value.trim(),
-          ...(document.getElementById("profilePhone").value.trim() ? { phone: document.getElementById("profilePhone").value.trim() } : {})
-        })
-      });
-      setUserIdentity(response?.user || response);
-      message.textContent = "Profile updated successfully.";
-      showToast("Profile updated successfully.");
-    } catch (error) {
-      console.error("Profile update failed:", error);
-      message.textContent = error?.data?.error || error?.data?.message || "Unable to update your profile.";
-    } finally {
-      button.disabled = false;
-      button.textContent = "Save Changes";
-    }
-  });
-
   async function loadDashboard() {
     try {
       const user = await FagaAPI.getProfile();
@@ -2408,23 +2311,9 @@
 
       renderOrders(dashboardOrders);
       updateDeliveryStats(dashboardOrders);
-      const ordersBadge = document.getElementById("ordersBadge");
-      if (ordersBadge) { ordersBadge.textContent = String(dashboardOrders.length); ordersBadge.hidden = dashboardOrders.length === 0; }
-      renderSavedAddresses();
 
       try {
-        const finance = await refreshWalletBalance();
-        const transactions = Array.isArray(finance?.transactions) ? finance.transactions : [];
-        const notificationBadge = document.getElementById("notificationsBadge");
-        if (notificationBadge) { notificationBadge.textContent = "0"; notificationBadge.hidden = true; }
-        const activityList = document.querySelector(".activity-list");
-        if (activityList) {
-          const activities = [
-            ...dashboardOrders.slice(0, 3).map(order => ({ title: `Delivery #${order?.id ?? "—"}`, text: formatStatus(order?.status || "PENDING"), time: order?.updatedAt || order?.updated_at || order?.createdAt || order?.created_at })),
-            ...transactions.slice(0, 3).map(tx => ({ title: "Wallet transaction", text: `${tx?.type || "Transaction"} · ${tx?.status || "COMPLETED"}`, time: tx?.createdAt || tx?.created_at }))
-          ].sort((a,b) => new Date(b.time || 0) - new Date(a.time || 0)).slice(0,5);
-          activityList.innerHTML = activities.length ? activities.map(a => `<div class="notification"><div class="notification-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><div><strong>${escapeHtml(a.title)}</strong><p>${escapeHtml(a.text)}${a.time ? " · " + escapeHtml(new Date(a.time).toLocaleString("en-NG")) : ""}</p></div></div>`).join("") : '<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><strong>No recent activity</strong><p>Your FAGA activity will appear here.</p></div>';
-        }
+        await refreshWalletBalance();
       } catch (walletError) {
         console.error("FAGA wallet sync failed:", walletError);
       }
@@ -2728,29 +2617,8 @@
   document.getElementById("fagaAddressForm")?.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const address = {
-      id: Date.now(),
-      label: document.getElementById("addressLabel")?.value.trim(),
-      phone: document.getElementById("addressPhone")?.value.trim(),
-      address: document.getElementById("addressLine")?.value.trim(),
-      city: document.getElementById("addressCity")?.value.trim(),
-      state: document.getElementById("addressState")?.value.trim(),
-      postalCode: document.getElementById("addressPostalCode")?.value.trim()
-    };
-
-    if (!address.label || !address.phone || !address.address || !address.city || !address.state) {
-      document.getElementById("fagaAddressError").textContent = "Please complete all required address fields.";
-      return;
-    }
-
-    const addresses = JSON.parse(localStorage.getItem("faga_saved_addresses") || "[]");
-    addresses.unshift(address);
-    localStorage.setItem("faga_saved_addresses", JSON.stringify(addresses.slice(0, 10)));
-    document.getElementById("fagaAddressForm").reset();
-    document.getElementById("fagaAddressError").textContent = "";
-    closeAddressModal();
-    renderSavedAddresses();
-    showToast("Address saved successfully.");
+    document.getElementById("fagaAddressError").textContent =
+      "The address interface is ready, but an address API method was not supplied in the current FagaAPI code.";
   });
 
   document.querySelectorAll(".modal-overlay").forEach(modal => {
@@ -2761,7 +2629,6 @@
     });
   });
 
-  renderSavedAddresses();
   loadDashboard();
 
   // Paystack redirects the customer back to this dashboard with a reference.
