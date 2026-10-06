@@ -1347,26 +1347,15 @@
       }
     }
   
-/* FAGA address management */
-#savedAddressesSection{margin:20px 0;padding:20px;border:1px solid #e5e7eb;border-radius:14px;background:#fff}
-.faga-address-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.faga-address-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.faga-address-card{border:1px solid #e5e7eb;border-radius:12px;padding:16px;overflow-wrap:anywhere}
-.faga-address-card.is-default{border-color:#ed7d31;background:#fffaf5}
-.faga-address-card p{font-size:12px;margin:7px 0;color:#4b5563}
-.faga-address-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.faga-address-actions button,.faga-address-head button,.faga-address-buttons button{padding:9px 12px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
-.faga-address-head button,.faga-address-buttons button[type=submit]{background:#ed7d31;color:#fff;border-color:#ed7d31}
-#fagaAddressModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:18px}
-#fagaAddressModal.visible{display:flex}
-.faga-address-dialog{background:#fff;color:#111827;width:min(650px,100%);max-height:92vh;overflow:auto;padding:22px;border-radius:14px}
-.faga-address-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.faga-address-form label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600}
-.faga-address-form input{padding:10px;border:1px solid #d1d5db;border-radius:8px;width:100%}
-.faga-address-form .full{grid-column:1/-1}
-.faga-address-buttons{display:flex;gap:8px;justify-content:flex-end;margin-top:15px}
-#fagaAddressError{color:#b91c1c;font-size:12px}
-@media(max-width:560px){.faga-address-form{grid-template-columns:1fr}.faga-address-form .full{grid-column:1}}
+
+    #fagaAddressModal { position:fixed; inset:0; background:rgba(7,26,51,.55); z-index:2000; display:none; align-items:center; justify-content:center; padding:20px; }
+    #fagaAddressModal.show { display:flex; }
+    #fagaAddressModal .modal { width:min(500px,100%); background:#fff; border-radius:18px; box-shadow:0 25px 70px rgba(0,0,0,.22); overflow:hidden; }
+    #fagaAddressModal .address-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    #fagaAddressModal .address-full { grid-column:1 / -1; }
+    #fagaAddressModal .address-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+    @media(max-width:560px){ #fagaAddressModal .address-grid{grid-template-columns:1fr;} #fagaAddressModal .address-full{grid-column:auto;} }
+
 </style>
 </head>
 
@@ -1404,7 +1393,7 @@
         <span>Dashboard</span>
       </a>
 
-      <a href="#accountSection">
+      <a href="#accountSection" onclick="showToast('Profile details are shown in your account header.')">
         <i class="fa-solid fa-user"></i>
         <span>My Profile</span>
       </a>
@@ -1412,7 +1401,7 @@
       <a href="#ordersSection">
         <i class="fa-solid fa-bag-shopping"></i>
         <span>My Orders</span>
-        <span class="nav-badge">3</span>
+        <span class="nav-badge" id="ordersBadge" hidden>0</span>
       </a>
 
       <a href="../Public-website/delivery-tracking.html">
@@ -1433,7 +1422,7 @@
       <a href="#notificationsSection">
         <i class="fa-solid fa-bell"></i>
         <span>Notifications</span>
-        <span class="nav-badge">5</span>
+        <span class="nav-badge" id="notificationsBadge" hidden>0</span>
       </a>
 
       <a href="#activitySection">
@@ -1503,7 +1492,7 @@
         <span>Help & Support</span>
       </a>
 
-      <a href="#accountSection">
+      <a href="#accountSection" onclick="showToast('Account settings are coming to the customer portal.')">
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
       </a>
@@ -1566,7 +1555,7 @@
 
         <div class="welcome-content">
           <div class="eyebrow">FAGA User Portal</div>
-          <h2>Welcome back, John 👋</h2>
+          <h2 id="welcomeUser">Welcome back, FAGA Member 👋</h2>
           <p>
             Everything you need for shopping, deliveries, services and more —
             all from one FAGA account.
@@ -1594,7 +1583,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Total Orders</div>
-              <div class="stat-value">0</div>
+              <div class="stat-value" id="totalOrdersStat">0</div>
               <div class="stat-change positive">
                 <i class="fa-solid fa-arrow-up"></i>
                 12% this month
@@ -1611,7 +1600,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Wallet Balance</div>
-              <div class="stat-value">₦0</div>
+              <div class="stat-value" id="walletStat">₦0</div>
               <div class="stat-change neutral">
                 Available balance
               </div>
@@ -1627,7 +1616,7 @@
           <div class="stat-top">
             <div>
               <div class="stat-label">Active Deliveries</div>
-              <div class="stat-value">0</div>
+              <div class="stat-value" id="activeDeliveriesStat">0</div>
               <div class="stat-change positive">
                 Currently in transit
               </div>
@@ -1949,27 +1938,11 @@
             <a href="#" class="view-link" onclick="navigateDashboard('#notificationsSection'); return false;">View all</a>
           </div>
 
-          <div class="notification-list">
-            <div class="notification">
-              <div class="notification-icon"><i class="fa-solid fa-truck-fast"></i></div>
-              <div>
-                <strong>Delivery update</strong>
-                <p>Your latest delivery status can be checked from Track Delivery.</p>
-              </div>
-            </div>
-            <div class="notification">
-              <div class="notification-icon"><i class="fa-solid fa-wallet"></i></div>
-              <div>
-                <strong>Wallet</strong>
-                <p>Wallet and transaction information will appear here when wallet services are connected.</p>
-              </div>
-            </div>
-            <div class="notification">
-              <div class="notification-icon"><i class="fa-solid fa-shield-halved"></i></div>
-              <div>
-                <strong>Account security</strong>
-                <p>Keep your FAGA login credentials private and secure.</p>
-              </div>
+          <div class="notification-list" id="notificationList">
+            <div class="empty-state">
+              <i class="fa-solid fa-bell"></i>
+              <strong>No new notifications</strong>
+              <p>Important FAGA updates will appear here.</p>
             </div>
           </div>
 
@@ -1979,19 +1952,20 @@
 
       <!-- SAVED ADDRESSES -->
       <section id="savedAddressesSection">
-        <div class="faga-address-head">
-          <div>
-            <div class="card-title">Saved Addresses</div>
-            <div class="card-subtitle">Manage addresses used for FAGA deliveries and services</div>
+        <div class="card" style="box-shadow:none;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Saved Addresses</div>
+              <div class="card-subtitle">Manage addresses used for FAGA deliveries and services</div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="openAddressModal()">Add Address</button>
           </div>
-          <button type="button" onclick="openAddressModal()">Add Address</button>
-        </div>
-
-        <div id="savedAddressesGrid" class="faga-address-grid">
-          <div class="empty-state">
-            <i class="fa-solid fa-location-dot"></i>
-            <strong>No saved addresses yet</strong>
-            <p>The address interface is ready; connect the address API when that endpoint is available.</p>
+          <div class="activity-list" id="savedAddressesGrid">
+            <div class="empty-state">
+              <i class="fa-solid fa-location-dot"></i>
+              <strong>No saved addresses yet</strong>
+              <p>Save an address to use it faster when booking FAGA services.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -2113,47 +2087,26 @@
 </div>
 
 <!-- ADDRESS MODAL -->
-<div id="fagaAddressModal">
-  <div class="faga-address-dialog">
-    <div class="faga-address-head">
-      <div>
-        <div class="card-title">Add Address</div>
-        <div class="card-subtitle">Save a delivery or service address</div>
-      </div>
-      <button type="button" onclick="closeAddressModal()">Close</button>
+<div class="modal-overlay" id="fagaAddressModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add Address</h3>
+      <button class="close-modal" type="button" onclick="closeAddressModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
     </div>
-
-    <form id="fagaAddressForm" class="faga-address-form">
-      <label>
-        Label
-        <input id="addressLabel" type="text" placeholder="Home, Office..." required>
-      </label>
-
-      <label>
-        Phone
-        <input id="addressPhone" type="tel" placeholder="080..." required>
-      </label>
-
-      <label class="full">
-        Address
-        <input id="addressLine" type="text" placeholder="Street address" required>
-      </label>
-
-      <label>
-        City
-        <input id="addressCity" type="text" placeholder="Lagos" required>
-      </label>
-
-      <label>
-        State
-        <input id="addressState" type="text" placeholder="Lagos State" required>
-      </label>
-
-      <div class="full" id="fagaAddressError"></div>
-
-      <div class="faga-address-buttons full">
-        <button type="button" onclick="closeAddressModal()">Cancel</button>
-        <button type="submit">Save Address</button>
+    <form id="fagaAddressForm">
+      <div class="modal-body">
+        <div class="address-grid">
+          <div class="form-group"><label for="addressLabel">Label</label><input id="addressLabel" type="text" placeholder="Home, Office..." required></div>
+          <div class="form-group"><label for="addressPhone">Phone</label><input id="addressPhone" type="tel" placeholder="080..." required></div>
+          <div class="form-group address-full"><label for="addressLine">Address</label><input id="addressLine" type="text" placeholder="Street address" required></div>
+          <div class="form-group"><label for="addressCity">City</label><input id="addressCity" type="text" placeholder="Lagos" required></div>
+          <div class="form-group"><label for="addressState">State</label><input id="addressState" type="text" placeholder="Lagos State" required></div>
+        </div>
+        <div id="fagaAddressError" class="card-subtitle" style="color:#b91c1c;display:none;margin-top:8px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeAddressModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Address</button>
       </div>
     </form>
   </div>
@@ -2223,11 +2176,11 @@
         element.textContent = initials;
       });
 
-    const sidebarName = document.querySelector(".sidebar-user strong");
-    const sidebarRole = document.querySelector(".sidebar-user span");
-    const topName = document.querySelector(".top-profile-info strong");
-    const topRole = document.querySelector(".top-profile-info span");
-    const welcome = document.querySelector(".welcome-content h2");
+    const sidebarName = document.getElementById("sidebarUserName") || document.querySelector(".sidebar-user strong");
+    const sidebarRole = document.getElementById("sidebarUserRole") || document.querySelector(".sidebar-user span");
+    const topName = document.getElementById("topUserName") || document.querySelector(".top-profile-info strong");
+    const topRole = document.getElementById("topUserRole") || document.querySelector(".top-profile-info span");
+    const welcome = document.getElementById("welcomeUser") || document.querySelector(".welcome-content h2");
 
     if (sidebarName) sidebarName.textContent = name;
     if (sidebarRole) sidebarRole.textContent = "FAGA Member";
@@ -2301,6 +2254,50 @@
     }
   }
 
+  function renderActivity(orders, finance) {
+    const list = document.querySelector(".activity-list");
+    const activitySection = document.getElementById("activitySection");
+    if (!list || !activitySection) return;
+    const items = [];
+    (Array.isArray(orders) ? orders.slice(0, 3) : []).forEach(order => {
+      items.push({ icon:"fa-truck-fast", title:`Delivery #${order.id || "—"}`, text:`Status: ${formatStatus(order.status || "PENDING")}`, time:order.updatedAt || order.createdAt });
+    });
+    (Array.isArray(finance?.transactions) ? finance.transactions.slice(0, 3) : []).forEach(tx => {
+      items.push({ icon:"fa-wallet", title:"Wallet transaction", text:`${String(tx.type || "TRANSACTION").replaceAll("_"," ")} · ₦${Number(tx.amount || 0).toLocaleString("en-NG")}`, time:tx.createdAt });
+    });
+    items.sort((a,b) => new Date(b.time || 0) - new Date(a.time || 0));
+    const target = activitySection.querySelector(".activity-list");
+    if (!target) return;
+    if (!items.length) {
+      target.innerHTML = `<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><strong>No recent activity</strong><p>Your FAGA account activity will appear here.</p></div>`;
+      return;
+    }
+    target.innerHTML = items.slice(0,5).map(item => `<div class="activity"><div class="activity-icon"><i class="fa-solid ${escapeHtml(item.icon)}"></i></div><div class="activity-content"><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.text)}</p></div><div class="activity-time">${item.time ? new Date(item.time).toLocaleDateString("en-NG") : ""}</div></div>`).join("");
+  }
+
+  function getSavedAddresses() {
+    try { return JSON.parse(localStorage.getItem("faga_saved_addresses") || "[]"); } catch { return []; }
+  }
+
+  function renderSavedAddresses() {
+    const grid = document.getElementById("savedAddressesGrid");
+    if (!grid) return;
+    const addresses = getSavedAddresses();
+    if (!addresses.length) {
+      grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-location-dot"></i><strong>No saved addresses yet</strong><p>Save an address to use it faster when booking FAGA services.</p></div>`;
+      return;
+    }
+    grid.innerHTML = addresses.map((a,i) => `<div class="activity"><div class="activity-icon"><i class="fa-solid fa-location-dot"></i></div><div class="activity-content"><strong>${escapeHtml(a.label)}</strong><p>${escapeHtml(a.address)}, ${escapeHtml(a.city)}, ${escapeHtml(a.state)} · ${escapeHtml(a.phone)}</p></div><button type="button" class="btn btn-outline" style="padding:7px 10px;font-size:10px" onclick="deleteSavedAddress(${i})">Delete</button></div>`).join("");
+  }
+
+  window.deleteSavedAddress = function(index) {
+    const addresses = getSavedAddresses();
+    addresses.splice(index, 1);
+    localStorage.setItem("faga_saved_addresses", JSON.stringify(addresses));
+    renderSavedAddresses();
+    showToast("Address removed.");
+  };
+
   async function loadDashboard() {
     try {
       const user = await FagaAPI.getProfile();
@@ -2311,12 +2308,21 @@
 
       renderOrders(dashboardOrders);
       updateDeliveryStats(dashboardOrders);
+      const ordersBadge = document.getElementById("ordersBadge");
+      if (ordersBadge) { ordersBadge.textContent = dashboardOrders.length; ordersBadge.hidden = dashboardOrders.length === 0; }
+      renderSavedAddresses();
 
+      let finance = null;
       try {
-        await refreshWalletBalance();
+        finance = await refreshWalletBalance();
       } catch (walletError) {
         console.error("FAGA wallet sync failed:", walletError);
       }
+      renderActivity(dashboardOrders, finance);
+      const notificationList = document.getElementById("notificationList");
+      const notificationsBadge = document.getElementById("notificationsBadge");
+      if (notificationList) notificationList.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bell"></i><strong>No new notifications</strong><p>Important FAGA updates will appear here.</p></div>`;
+      if (notificationsBadge) notificationsBadge.hidden = true;
     } catch (error) {
       console.error("FAGA dashboard sync failed:", error);
       showToast("Could not load live dashboard data.");
@@ -2391,7 +2397,7 @@
       String(order?.trackingNumber ?? "") === trackingNumber
     );
 
-    if (/^\\d+$/.test(trackingNumber)) {
+    if (/^\d+$/.test(trackingNumber)) {
       window.location.href = `../Public-website/delivery-tracking.html?delivery=${encodeURIComponent(trackingNumber)}`;
       return;
     }
@@ -2586,46 +2592,44 @@
   });
 
   window.openAddressModal = function () {
-    document.getElementById("fagaAddressModal")?.classList.add("visible");
+    document.getElementById("fagaAddressModal")?.classList.add("show");
   };
 
   window.closeAddressModal = function () {
-    document.getElementById("fagaAddressModal")?.classList.remove("visible");
+    document.getElementById("fagaAddressModal")?.classList.remove("show");
   };
 
-  document.getElementById("quickOrderForm")?.addEventListener("submit", async function (event) {
+  document.getElementById("quickOrderForm")?.addEventListener("submit", function (event) {
     event.preventDefault();
-
-    const pickup = document.getElementById("quickPickup").value.trim();
-    const dropoff = document.getElementById("quickDropoff").value.trim();
-    const message = document.getElementById("quickOrderMessage");
-
-    try {
-      closeModal("quickOrderModal");
-      window.location.href = "../Public-website/delivery-booking.html";
-    } catch (error) {
-      console.error("Delivery creation failed:", error);
-
-      message.className =
-        "mb-3 p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-100";
-      message.textContent =
-        "Unable to create the delivery. Check the backend/API connection.";
-      message.classList.remove("hidden");
-    }
+    const pickup = document.getElementById("quickPickup")?.value.trim();
+    const dropoff = document.getElementById("quickDropoff")?.value.trim();
+    if (!pickup || !dropoff) return;
+    sessionStorage.setItem("faga_quick_order", JSON.stringify({ pickup, dropoff }));
+    window.location.href = "../Public-website/delivery-booking.html";
   });
 
   document.getElementById("fagaAddressForm")?.addEventListener("submit", function (event) {
     event.preventDefault();
-
-    document.getElementById("fagaAddressError").textContent =
-      "The address interface is ready, but an address API method was not supplied in the current FagaAPI code.";
+    const address = {
+      label: document.getElementById("addressLabel").value.trim(),
+      phone: document.getElementById("addressPhone").value.trim(),
+      address: document.getElementById("addressLine").value.trim(),
+      city: document.getElementById("addressCity").value.trim(),
+      state: document.getElementById("addressState").value.trim()
+    };
+    if (!address.label || !address.phone || !address.address || !address.city || !address.state) return;
+    const addresses = getSavedAddresses();
+    addresses.unshift(address);
+    localStorage.setItem("faga_saved_addresses", JSON.stringify(addresses.slice(0,10)));
+    event.target.reset();
+    closeAddressModal();
+    renderSavedAddresses();
+    showToast("Address saved successfully.");
   });
 
   document.querySelectorAll(".modal-overlay").forEach(modal => {
     modal.addEventListener("click", function (event) {
-      if (event.target === modal) {
-        modal.classList.remove("show");
-      }
+      if (event.target === modal) modal.classList.remove("show");
     });
   });
 
