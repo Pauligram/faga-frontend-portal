@@ -1783,7 +1783,7 @@
               <div class="card-subtitle">Manage your FAGA funds</div>
             </div>
 
-            <a href="#walletSection" class="view-link">History</a>
+            <a href="#" class="view-link" onclick="openModal('transactionHistoryModal'); loadTransactionHistory(); return false;">History</a>
           </div>
 
           <div class="wallet-card">
@@ -2039,6 +2039,25 @@
         </button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- TRANSACTION HISTORY MODAL -->
+<div class="modal-overlay" id="transactionHistoryModal">
+  <div class="modal" style="max-width:760px;">
+    <div class="modal-header">
+      <h3>Transaction History</h3>
+      <button class="close-modal" onclick="closeModal('transactionHistoryModal')" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="transactionHistoryMessage" class="card-subtitle">Loading transactions...</div>
+      <div id="transactionHistoryList" style="margin-top:12px;display:grid;gap:10px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline" onclick="closeModal('transactionHistoryModal')">Close</button>
+    </div>
   </div>
 </div>
 
@@ -2422,6 +2441,50 @@
     button.innerHTML = loading
       ? '<i class="fa-solid fa-spinner fa-spin"></i> Connecting to Paystack...'
       : '<i class="fa-solid fa-lock"></i> Continue to Paystack';
+  }
+
+  async function loadTransactionHistory() {
+    const message = document.getElementById("transactionHistoryMessage");
+    const list = document.getElementById("transactionHistoryList");
+    if (!message || !list) return;
+
+    message.textContent = "Loading transactions...";
+    list.innerHTML = "";
+
+    try {
+      const finance = await FagaAPI.request("/api/finance/wallet");
+      const transactions = Array.isArray(finance?.transactions) ? finance.transactions : [];
+
+      if (!transactions.length) {
+        message.textContent = "No wallet transactions yet.";
+        return;
+      }
+
+      message.textContent = `${transactions.length} transaction${transactions.length === 1 ? "" : "s"}`;
+
+      list.innerHTML = transactions.map(tx => {
+        const amount = Number(tx?.amount || 0);
+        const status = String(tx?.status || "").toUpperCase();
+        const type = String(tx?.type || "TRANSACTION").replaceAll("_", " ");
+        const date = tx?.createdAt ? new Date(tx.createdAt).toLocaleString("en-NG") : "Date unavailable";
+        const sign = type.includes("DEPOSIT") ? "+" : "";
+        return `
+          <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;padding:12px;border:1px solid #e5e7eb;border-radius:10px;">
+            <div style="min-width:0;">
+              <strong style="display:block;text-transform:capitalize;">${type.toLowerCase()}</strong>
+              <small style="display:block;color:#6b7280;margin-top:4px;">${date}</small>
+              <small style="display:block;color:#6b7280;margin-top:3px;">${tx?.description || ""}</small>
+            </div>
+            <div style="text-align:right;white-space:nowrap;">
+              <strong style="display:block;">${sign}₦${amount.toLocaleString("en-NG", {minimumFractionDigits:2, maximumFractionDigits:2})}</strong>
+              <small style="display:block;margin-top:4px;">${status}</small>
+            </div>
+          </div>`;
+      }).join("");
+    } catch (error) {
+      console.error("FAGA transaction history failed:", error);
+      message.textContent = error?.data?.error || error?.data?.message || "Unable to load transaction history.";
+    }
   }
 
   async function refreshWalletBalance() {
