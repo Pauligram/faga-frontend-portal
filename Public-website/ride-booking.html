@@ -2090,21 +2090,332 @@ button, a, input, select {
         }
 
 
-        /* =====================================
-           INPUT CHANGES
-        ===================================== */
+       /* =====================================
+   INPUT CHANGES + ADDRESS GEOCODING
+===================================== */
 
-        pickupInput.addEventListener("input", () => {
-    window.fagaPickupCoordinates = null;
-    window.fagaRouteData = null;
-    updateRoute();
-});
+let pickupGeocodeTimer = null;
+let destinationGeocodeTimer = null;
 
-destinationInput.addEventListener("input", () => {
-    window.fagaDestinationCoordinates = null;
-    window.fagaRouteData = null;
-    updateRoute();
-});
+let pickupGeocodeRequest = 0;
+let destinationGeocodeRequest = 0;
+
+
+/*
+ * Resolve a typed address through
+ * the FAGA backend.
+ */
+async function resolveFagaAddress(
+    address,
+    type
+) {
+
+    const cleanAddress =
+        String(address || "").trim();
+
+    if (!cleanAddress) {
+        return null;
+    }
+
+    if (
+        typeof FagaAPI === "undefined" ||
+        typeof FagaAPI.request !== "function"
+    ) {
+        console.error(
+            "FAGA API is unavailable."
+        );
+
+        return null;
+    }
+
+    try {
+
+        console.log(
+            `FAGA geocoding ${type}:`,
+            cleanAddress
+        );
+
+        const response =
+            await FagaAPI.request(
+                `/api/geocode?address=${encodeURIComponent(cleanAddress)}`,
+                {
+                    method: "GET"
+                }
+            );
+
+        const location =
+            response?.location;
+
+        if (
+            !location ||
+            !Number.isFinite(
+                Number(location.latitude)
+            ) ||
+            !Number.isFinite(
+                Number(location.longitude)
+            )
+        ) {
+
+            throw new Error(
+                "Invalid coordinates returned by FAGA."
+            );
+
+        }
+
+        const coordinates = {
+
+            latitude:
+                Number(location.latitude),
+
+            longitude:
+                Number(location.longitude)
+
+        };
+
+        console.log(
+            `FAGA ${type} coordinates:`,
+            coordinates.latitude,
+            coordinates.longitude
+        );
+
+        return coordinates;
+
+    } catch (error) {
+
+        console.error(
+            `FAGA ${type} geocoding error:`,
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/*
+ * Pickup address typing
+ */
+pickupInput.addEventListener(
+    "input",
+    () => {
+
+        const value =
+            pickupInput.value.trim();
+
+        /*
+         * If the user starts editing
+         * the current-location value,
+         * remove the old GPS coordinates.
+         */
+        if (
+            value !== "Current location"
+        ) {
+
+            window.fagaPickupCoordinates =
+                null;
+
+        }
+
+        window.fagaRouteData =
+            null;
+
+        window.clearTimeout(
+            pickupGeocodeTimer
+        );
+
+        pickupGeocodeTimer =
+            window.setTimeout(
+                async () => {
+
+                    const requestId =
+                        ++pickupGeocodeRequest;
+
+                    const address =
+                        pickupInput.value.trim();
+
+                    if (!address) {
+
+                        updateRoute();
+
+                        return;
+
+                    }
+
+                    /*
+                     * Do not geocode the special
+                     * current-location label.
+                     */
+                    if (
+                        address ===
+                        "Current location"
+                    ) {
+
+                        updateRoute();
+
+                        return;
+
+                    }
+
+                    const coordinates =
+                        await resolveFagaAddress(
+                            address,
+                            "pickup"
+                        );
+
+                    /*
+                     * Ignore an old request if
+                     * the user has typed again.
+                     */
+                    if (
+                        requestId !==
+                        pickupGeocodeRequest
+                    ) {
+
+                        return;
+
+                    }
+
+                    /*
+                     * Only apply coordinates if
+                     * the input still contains
+                     * the same address.
+                     */
+                    if (
+                        pickupInput.value.trim() !==
+                        address
+                    ) {
+
+                        return;
+
+                    }
+
+                    if (coordinates) {
+
+                        window.fagaPickupCoordinates =
+                            coordinates;
+
+                        console.log(
+                            "Pickup coordinates set:",
+                            coordinates
+                        );
+
+                    } else {
+
+                        window.fagaPickupCoordinates =
+                            null;
+
+                    }
+
+                    updateRoute();
+
+                },
+                700
+            );
+
+    }
+);
+
+
+/*
+ * Destination address typing
+ */
+destinationInput.addEventListener(
+    "input",
+    () => {
+
+        const value =
+            destinationInput.value.trim();
+
+        window.fagaDestinationCoordinates =
+            null;
+
+        window.fagaRouteData =
+            null;
+
+        window.clearTimeout(
+            destinationGeocodeTimer
+        );
+
+        destinationGeocodeTimer =
+            window.setTimeout(
+                async () => {
+
+                    const requestId =
+                        ++destinationGeocodeRequest;
+
+                    const address =
+                        destinationInput.value.trim();
+
+                    if (!address) {
+
+                        updateRoute();
+
+                        return;
+
+                    }
+
+                    const coordinates =
+                        await resolveFagaAddress(
+                            address,
+                            "destination"
+                        );
+
+                    /*
+                     * Ignore an old request if
+                     * the user has typed again.
+                     */
+                    if (
+                        requestId !==
+                        destinationGeocodeRequest
+                    ) {
+
+                        return;
+
+                    }
+
+                    /*
+                     * Only apply coordinates if
+                     * the input still contains
+                     * the same address.
+                     */
+                    if (
+                        destinationInput.value.trim() !==
+                        address
+                    ) {
+
+                        return;
+
+                    }
+
+                    if (coordinates) {
+
+                        window.fagaDestinationCoordinates =
+                            coordinates;
+
+                        console.log(
+                            "Destination coordinates set:",
+                            coordinates
+                        );
+
+                    } else {
+
+                        window.fagaDestinationCoordinates =
+                            null;
+
+                    }
+
+                    updateRoute();
+
+                },
+                700
+            );
+
+    }
+);
 
 
 
@@ -2190,7 +2501,51 @@ async function loadRealRouteEstimate() {
     if (!pickup || !destination) {
         return;
     }
+    /*
+ * Wait until typed addresses have been
+ * resolved into coordinates.
+ */
+const pickupCoordinates =
+    window.fagaPickupCoordinates;
 
+const destinationCoordinates =
+    window.fagaDestinationCoordinates;
+
+if (
+    !pickupCoordinates ||
+    !Number.isFinite(
+        Number(pickupCoordinates.latitude)
+    ) ||
+    !Number.isFinite(
+        Number(pickupCoordinates.longitude)
+    )
+) {
+
+    console.log(
+        "Waiting for pickup coordinates..."
+    );
+
+    return;
+
+}
+
+if (
+    !destinationCoordinates ||
+    !Number.isFinite(
+        Number(destinationCoordinates.latitude)
+    ) ||
+    !Number.isFinite(
+        Number(destinationCoordinates.longitude)
+    )
+) {
+
+    console.log(
+        "Waiting for destination coordinates..."
+    );
+
+    return;
+
+}
     distanceValue.textContent =
         "Calculating...";
 
@@ -2223,24 +2578,16 @@ async function loadRealRouteEstimate() {
                             passengers,
 
                         pickupLatitude:
-                            window
-                                .fagaPickupCoordinates
-                                ?.latitude ?? null,
+                        pickupCoordinates.latitude,
 
                         pickupLongitude:
-                            window
-                                .fagaPickupCoordinates
-                                ?.longitude ?? null,
+                        pickupCoordinates.longitude,
 
                         destinationLatitude:
-                            window
-                                .fagaDestinationCoordinates
-                                ?.latitude ?? null,
+                        destinationCoordinates.latitude,
 
                         destinationLongitude:
-                            window
-                                .fagaDestinationCoordinates
-                                ?.longitude ?? null
+                        destinationCoordinates.longitude
                     })
                 }
             );
@@ -2313,12 +2660,26 @@ async function loadRealRouteEstimate() {
                 serverFare.toLocaleString();
         }
 
-    } catch (error) {
+   } catch (error) {
 
-        console.error(
-            "FAGA route estimate error:",
-            error
-        );
+    console.error(
+        "FAGA route estimate error:",
+        error?.data?.message ||
+        error?.message ||
+        error
+    );
+
+    console.error(
+        "FAGA route estimate full error:",
+        error
+    );
+
+    distanceValue.textContent = "Unavailable";
+
+    durationValue.textContent = "Unavailable";
+
+    arrivalValue.textContent = "Unavailable";
+}
 
         distanceValue.textContent =
             "Unavailable";
@@ -2439,6 +2800,10 @@ function formatArrivalTime(
                     );
                         updateRoute();
                 },
+
+                
+
+
 
                 error => {
 
