@@ -2103,11 +2103,6 @@ let destinationGeocodeTimer = null;
 let pickupGeocodeRequest = 0;
 let destinationGeocodeRequest = 0;
 
-
-/* =====================================
-   FAGA ADDRESS GEOCODING
-===================================== */
-
 async function resolveFagaAddress(address, type) {
 
     const cleanAddress =
@@ -2117,6 +2112,15 @@ async function resolveFagaAddress(address, type) {
         return null;
     }
 
+    /*
+     * FAGA currently operates in Lagos.
+     *
+     * Nominatim can return another Nigerian location
+     * when the user enters only a neighbourhood name
+     * such as "Yaba", "Ikeja", "Ajah", etc.
+     *
+     * Therefore, make short/local addresses Lagos-specific.
+     */
     const geocodingAddress =
         /lagos/i.test(cleanAddress) ||
         /nigeria/i.test(cleanAddress)
@@ -2127,7 +2131,10 @@ async function resolveFagaAddress(address, type) {
         typeof FagaAPI === "undefined" ||
         typeof FagaAPI.request !== "function"
     ) {
-        console.error("FAGA API is unavailable.");
+        console.error(
+            "FAGA API is unavailable."
+        );
+
         return null;
     }
 
@@ -2166,10 +2173,13 @@ async function resolveFagaAddress(address, type) {
         }
 
         const coordinates = {
+
             latitude:
                 Number(location.latitude),
+
             longitude:
                 Number(location.longitude)
+
         };
 
         console.log(
@@ -2208,15 +2218,20 @@ pickupInput.addEventListener(
         if (
             address !== "Current location"
         ) {
-            window.fagaPickupCoordinates = null;
+            window.fagaPickupCoordinates =
+                null;
         }
 
-        window.fagaRouteData = null;
+        window.fagaRouteData =
+            null;
 
         window.clearTimeout(
             pickupGeocodeTimer
         );
 
+        /*
+         * Do not geocode very short input.
+         */
         if (
             address.length < 3 ||
             address === "Current location"
@@ -2248,6 +2263,9 @@ pickupInput.addEventListener(
                             "pickup"
                         );
 
+                    /*
+                     * Ignore old request.
+                     */
                     if (
                         requestId !==
                         pickupGeocodeRequest
@@ -2255,6 +2273,10 @@ pickupInput.addEventListener(
                         return;
                     }
 
+                    /*
+                     * User changed the address
+                     * while request was running.
+                     */
                     if (
                         pickupInput.value.trim() !==
                         currentAddress
@@ -2263,6 +2285,7 @@ pickupInput.addEventListener(
                     }
 
                     if (coordinates) {
+
                         window.fagaPickupCoordinates =
                             coordinates;
 
@@ -2270,8 +2293,11 @@ pickupInput.addEventListener(
                             "Pickup coordinates set:",
                             coordinates
                         );
+
                     } else {
-                        window.fagaPickupCoordinates = null;
+
+                        window.fagaPickupCoordinates =
+                            null;
                     }
 
                     updateRoute();
@@ -2295,14 +2321,22 @@ destinationInput.addEventListener(
         const address =
             destinationInput.value.trim();
 
-        window.fagaDestinationCoordinates = null;
-        window.fagaRouteData = null;
+        window.fagaDestinationCoordinates =
+            null;
+
+        window.fagaRouteData =
+            null;
 
         window.clearTimeout(
             destinationGeocodeTimer
         );
 
-        if (address.length < 3) {
+        /*
+         * Do not geocode very short input.
+         */
+        if (
+            address.length < 3
+        ) {
             updateRoute();
             return;
         }
@@ -2317,7 +2351,9 @@ destinationInput.addEventListener(
                     const currentAddress =
                         destinationInput.value.trim();
 
-                    if (currentAddress.length < 3) {
+                    if (
+                        currentAddress.length < 3
+                    ) {
                         return;
                     }
 
@@ -2327,6 +2363,9 @@ destinationInput.addEventListener(
                             "destination"
                         );
 
+                    /*
+                     * Ignore old request.
+                     */
                     if (
                         requestId !==
                         destinationGeocodeRequest
@@ -2334,6 +2373,10 @@ destinationInput.addEventListener(
                         return;
                     }
 
+                    /*
+                     * User changed the address
+                     * while request was running.
+                     */
                     if (
                         destinationInput.value.trim() !==
                         currentAddress
@@ -2342,6 +2385,7 @@ destinationInput.addEventListener(
                     }
 
                     if (coordinates) {
+
                         window.fagaDestinationCoordinates =
                             coordinates;
 
@@ -2349,8 +2393,11 @@ destinationInput.addEventListener(
                             "Destination coordinates set:",
                             coordinates
                         );
+
                     } else {
-                        window.fagaDestinationCoordinates = null;
+
+                        window.fagaDestinationCoordinates =
+                            null;
                     }
 
                     updateRoute();
@@ -2363,7 +2410,328 @@ destinationInput.addEventListener(
 );
 
 
-/* =====================================
+
+
+            let routeEstimateTimer = null;
+            let routeEstimateRequest = 0;
+
+            async function updateRoute() {
+
+                const distanceValue =
+                    document.getElementById("distanceValue");
+
+                const durationValue =
+                    document.getElementById("durationValue");
+
+                const arrivalValue =
+                    document.getElementById("arrivalValue");
+
+                const pickup =
+                    pickupInput.value.trim();
+
+                const destination =
+                    destinationInput.value.trim();
+
+                if (!pickup || !destination) {
+
+                    distanceValue.textContent = "—";
+                    durationValue.textContent = "—";
+                    arrivalValue.textContent = "—";
+
+                    return;
+                }
+
+                if (
+                    typeof FagaAPI === "undefined" ||
+                    !FagaAPI.isLoggedIn()
+                ) {
+
+                    distanceValue.textContent =
+                        "Sign in";
+
+                    durationValue.textContent =
+                        "Sign in";
+
+                    arrivalValue.textContent =
+                        "Sign in";
+
+                    return;
+                }
+
+                window.clearTimeout(
+                    routeEstimateTimer
+                );
+
+                routeEstimateTimer =
+                    window.setTimeout(
+                        loadRealRouteEstimate,
+                        500
+                    );
+            }
+
+
+            async function loadRealRouteEstimate() {
+
+                const requestId =
+                    ++routeEstimateRequest;
+
+                const distanceValue =
+                    document.getElementById("distanceValue");
+
+                const durationValue =
+                    document.getElementById("durationValue");
+
+                const arrivalValue =
+                    document.getElementById("arrivalValue");
+
+                const pickup =
+                    pickupInput.value.trim();
+
+                const destination =
+                    destinationInput.value.trim();
+
+                if (!pickup || !destination) {
+                    return;
+                }
+                /*
+            * Wait until typed addresses have been
+            * resolved into coordinates.
+            */
+            const pickupCoordinates =
+                window.fagaPickupCoordinates;
+
+            const destinationCoordinates =
+                window.fagaDestinationCoordinates;
+
+            if (
+                !pickupCoordinates ||
+                !Number.isFinite(
+                    Number(pickupCoordinates.latitude)
+                ) ||
+                !Number.isFinite(
+                    Number(pickupCoordinates.longitude)
+                )
+            ) {
+
+                console.log(
+                    "Waiting for pickup coordinates..."
+                );
+
+                return;
+
+            }
+
+            if (
+                !destinationCoordinates ||
+                !Number.isFinite(
+                    Number(destinationCoordinates.latitude)
+                ) ||
+                !Number.isFinite(
+                    Number(destinationCoordinates.longitude)
+                )
+            ) {
+
+                console.log(
+                    "Waiting for destination coordinates..."
+                );
+
+                return;
+
+            }
+                distanceValue.textContent =
+                    "Calculating...";
+
+                durationValue.textContent =
+                    "Calculating...";
+
+                arrivalValue.textContent =
+                    "Calculating...";
+
+                try {
+
+                    const response =
+                        await FagaAPI.request(
+                            "/api/rides/estimate",
+                            {
+                                method: "POST",
+
+                                body: JSON.stringify({
+
+                                    pickupAddress:
+                                        pickup,
+
+                                    destinationAddress:
+                                        destination,
+
+                                    rideType:
+                                        selectedRide,
+
+                                    passengers:
+                                        passengers,
+
+                                    pickupLatitude:
+                                    pickupCoordinates.latitude,
+
+                                    pickupLongitude:
+                                    pickupCoordinates.longitude,
+
+                                    destinationLatitude:
+                                    destinationCoordinates.latitude,
+
+                                    destinationLongitude:
+                                    destinationCoordinates.longitude
+                                })
+                            }
+                        );
+
+                    if (
+                        requestId !==
+                        routeEstimateRequest
+                    ) {
+                        return;
+                    }
+
+                    const estimate =
+                        response?.estimate;
+
+                    if (!estimate) {
+                        throw new Error(
+                            "Invalid route estimate."
+                        );
+                    }
+
+                    const distanceKm =
+                        Number(
+                            estimate.distanceKm
+                        );
+
+                    const durationMinutes =
+                        Number(
+                            estimate.durationMinutes
+                        );
+
+                    if (
+                        !Number.isFinite(
+                            distanceKm
+                        ) ||
+                        !Number.isFinite(
+                            durationMinutes
+                        )
+                    ) {
+                        throw new Error(
+                            "Invalid distance or duration."
+                        );
+                    }
+
+                    distanceValue.textContent =
+                        `${distanceKm.toFixed(1)} km`;
+
+                    durationValue.textContent =
+                        formatDuration(
+                            durationMinutes
+                        );
+
+                    arrivalValue.textContent =
+                        formatArrivalTime(
+                            estimate.estimatedArrivalAt
+                        );
+
+                    const serverFare =
+                        Number(
+                            estimate.fare
+                        );
+
+                    if (
+                        Number.isFinite(
+                            serverFare
+                        )
+                    ) {
+
+                        estimatePrice.textContent =
+                            "₦" +
+                            serverFare.toLocaleString();
+                    }
+
+                                    } catch (error) {
+
+                            console.error(
+                                "FAGA route estimate error:",
+                                error?.data?.message ||
+                                error?.message ||
+                                error
+                            );
+
+                            console.error(
+                                "FAGA route estimate full error:",
+                                error
+                            );
+
+                            distanceValue.textContent =
+                                "Unavailable";
+
+                            durationValue.textContent =
+                                "Unavailable";
+
+                            arrivalValue.textContent =
+                                "Unavailable";
+                        }
+                    }
+
+
+
+            function formatDuration(
+                minutes
+            ) {
+
+                const totalMinutes =
+                    Math.max(
+                        1,
+                        Math.round(minutes)
+                    );
+
+                const hours =
+                    Math.floor(
+                        totalMinutes / 60
+                    );
+
+                const remainingMinutes =
+                    totalMinutes % 60;
+
+                if (hours > 0) {
+
+                    return `${hours} hr ${remainingMinutes} min`;
+
+                }
+
+                return `${remainingMinutes} min`;
+            }
+
+
+            function formatArrivalTime(
+                value
+            ) {
+
+                const date =
+                    new Date(value);
+
+                if (
+                    Number.isNaN(
+                        date.getTime()
+                    )
+                ) {
+                    return "—";
+                }
+
+                return date.toLocaleTimeString(
+                    [],
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                );
+            }
+
+                    /* =====================================
                     CURRENT LOCATION
                     ===================================== */
 
