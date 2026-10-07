@@ -1,3116 +1,3110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Ride | FAGA</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --navy: #071a33;
-            --navy-2: #0d2748;
-            --orange: #f7931e;
-            --orange-dark: #df7f0d;
-            --light: #f5f7fa;
-            --white: #ffffff;
-            --text: #172033;
-            --muted: #6b7280;
-            --border: #e5e7eb;
-            --green: #16a34a;
-            --red: #dc2626;
-            --shadow: 0 10px 30px rgba(7, 26, 51, 0.10);
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: var(--light);
-            color: var(--text);
-            line-height: 1.5;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* =========================
-           NAVBAR
-        ========================= */
-
-        .navbar {
-            height: 72px;
-            background: var(--navy);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 25px;
-            font-weight: 800;
-        }
-
-        .logo-mark {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: var(--orange);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--navy);
-            font-weight: 900;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-        }
-
-        .nav-links a {
-            font-size: 14px;
-            color: #dbe4ef;
-            transition: 0.2s;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--orange);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-outline {
-            border: 1px solid rgba(255,255,255,0.4);
-            color: white;
-            background: transparent;
-            padding: 10px 18px;
-            border-radius: 8px;
-        }
-
-        .btn-orange {
-            border: none;
-            color: var(--navy);
-            background: var(--orange);
-            padding: 11px 20px;
-            border-radius: 8px;
-            font-weight: 700;
-        }
-
-        .btn-orange:hover {
-            background: var(--orange-dark);
-            color: white;
-        }
-
-        .mobile-menu {
-            display: none;
-            border: none;
-            background: transparent;
-            color: white;
-            font-size: 27px;
-        }
-
-        /* =========================
-           PAGE HEADER
-        ========================= */
-
-        .page-header {
-            background: linear-gradient(135deg, var(--navy), var(--navy-2));
-            padding: 55px 6% 80px;
-            color: white;
-        }
-
-        .page-header-inner {
-            max-width: 1250px;
-            margin: auto;
-        }
-
-        .breadcrumb {
-            font-size: 13px;
-            color: #b8c7d9;
-            margin-bottom: 18px;
-        }
-
-        .breadcrumb a {
-            color: var(--orange);
-        }
-
-        .page-header h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
-
-        .page-header p {
-            max-width: 650px;
-            color: #cbd5e1;
-            font-size: 17px;
-        }
-
-        /* =========================
-           BOOKING AREA
-        ========================= */
-
-        .booking-wrapper {
-            max-width: 1250px;
-            margin: -45px auto 70px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .booking-grid {
-            display: grid;
-            grid-template-columns: 470px 1fr;
-            gap: 22px;
-            align-items: stretch;
-        }
-
-        .booking-card {
-            background: white;
-            border-radius: 18px;
-            box-shadow: var(--shadow);
-            padding: 28px;
-        }
-
-        .booking-card h2 {
-            font-size: 23px;
-            margin-bottom: 5px;
-        }
-
-        .booking-subtitle {
-            color: var(--muted);
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        /* =========================
-           LOCATION INPUTS
-        ========================= */
-
-        .location-box {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 4px 15px;
-            margin-bottom: 20px;
-            background: #fafafa;
-        }
-
-        .location-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-height: 62px;
-        }
-
-        .location-icon {
-            width: 17px;
-            height: 17px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .pickup-dot {
-            background: var(--green);
-        }
-
-        .destination-dot {
-            background: var(--red);
-            border-radius: 4px;
-        }
-
-        .location-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            background: transparent;
-            color: var(--text);
-            font-size: 15px;
-        }
-
-        .location-input::placeholder {
-            color: #9ca3af;
-        }
-
-        .location-divider {
-            height: 1px;
-            background: var(--border);
-            margin-left: 29px;
-        }
-
-        .location-button {
-            border: none;
-            background: transparent;
-            color: var(--orange-dark);
-            font-size: 13px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        /* =========================
-           RIDE TYPES
-        ========================= */
-
-        .section-label {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .ride-types {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 22px;
-        }
-
-        .ride-option {
-            border: 2px solid var(--border);
-            background: white;
-            border-radius: 12px;
-            padding: 14px 8px;
-            text-align: center;
-            transition: 0.2s;
-            position: relative;
-        }
-
-        .ride-option:hover {
-            border-color: #f7c27d;
-        }
-
-        .ride-option.selected {
-            border-color: var(--orange);
-            background: #fff8ef;
-        }
-
-        .ride-icon {
-            font-size: 31px;
-            margin-bottom: 5px;
-        }
-
-        .ride-name {
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .ride-description {
-            font-size: 11px;
-            color: var(--muted);
-            margin: 3px 0;
-        }
-
-        .ride-price {
-            font-weight: 700;
-            font-size: 12px;
-        }
-
-        .recommended {
-            position: absolute;
-            top: -9px;
-            right: 6px;
-            background: var(--orange);
-            color: var(--navy);
-            padding: 3px 7px;
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: 800;
-        }
-
-        /* =========================
-           PASSENGER / OPTIONS
-        ========================= */
-
-        .options-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 22px;
-        }
-
-        .option-box {
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 11px 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-        }
-
-        .option-label {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .option-value {
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .passenger-control {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-        }
-
-        .passenger-btn {
-            width: 26px;
-            height: 26px;
-            border: 1px solid var(--border);
-            background: #f8fafc;
-            border-radius: 50%;
-            font-weight: 700;
-        }
-
-        /* =========================
-           ESTIMATE
-        ========================= */
-
-        .estimate-card {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-
-        .estimate-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-
-        .estimate-title span:first-child {
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .estimate-price {
-            font-size: 25px;
-            font-weight: 800;
-            color: var(--navy);
-        }
-
-        .estimate-details {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .estimate-item {
-            border-right: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .estimate-item:last-child {
-            border-right: none;
-        }
-
-        .estimate-item strong {
-            display: block;
-            font-size: 13px;
-        }
-
-        .estimate-item span {
-            display: block;
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 3px;
-        }
-
-        /* =========================
-           BOOK BUTTON
-        ========================= */
-
-        .book-btn {
-            width: 100%;
-            background: var(--orange);
-            border: none;
-            color: var(--navy);
-            font-weight: 800;
-            font-size: 16px;
-            padding: 16px;
-            border-radius: 11px;
-            transition: 0.2s;
-        }
-
-        .book-btn:hover {
-            background: var(--orange-dark);
-            color: white;
-        }
-
-        .book-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .secure-note {
-            text-align: center;
-            color: var(--muted);
-            font-size: 11px;
-            margin-top: 12px;
-        }
-
-        /* =========================
-           MAP
-        ========================= */
-
-        .map-card {
-            background: white;
-            border-radius: 18px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            min-height: 650px;
-            position: relative;
-        }
-
-        .map-area {
-            height: 100%;
-            min-height: 650px;
-            position: relative;
-            overflow: hidden;
-            background:
-                linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px),
-                linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
-                #e6ebdf;
-            background-size: 70px 70px;
-        }
-
-        .road {
-            position: absolute;
-            background: #ffffff;
-            box-shadow: 0 0 0 1px #d4d8ce;
-            transform: rotate(-18deg);
-        }
-
-        .road.one {
-            width: 120%;
-            height: 70px;
-            top: 28%;
-            left: -10%;
-        }
-
-        .road.two {
-            width: 110%;
-            height: 48px;
-            top: 62%;
-            left: -5%;
-            transform: rotate(17deg);
-        }
-
-        .road.three {
-            width: 80%;
-            height: 38px;
-            top: 8%;
-            left: 28%;
-            transform: rotate(75deg);
-        }
-
-        .map-label {
-            position: absolute;
-            color: #64748b;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .label-one {
-            top: 18%;
-            left: 15%;
-        }
-
-        .label-two {
-            top: 47%;
-            right: 17%;
-        }
-
-        .label-three {
-            bottom: 18%;
-            left: 17%;
-        }
-
-        .map-route {
-            position: absolute;
-            width: 3px;
-            height: 46%;
-            background: var(--orange);
-            left: 49%;
-            top: 27%;
-            transform: rotate(31deg);
-            transform-origin: top center;
-            border-radius: 10px;
-            box-shadow: 0 0 0 2px rgba(247,147,30,0.15);
-        }
-
-        .map-marker {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            position: absolute;
-            z-index: 5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .pickup-marker {
-            background: var(--green);
-            top: 25%;
-            left: 35%;
-            border: 5px solid white;
-        }
-
-        .destination-marker {
-            background: var(--red);
-            bottom: 22%;
-            right: 27%;
-            border: 5px solid white;
-            border-radius: 6px;
-        }
-
-        .map-info {
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            background: white;
-            border-radius: 12px;
-            padding: 13px 16px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
-            z-index: 10;
-        }
-
-        .map-info strong {
-            display: block;
-            font-size: 13px;
-        }
-
-        .map-info span {
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        .map-controls {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .map-control {
-            width: 42px;
-            height: 42px;
-            border: none;
-            background: white;
-            border-radius: 9px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            font-size: 18px;
-        }
-
-        .map-note {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(7,26,51,0.92);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 9px;
-            font-size: 11px;
-            max-width: 250px;
-        }
-
-        /* =========================
-           RECENT LOCATIONS
-        ========================= */
-
-        .recent-section {
-            max-width: 1250px;
-            margin: 0 auto 70px;
-            padding: 0 20px;
-        }
-
-        .recent-section h2 {
-            margin-bottom: 18px;
-            font-size: 22px;
-        }
-
-        .recent-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .recent-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 17px;
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            transition: 0.2s;
-        }
-
-        .recent-card:hover {
-            border-color: var(--orange);
-            transform: translateY(-2px);
-        }
-
-        .recent-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #fff4e6;
-            color: var(--orange-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .recent-card strong {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-
-        .recent-card span {
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        /* =========================
-           INFO CARDS
-        ========================= */
-
-        .info-section {
-            max-width: 1250px;
-            margin: 0 auto 70px;
-            padding: 0 20px;
-        }
-
-        .info-section h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .info-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            border: 1px solid var(--border);
-        }
-
-        .info-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: #fff4e6;
-            color: var(--orange-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 23px;
-            margin-bottom: 15px;
-        }
-
-        .info-card h3 {
-            font-size: 17px;
-            margin-bottom: 7px;
-        }
-
-        .info-card p {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        footer {
-            background: var(--navy);
-            color: white;
-            padding: 55px 6% 25px;
-        }
-
-        .footer-grid {
-            max-width: 1250px;
-            margin: auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 35px;
-        }
-
-        .footer-brand p {
-            color: #aebdce;
-            font-size: 13px;
-            max-width: 350px;
-            margin-top: 14px;
-        }
-
-        footer h4 {
-            margin-bottom: 14px;
-            font-size: 14px;
-        }
-
-        footer ul {
-            list-style: none;
-        }
-
-        footer li {
-            margin-bottom: 9px;
-        }
-
-        footer li a {
-            color: #aebdce;
-            font-size: 13px;
-        }
-
-        footer li a:hover {
-            color: var(--orange);
-        }
-
-        .footer-bottom {
-            max-width: 1250px;
-            margin: 40px auto 0;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: #91a2b7;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        /* =========================
-           MODAL
-        ========================= */
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-box {
-            width: 100%;
-            max-width: 450px;
-            background: white;
-            border-radius: 18px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-        }
-
-        .modal-icon {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            background: #fff4e6;
-            color: var(--orange-dark);
-            margin: 0 auto 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-
-        .modal-box h2 {
-            margin-bottom: 8px;
-        }
-
-        .modal-box p {
-            color: var(--muted);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 9px;
-        }
-
-        .cancel-modal {
-            background: white;
-            border: 1px solid var(--border);
-        }
-
-        .continue-modal {
-            background: var(--orange);
-            border: none;
-            font-weight: 700;
-        }
-
-        /* =========================
-           TOAST
-        ========================= */
-
-        .toast {
-            position: fixed;
-            right: 25px;
-            bottom: 25px;
-            background: var(--navy);
-            color: white;
-            padding: 14px 18px;
-            border-radius: 9px;
-            box-shadow: var(--shadow);
-            transform: translateY(120px);
-            opacity: 0;
-            transition: 0.3s;
-            z-index: 3000;
-            font-size: 13px;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 1000px) {
-            .booking-grid {
-                grid-template-columns: 1fr;
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Book a Ride | FAGA</title>
+
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+
+                    :root {
+                        --navy: #071a33;
+                        --navy-2: #0d2748;
+                        --orange: #f7931e;
+                        --orange-dark: #df7f0d;
+                        --light: #f5f7fa;
+                        --white: #ffffff;
+                        --text: #172033;
+                        --muted: #6b7280;
+                        --border: #e5e7eb;
+                        --green: #16a34a;
+                        --red: #dc2626;
+                        --shadow: 0 10px 30px rgba(7, 26, 51, 0.10);
+                    }
+
+                    body {
+                        font-family: Arial, Helvetica, sans-serif;
+                        background: var(--light);
+                        color: var(--text);
+                        line-height: 1.5;
+                    }
+
+                    a {
+                        text-decoration: none;
+                        color: inherit;
+                    }
+
+                    button,
+                    input,
+                    select,
+                    textarea {
+                        font: inherit;
+                    }
+
+                    button {
+                        cursor: pointer;
+                    }
+
+                    /* =========================
+                    NAVBAR
+                    ========================= */
+
+                    .navbar {
+                        height: 72px;
+                        background: var(--navy);
+                        color: var(--white);
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 0 6%;
+                        position: sticky;
+                        top: 0;
+                        z-index: 1000;
+                        box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+                    }
+
+                    .logo {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        font-size: 25px;
+                        font-weight: 800;
+                    }
+
+                    .logo-mark {
+                        width: 38px;
+                        height: 38px;
+                        border-radius: 10px;
+                        background: var(--orange);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--navy);
+                        font-weight: 900;
+                    }
+
+                    .nav-links {
+                        display: flex;
+                        align-items: center;
+                        gap: 28px;
+                    }
+
+                    .nav-links a {
+                        font-size: 14px;
+                        color: #dbe4ef;
+                        transition: 0.2s;
+                    }
+
+                    .nav-links a:hover,
+                    .nav-links a.active {
+                        color: var(--orange);
+                    }
+
+                    .nav-actions {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+
+                    .btn-outline {
+                        border: 1px solid rgba(255,255,255,0.4);
+                        color: white;
+                        background: transparent;
+                        padding: 10px 18px;
+                        border-radius: 8px;
+                    }
+
+                    .btn-orange {
+                        border: none;
+                        color: var(--navy);
+                        background: var(--orange);
+                        padding: 11px 20px;
+                        border-radius: 8px;
+                        font-weight: 700;
+                    }
+
+                    .btn-orange:hover {
+                        background: var(--orange-dark);
+                        color: white;
+                    }
+
+                    .mobile-menu {
+                        display: none;
+                        border: none;
+                        background: transparent;
+                        color: white;
+                        font-size: 27px;
+                    }
+
+                    /* =========================
+                    PAGE HEADER
+                    ========================= */
+
+                    .page-header {
+                        background: linear-gradient(135deg, var(--navy), var(--navy-2));
+                        padding: 55px 6% 80px;
+                        color: white;
+                    }
+
+                    .page-header-inner {
+                        max-width: 1250px;
+                        margin: auto;
+                    }
+
+                    .breadcrumb {
+                        font-size: 13px;
+                        color: #b8c7d9;
+                        margin-bottom: 18px;
+                    }
+
+                    .breadcrumb a {
+                        color: var(--orange);
+                    }
+
+                    .page-header h1 {
+                        font-size: 42px;
+                        margin-bottom: 10px;
+                    }
+
+                    .page-header p {
+                        max-width: 650px;
+                        color: #cbd5e1;
+                        font-size: 17px;
+                    }
+
+                    /* =========================
+                    BOOKING AREA
+                    ========================= */
+
+                    .booking-wrapper {
+                        max-width: 1250px;
+                        margin: -45px auto 70px;
+                        padding: 0 20px;
+                        position: relative;
+                        z-index: 10;
+                    }
+
+                    .booking-grid {
+                        display: grid;
+                        grid-template-columns: 470px 1fr;
+                        gap: 22px;
+                        align-items: stretch;
+                    }
+
+                    .booking-card {
+                        background: white;
+                        border-radius: 18px;
+                        box-shadow: var(--shadow);
+                        padding: 28px;
+                    }
+
+                    .booking-card h2 {
+                        font-size: 23px;
+                        margin-bottom: 5px;
+                    }
+
+                    .booking-subtitle {
+                        color: var(--muted);
+                        font-size: 14px;
+                        margin-bottom: 25px;
+                    }
+
+                    /* =========================
+                    LOCATION INPUTS
+                    ========================= */
+
+                    .location-box {
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                        padding: 4px 15px;
+                        margin-bottom: 20px;
+                        background: #fafafa;
+                    }
+
+                    .location-row {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        min-height: 62px;
+                    }
+
+                    .location-icon {
+                        width: 17px;
+                        height: 17px;
+                        border-radius: 50%;
+                        flex-shrink: 0;
+                    }
+
+                    .pickup-dot {
+                        background: var(--green);
+                    }
+
+                    .destination-dot {
+                        background: var(--red);
+                        border-radius: 4px;
+                    }
+
+                    .location-input {
+                        flex: 1;
+                        border: none;
+                        outline: none;
+                        background: transparent;
+                        color: var(--text);
+                        font-size: 15px;
+                    }
+
+                    .location-input::placeholder {
+                        color: #9ca3af;
+                    }
+
+                    .location-divider {
+                        height: 1px;
+                        background: var(--border);
+                        margin-left: 29px;
+                    }
+
+                    .location-button {
+                        border: none;
+                        background: transparent;
+                        color: var(--orange-dark);
+                        font-size: 13px;
+                        font-weight: 700;
+                        white-space: nowrap;
+                    }
+
+                    /* =========================
+                    RIDE TYPES
+                    ========================= */
+
+                    .section-label {
+                        font-size: 14px;
+                        font-weight: 700;
+                        margin-bottom: 12px;
+                    }
+
+                    .ride-types {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 10px;
+                        margin-bottom: 22px;
+                    }
+
+                    .ride-option {
+                        border: 2px solid var(--border);
+                        background: white;
+                        border-radius: 12px;
+                        padding: 14px 8px;
+                        text-align: center;
+                        transition: 0.2s;
+                        position: relative;
+                    }
+
+                    .ride-option:hover {
+                        border-color: #f7c27d;
+                    }
+
+                    .ride-option.selected {
+                        border-color: var(--orange);
+                        background: #fff8ef;
+                    }
+
+                    .ride-icon {
+                        font-size: 31px;
+                        margin-bottom: 5px;
+                    }
+
+                    .ride-name {
+                        font-weight: 700;
+                        font-size: 13px;
+                    }
+
+                    .ride-description {
+                        font-size: 11px;
+                        color: var(--muted);
+                        margin: 3px 0;
+                    }
+
+                    .ride-price {
+                        font-weight: 700;
+                        font-size: 12px;
+                    }
+
+                    .recommended {
+                        position: absolute;
+                        top: -9px;
+                        right: 6px;
+                        background: var(--orange);
+                        color: var(--navy);
+                        padding: 3px 7px;
+                        border-radius: 10px;
+                        font-size: 9px;
+                        font-weight: 800;
+                    }
+
+                    /* =========================
+                    PASSENGER / OPTIONS
+                    ========================= */
+
+                    .options-row {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 12px;
+                        margin-bottom: 22px;
+                    }
+
+                    .option-box {
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        padding: 11px 13px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        background: white;
+                    }
+
+                    .option-label {
+                        font-size: 12px;
+                        color: var(--muted);
+                    }
+
+                    .option-value {
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+
+                    .passenger-control {
+                        display: flex;
+                        align-items: center;
+                        gap: 9px;
+                    }
+
+                    .passenger-btn {
+                        width: 26px;
+                        height: 26px;
+                        border: 1px solid var(--border);
+                        background: #f8fafc;
+                        border-radius: 50%;
+                        font-weight: 700;
+                    }
+
+                    /* =========================
+                    ESTIMATE
+                    ========================= */
+
+                    .estimate-card {
+                        background: #f8fafc;
+                        border-radius: 12px;
+                        padding: 18px;
+                        margin-bottom: 20px;
+                    }
+
+                    .estimate-title {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 14px;
+                    }
+
+                    .estimate-title span:first-child {
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+
+                    .estimate-price {
+                        font-size: 25px;
+                        font-weight: 800;
+                        color: var(--navy);
+                    }
+
+                    .estimate-details {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 10px;
+                    }
+
+                    .estimate-item {
+                        border-right: 1px solid var(--border);
+                        text-align: center;
+                    }
+
+                    .estimate-item:last-child {
+                        border-right: none;
+                    }
+
+                    .estimate-item strong {
+                        display: block;
+                        font-size: 13px;
+                    }
+
+                    .estimate-item span {
+                        display: block;
+                        font-size: 11px;
+                        color: var(--muted);
+                        margin-top: 3px;
+                    }
+
+                    /* =========================
+                    BOOK BUTTON
+                    ========================= */
+
+                    .book-btn {
+                        width: 100%;
+                        background: var(--orange);
+                        border: none;
+                        color: var(--navy);
+                        font-weight: 800;
+                        font-size: 16px;
+                        padding: 16px;
+                        border-radius: 11px;
+                        transition: 0.2s;
+                    }
+
+                    .book-btn:hover {
+                        background: var(--orange-dark);
+                        color: white;
+                    }
+
+                    .book-btn:disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+
+                    .secure-note {
+                        text-align: center;
+                        color: var(--muted);
+                        font-size: 11px;
+                        margin-top: 12px;
+                    }
+
+                    /* =========================
+                    MAP
+                    ========================= */
+
+                    .map-card {
+                        background: white;
+                        border-radius: 18px;
+                        box-shadow: var(--shadow);
+                        overflow: hidden;
+                        min-height: 650px;
+                        position: relative;
+                    }
+
+                    .map-area {
+                        height: 100%;
+                        min-height: 650px;
+                        position: relative;
+                        overflow: hidden;
+                        background:
+                            linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px),
+                            linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
+                            #e6ebdf;
+                        background-size: 70px 70px;
+                    }
+
+                    .road {
+                        position: absolute;
+                        background: #ffffff;
+                        box-shadow: 0 0 0 1px #d4d8ce;
+                        transform: rotate(-18deg);
+                    }
+
+                    .road.one {
+                        width: 120%;
+                        height: 70px;
+                        top: 28%;
+                        left: -10%;
+                    }
+
+                    .road.two {
+                        width: 110%;
+                        height: 48px;
+                        top: 62%;
+                        left: -5%;
+                        transform: rotate(17deg);
+                    }
+
+                    .road.three {
+                        width: 80%;
+                        height: 38px;
+                        top: 8%;
+                        left: 28%;
+                        transform: rotate(75deg);
+                    }
+
+                    .map-label {
+                        position: absolute;
+                        color: #64748b;
+                        font-size: 12px;
+                        font-weight: 600;
+                    }
+
+                    .label-one {
+                        top: 18%;
+                        left: 15%;
+                    }
+
+                    .label-two {
+                        top: 47%;
+                        right: 17%;
+                    }
+
+                    .label-three {
+                        bottom: 18%;
+                        left: 17%;
+                    }
+
+                    .map-route {
+                        position: absolute;
+                        width: 3px;
+                        height: 46%;
+                        background: var(--orange);
+                        left: 49%;
+                        top: 27%;
+                        transform: rotate(31deg);
+                        transform-origin: top center;
+                        border-radius: 10px;
+                        box-shadow: 0 0 0 2px rgba(247,147,30,0.15);
+                    }
+
+                    .map-marker {
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        position: absolute;
+                        z-index: 5;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    }
+
+                    .pickup-marker {
+                        background: var(--green);
+                        top: 25%;
+                        left: 35%;
+                        border: 5px solid white;
+                    }
+
+                    .destination-marker {
+                        background: var(--red);
+                        bottom: 22%;
+                        right: 27%;
+                        border: 5px solid white;
+                        border-radius: 6px;
+                    }
+
+                    .map-info {
+                        position: absolute;
+                        left: 20px;
+                        top: 20px;
+                        background: white;
+                        border-radius: 12px;
+                        padding: 13px 16px;
+                        box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+                        z-index: 10;
+                    }
+
+                    .map-info strong {
+                        display: block;
+                        font-size: 13px;
+                    }
+
+                    .map-info span {
+                        color: var(--muted);
+                        font-size: 11px;
+                    }
+
+                    .map-controls {
+                        position: absolute;
+                        right: 20px;
+                        bottom: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 7px;
+                    }
+
+                    .map-control {
+                        width: 42px;
+                        height: 42px;
+                        border: none;
+                        background: white;
+                        border-radius: 9px;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                        font-size: 18px;
+                    }
+
+                    .map-note {
+                        position: absolute;
+                        bottom: 20px;
+                        left: 20px;
+                        background: rgba(7,26,51,0.92);
+                        color: white;
+                        padding: 12px 15px;
+                        border-radius: 9px;
+                        font-size: 11px;
+                        max-width: 250px;
+                    }
+
+                    /* =========================
+                    RECENT LOCATIONS
+                    ========================= */
+
+                    .recent-section {
+                        max-width: 1250px;
+                        margin: 0 auto 70px;
+                        padding: 0 20px;
+                    }
+
+                    .recent-section h2 {
+                        margin-bottom: 18px;
+                        font-size: 22px;
+                    }
+
+                    .recent-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 15px;
+                    }
+
+                    .recent-card {
+                        background: white;
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                        padding: 17px;
+                        display: flex;
+                        align-items: center;
+                        gap: 13px;
+                        transition: 0.2s;
+                    }
+
+                    .recent-card:hover {
+                        border-color: var(--orange);
+                        transform: translateY(-2px);
+                    }
+
+                    .recent-icon {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 10px;
+                        background: #fff4e6;
+                        color: var(--orange-dark);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .recent-card strong {
+                        display: block;
+                        font-size: 13px;
+                        margin-bottom: 3px;
+                    }
+
+                    .recent-card span {
+                        color: var(--muted);
+                        font-size: 11px;
+                    }
+
+                    /* =========================
+                    INFO CARDS
+                    ========================= */
+
+                    .info-section {
+                        max-width: 1250px;
+                        margin: 0 auto 70px;
+                        padding: 0 20px;
+                    }
+
+                    .info-section h2 {
+                        font-size: 24px;
+                        margin-bottom: 20px;
+                    }
+
+                    .info-grid {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 20px;
+                    }
+
+                    .info-card {
+                        background: white;
+                        border-radius: 15px;
+                        padding: 25px;
+                        border: 1px solid var(--border);
+                    }
+
+                    .info-icon {
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 12px;
+                        background: #fff4e6;
+                        color: var(--orange-dark);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 23px;
+                        margin-bottom: 15px;
+                    }
+
+                    .info-card h3 {
+                        font-size: 17px;
+                        margin-bottom: 7px;
+                    }
+
+                    .info-card p {
+                        color: var(--muted);
+                        font-size: 13px;
+                    }
+
+                    /* =========================
+                    FOOTER
+                    ========================= */
+
+                    footer {
+                        background: var(--navy);
+                        color: white;
+                        padding: 55px 6% 25px;
+                    }
+
+                    .footer-grid {
+                        max-width: 1250px;
+                        margin: auto;
+                        display: grid;
+                        grid-template-columns: 2fr 1fr 1fr 1fr;
+                        gap: 35px;
+                    }
+
+                    .footer-brand p {
+                        color: #aebdce;
+                        font-size: 13px;
+                        max-width: 350px;
+                        margin-top: 14px;
+                    }
+
+                    footer h4 {
+                        margin-bottom: 14px;
+                        font-size: 14px;
+                    }
+
+                    footer ul {
+                        list-style: none;
+                    }
+
+                    footer li {
+                        margin-bottom: 9px;
+                    }
+
+                    footer li a {
+                        color: #aebdce;
+                        font-size: 13px;
+                    }
+
+                    footer li a:hover {
+                        color: var(--orange);
+                    }
+
+                    .footer-bottom {
+                        max-width: 1250px;
+                        margin: 40px auto 0;
+                        padding-top: 20px;
+                        border-top: 1px solid rgba(255,255,255,0.1);
+                        color: #91a2b7;
+                        font-size: 12px;
+                        display: flex;
+                        justify-content: space-between;
+                        gap: 20px;
+                    }
+
+                    /* =========================
+                    MODAL
+                    ========================= */
+
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        inset: 0;
+                        background: rgba(0,0,0,0.55);
+                        z-index: 2000;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                    }
+
+                    .modal.show {
+                        display: flex;
+                    }
+
+                    .modal-box {
+                        width: 100%;
+                        max-width: 450px;
+                        background: white;
+                        border-radius: 18px;
+                        padding: 30px;
+                        text-align: center;
+                        box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+                    }
+
+                    .modal-icon {
+                        width: 65px;
+                        height: 65px;
+                        border-radius: 50%;
+                        background: #fff4e6;
+                        color: var(--orange-dark);
+                        margin: 0 auto 18px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 30px;
+                    }
+
+                    .modal-box h2 {
+                        margin-bottom: 8px;
+                    }
+
+                    .modal-box p {
+                        color: var(--muted);
+                        font-size: 14px;
+                        margin-bottom: 20px;
+                    }
+
+                    .modal-actions {
+                        display: flex;
+                        gap: 10px;
+                    }
+
+                    .modal-actions button {
+                        flex: 1;
+                        padding: 12px;
+                        border-radius: 9px;
+                    }
+
+                    .cancel-modal {
+                        background: white;
+                        border: 1px solid var(--border);
+                    }
+
+                    .continue-modal {
+                        background: var(--orange);
+                        border: none;
+                        font-weight: 700;
+                    }
+
+                    /* =========================
+                    TOAST
+                    ========================= */
+
+                    .toast {
+                        position: fixed;
+                        right: 25px;
+                        bottom: 25px;
+                        background: var(--navy);
+                        color: white;
+                        padding: 14px 18px;
+                        border-radius: 9px;
+                        box-shadow: var(--shadow);
+                        transform: translateY(120px);
+                        opacity: 0;
+                        transition: 0.3s;
+                        z-index: 3000;
+                        font-size: 13px;
+                    }
+
+                    .toast.show {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+
+                    /* =========================
+                    MOBILE
+                    ========================= */
+
+                    @media (max-width: 1000px) {
+                        .booking-grid {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .map-card,
+                        .map-area {
+                            min-height: 500px;
+                        }
+
+                        .recent-grid,
+                        .info-grid {
+                            grid-template-columns: 1fr 1fr;
+                        }
+
+                        .nav-links {
+                            display: none;
+                        }
+
+                        .mobile-menu {
+                            display: block;
+                        }
+                    }
+
+                    @media (max-width: 650px) {
+                        .navbar {
+                            padding: 0 18px;
+                        }
+
+                        .nav-actions .btn-outline {
+                            display: none;
+                        }
+
+                        .page-header {
+                            padding: 40px 20px 70px;
+                        }
+
+                        .page-header h1 {
+                            font-size: 31px;
+                        }
+
+                        .page-header p {
+                            font-size: 14px;
+                        }
+
+                        .booking-wrapper {
+                            margin-top: -35px;
+                            padding: 0 12px;
+                        }
+
+                        .booking-card {
+                            padding: 20px 16px;
+                        }
+
+                        .ride-types {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .ride-option {
+                            display: grid;
+                            grid-template-columns: 45px 1fr auto;
+                            align-items: center;
+                            text-align: left;
+                            gap: 8px;
+                        }
+
+                        .ride-icon {
+                            margin: 0;
+                        }
+
+                        .ride-description {
+                            margin: 0;
+                        }
+
+                        .options-row {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .estimate-details {
+                            grid-template-columns: 1fr 1fr 1fr;
+                        }
+
+                        .map-card,
+                        .map-area {
+                            min-height: 420px;
+                        }
+
+                        .recent-grid,
+                        .info-grid {
+                            grid-template-columns: 1fr;
+                        }
+
+                        .footer-grid {
+                            grid-template-columns: 1fr 1fr;
+                        }
+
+                        .footer-brand {
+                            grid-column: 1 / -1;
+                        }
+
+                        .footer-bottom {
+                            flex-direction: column;
+                        }
+
+                        .map-info {
+                            left: 12px;
+                            top: 12px;
+                        }
+
+                        .map-controls {
+                            right: 12px;
+                            bottom: 12px;
+                        }
+
+                        .map-note {
+                            left: 12px;
+                            bottom: 12px;
+                            max-width: 200px;
+                        }
+                    }
+
+                    @media (max-width: 430px) {
+                        .logo {
+                            font-size: 21px;
+                        }
+
+                        .logo-mark {
+                            width: 34px;
+                            height: 34px;
+                        }
+
+                        .nav-actions .btn-orange {
+                            padding: 9px 12px;
+                            font-size: 12px;
+                        }
+
+                        .footer-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                
+            /* =========================================================
+            FAGA PRODUCTION MOBILE HARDENING
+            Keeps the existing visual design but prevents overflow
+            and improves touch usability on phones.
+            ========================================================= */
+            html, body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
             }
 
-            .map-card,
-            .map-area {
-                min-height: 500px;
+            img, svg, video, iframe {
+                max-width: 100%;
             }
 
-            .recent-grid,
-            .info-grid {
-                grid-template-columns: 1fr 1fr;
+            button, a, input, select {
+                -webkit-tap-highlight-color: transparent;
             }
 
-            .nav-links {
-                display: none;
+            @media (max-width: 1000px) {
+                .booking-wrapper {
+                    width: 100%;
+                }
+
+                .booking-grid {
+                    width: 100%;
+                }
+
+                .map-card {
+                    width: 100%;
+                }
             }
 
-            .mobile-menu {
-                display: block;
+            @media (max-width: 650px) {
+                .navbar {
+                    min-height: 64px;
+                    height: auto;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    gap: 10px;
+                }
+
+                .logo {
+                    min-width: 0;
+                }
+
+                .nav-actions {
+                    margin-left: auto;
+                }
+
+                .mobile-menu {
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .page-header {
+                    padding: 32px 16px 58px;
+                }
+
+                .page-header h1 {
+                    font-size: clamp(28px, 8vw, 34px);
+                    line-height: 1.1;
+                }
+
+                .page-header p {
+                    line-height: 1.55;
+                }
+
+                .booking-wrapper {
+                    margin-top: -28px;
+                    padding: 0 10px;
+                    margin-bottom: 45px;
+                }
+
+                .booking-card {
+                    padding: 18px 14px;
+                    border-radius: 15px;
+                }
+
+                .location-box {
+                    padding: 4px 11px;
+                }
+
+                .location-row {
+                    min-height: 58px;
+                    gap: 9px;
+                }
+
+                .location-button {
+                    font-size: 12px;
+                    padding: 8px 2px;
+                }
+
+                .location-input {
+                    min-width: 0;
+                    width: 100%;
+                    font-size: 16px;
+                }
+
+                .ride-types {
+                    gap: 8px;
+                }
+
+                .ride-option {
+                    min-height: 66px;
+                    padding: 10px;
+                }
+
+                .ride-price {
+                    white-space: nowrap;
+                }
+
+                .options-row {
+                    gap: 8px;
+                }
+
+                .option-box {
+                    min-height: 58px;
+                }
+
+                .estimate-card {
+                    padding: 14px;
+                }
+
+                .estimate-price {
+                    font-size: 21px;
+                }
+
+                .estimate-details {
+                    gap: 5px;
+                }
+
+                .estimate-item {
+                    min-width: 0;
+                }
+
+                .estimate-item strong {
+                    font-size: 12px;
+                }
+
+                .estimate-item span {
+                    font-size: 10px;
+                }
+
+                .book-btn {
+                    min-height: 52px;
+                }
+
+                .map-card,
+                .map-area {
+                    min-height: 360px;
+                    height: 360px;
+                }
+
+                .map-note {
+                    right: 12px;
+                    max-width: none;
+                    width: auto;
+                    font-size: 10px;
+                }
+
+                .map-controls button {
+                    width: 44px;
+                    height: 44px;
+                }
+
+                .recent-section,
+                .info-section {
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    margin-bottom: 45px;
+                }
+
+                .recent-card {
+                    min-height: 64px;
+                }
+
+                .info-card {
+                    padding: 20px;
+                }
+
+                footer {
+                    padding-left: 18px;
+                    padding-right: 18px;
+                }
+
+                .modal {
+                    padding: 12px;
+                }
+
+                .modal-box {
+                    max-height: calc(100dvh - 24px);
+                    overflow-y: auto;
+                    padding: 22px 17px;
+                }
+
+                .modal-actions {
+                    flex-direction: column-reverse;
+                }
+
+                .modal-actions button {
+                    min-height: 48px;
+                }
+
+                .toast {
+                    left: 12px;
+                    right: 12px;
+                    bottom: 14px;
+                    text-align: center;
+                }
             }
-        }
 
-        @media (max-width: 650px) {
-            .navbar {
-                padding: 0 18px;
+            @media (max-width: 430px) {
+                .nav-actions .btn-orange {
+                    display: none;
+                }
+
+                .logo {
+                    font-size: 20px;
+                }
+
+                .location-button {
+                    max-width: 74px;
+                    white-space: normal;
+                    line-height: 1.15;
+                }
+
+                .estimate-details {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+
+                .footer-grid {
+                    grid-template-columns: 1fr;
+                }
             }
 
-            .nav-actions .btn-outline {
-                display: none;
+            @media (prefers-reduced-motion: reduce) {
+                *, *::before, *::after {
+                    scroll-behavior: auto !important;
+                    transition-duration: 0.01ms !important;
+                }
             }
 
-            .page-header {
-                padding: 40px 20px 70px;
-            }
-
-            .page-header h1 {
-                font-size: 31px;
-            }
-
-            .page-header p {
-                font-size: 14px;
-            }
-
-            .booking-wrapper {
-                margin-top: -35px;
-                padding: 0 12px;
-            }
-
-            .booking-card {
-                padding: 20px 16px;
-            }
-
-            .ride-types {
-                grid-template-columns: 1fr;
-            }
-
-            .ride-option {
-                display: grid;
-                grid-template-columns: 45px 1fr auto;
-                align-items: center;
-                text-align: left;
-                gap: 8px;
-            }
-
-            .ride-icon {
-                margin: 0;
-            }
-
-            .ride-description {
-                margin: 0;
-            }
-
-            .options-row {
-                grid-template-columns: 1fr;
-            }
-
-            .estimate-details {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-
-            .map-card,
-            .map-area {
-                min-height: 420px;
-            }
-
-            .recent-grid,
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .footer-brand {
-                grid-column: 1 / -1;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-            }
-
-            .map-info {
-                left: 12px;
-                top: 12px;
-            }
-
-            .map-controls {
-                right: 12px;
-                bottom: 12px;
-            }
-
-            .map-note {
-                left: 12px;
-                bottom: 12px;
-                max-width: 200px;
-            }
-        }
-
-        @media (max-width: 430px) {
-            .logo {
-                font-size: 21px;
-            }
-
-            .logo-mark {
-                width: 34px;
-                height: 34px;
-            }
-
-            .nav-actions .btn-orange {
-                padding: 9px 12px;
-                font-size: 12px;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    
-/* =========================================================
-   FAGA PRODUCTION MOBILE HARDENING
-   Keeps the existing visual design but prevents overflow
-   and improves touch usability on phones.
-========================================================= */
-html, body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-img, svg, video, iframe {
-    max-width: 100%;
-}
-
-button, a, input, select {
-    -webkit-tap-highlight-color: transparent;
-}
-
-@media (max-width: 1000px) {
-    .booking-wrapper {
-        width: 100%;
-    }
-
-    .booking-grid {
-        width: 100%;
-    }
-
-    .map-card {
-        width: 100%;
-    }
-}
-
-@media (max-width: 650px) {
-    .navbar {
-        min-height: 64px;
-        height: auto;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        gap: 10px;
-    }
-
-    .logo {
-        min-width: 0;
-    }
-
-    .nav-actions {
-        margin-left: auto;
-    }
-
-    .mobile-menu {
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .page-header {
-        padding: 32px 16px 58px;
-    }
-
-    .page-header h1 {
-        font-size: clamp(28px, 8vw, 34px);
-        line-height: 1.1;
-    }
-
-    .page-header p {
-        line-height: 1.55;
-    }
-
-    .booking-wrapper {
-        margin-top: -28px;
-        padding: 0 10px;
-        margin-bottom: 45px;
-    }
-
-    .booking-card {
-        padding: 18px 14px;
-        border-radius: 15px;
-    }
-
-    .location-box {
-        padding: 4px 11px;
-    }
-
-    .location-row {
-        min-height: 58px;
-        gap: 9px;
-    }
-
-    .location-button {
-        font-size: 12px;
-        padding: 8px 2px;
-    }
-
-    .location-input {
-        min-width: 0;
-        width: 100%;
-        font-size: 16px;
-    }
-
-    .ride-types {
-        gap: 8px;
-    }
-
-    .ride-option {
-        min-height: 66px;
-        padding: 10px;
-    }
-
-    .ride-price {
-        white-space: nowrap;
-    }
-
-    .options-row {
-        gap: 8px;
-    }
-
-    .option-box {
-        min-height: 58px;
-    }
-
-    .estimate-card {
-        padding: 14px;
-    }
-
-    .estimate-price {
-        font-size: 21px;
-    }
-
-    .estimate-details {
-        gap: 5px;
-    }
-
-    .estimate-item {
-        min-width: 0;
-    }
-
-    .estimate-item strong {
-        font-size: 12px;
-    }
-
-    .estimate-item span {
-        font-size: 10px;
-    }
-
-    .book-btn {
-        min-height: 52px;
-    }
-
-    .map-card,
-    .map-area {
-        min-height: 360px;
-        height: 360px;
-    }
-
-    .map-note {
-        right: 12px;
-        max-width: none;
-        width: auto;
-        font-size: 10px;
-    }
-
-    .map-controls button {
-        width: 44px;
-        height: 44px;
-    }
-
-    .recent-section,
-    .info-section {
-        padding-left: 12px;
-        padding-right: 12px;
-        margin-bottom: 45px;
-    }
-
-    .recent-card {
-        min-height: 64px;
-    }
-
-    .info-card {
-        padding: 20px;
-    }
-
-    footer {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-    .modal {
-        padding: 12px;
-    }
-
-    .modal-box {
-        max-height: calc(100dvh - 24px);
-        overflow-y: auto;
-        padding: 22px 17px;
-    }
-
-    .modal-actions {
-        flex-direction: column-reverse;
-    }
-
-    .modal-actions button {
-        min-height: 48px;
-    }
-
-    .toast {
-        left: 12px;
-        right: 12px;
-        bottom: 14px;
-        text-align: center;
-    }
-}
-
-@media (max-width: 430px) {
-    .nav-actions .btn-orange {
-        display: none;
-    }
-
-    .logo {
-        font-size: 20px;
-    }
-
-    .location-button {
-        max-width: 74px;
-        white-space: normal;
-        line-height: 1.15;
-    }
-
-    .estimate-details {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-    </style>
-</head>
-
-<body>
-
-    <!-- =========================
-         NAVBAR
-    ========================== -->
-
-    <header class="navbar">
-
-        <a href="./index.html" class="logo">
-            <span class="logo-mark">F</span>
-            FAGA
-        </a>
-
-        <nav class="nav-links">
-            <a href="./index.html">Home</a>
-            <a href="./logistics.html" class="active">Logistics</a>
-            <a href="./marketplace.html">Marketplace</a>
-            <a href="./services.html">Services</a>
-            <a href="./food.html">Food</a>
-            <a href="./jobs.html">Jobs</a>
-            <a href="./help.html">Help</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="../user-portal/login.html" class="btn-outline">Login</a>
-            <a href="../user-portal/register.html" class="btn-orange">Sign Up</a>
-            <button class="mobile-menu" id="mobileMenu">☰</button>
-        </div>
-
-    </header>
-
-
-    <!-- =========================
-         PAGE HEADER
-    ========================== -->
-
-    <section class="page-header">
-
-        <div class="page-header-inner">
-
-            <div class="breadcrumb">
-                <a href="./index.html">Home</a>
-                &nbsp; / &nbsp;
-                <a href="./logistics.html">Logistics</a>
-                &nbsp; / &nbsp;
-                Book a Ride
-            </div>
-
-            <h1>Book a Ride</h1>
-
-            <p>
-                Get where you need to go with FAGA. Request a ride,
-                get an estimated fare and track your driver from pickup
-                to destination.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         BOOKING AREA
-    ========================== -->
-
-    <main class="booking-wrapper">
-
-        <div class="booking-grid">
-
-            <!-- BOOKING FORM -->
-
-            <section class="booking-card">
-
-                <h2>Where are you going?</h2>
-
-                <p class="booking-subtitle">
-                    Enter your pickup and destination to request a ride.
-                </p>
-
-
-                <!-- LOCATION -->
-
-                <div class="location-box">
-
-                    <div class="location-row">
-
-                        <span class="location-icon pickup-dot"></span>
-
-                        <input
-                            type="text"
-                            id="pickup"
-                            class="location-input"
-                            placeholder="Pickup location"
-                            autocomplete="off"
-                        >
+                </style>
+            </head>
+
+            <body>
+
+                <!-- =========================
+                    NAVBAR
+                ========================== -->
+
+                <header class="navbar">
+
+                    <a href="./index.html" class="logo">
+                        <span class="logo-mark">F</span>
+                        FAGA
+                    </a>
+
+                    <nav class="nav-links">
+                        <a href="./index.html">Home</a>
+                        <a href="./logistics.html" class="active">Logistics</a>
+                        <a href="./marketplace.html">Marketplace</a>
+                        <a href="./services.html">Services</a>
+                        <a href="./food.html">Food</a>
+                        <a href="./jobs.html">Jobs</a>
+                        <a href="./help.html">Help</a>
+                    </nav>
+
+                    <div class="nav-actions">
+                        <a href="../user-portal/login.html" class="btn-outline">Login</a>
+                        <a href="../user-portal/register.html" class="btn-orange">Sign Up</a>
+                        <button class="mobile-menu" id="mobileMenu">☰</button>
+                    </div>
+
+                </header>
+
+
+                <!-- =========================
+                    PAGE HEADER
+                ========================== -->
+
+                <section class="page-header">
+
+                    <div class="page-header-inner">
+
+                        <div class="breadcrumb">
+                            <a href="./index.html">Home</a>
+                            &nbsp; / &nbsp;
+                            <a href="./logistics.html">Logistics</a>
+                            &nbsp; / &nbsp;
+                            Book a Ride
+                        </div>
+
+                        <h1>Book a Ride</h1>
+
+                        <p>
+                            Get where you need to go with FAGA. Request a ride,
+                            get an estimated fare and track your driver from pickup
+                            to destination.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                    BOOKING AREA
+                ========================== -->
+
+                <main class="booking-wrapper">
+
+                    <div class="booking-grid">
+
+                        <!-- BOOKING FORM -->
+
+                        <section class="booking-card">
+
+                            <h2>Where are you going?</h2>
+
+                            <p class="booking-subtitle">
+                                Enter your pickup and destination to request a ride.
+                            </p>
+
+
+                            <!-- LOCATION -->
+
+                            <div class="location-box">
+
+                                <div class="location-row">
+
+                                    <span class="location-icon pickup-dot"></span>
+
+                                    <input
+                                        type="text"
+                                        id="pickup"
+                                        class="location-input"
+                                        placeholder="Pickup location"
+                                        autocomplete="off"
+                                    >
+
+                                    <button
+                                        class="location-button"
+                                        id="locationBtn"
+                                        type="button"
+                                    >
+                                        Use current
+                                    </button>
+
+                                </div>
+
+                                <div class="location-divider"></div>
+
+                                <div class="location-row">
+
+                                    <span class="location-icon destination-dot"></span>
+
+                                    <input
+                                        type="text"
+                                        id="destination"
+                                        class="location-input"
+                                        placeholder="Where to?"
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- RIDE TYPE -->
+
+                            <div class="section-label">
+                                Choose a ride
+                            </div>
+
+                            <div class="ride-types">
+
+                                <button
+                                    type="button"
+                                    class="ride-option selected"
+                                    data-type="economy"
+                                    data-price="1800"
+                                >
+
+                                    <div class="ride-icon">🚗</div>
+
+                                    <div>
+                                        <div class="ride-name">Economy</div>
+                                        <div class="ride-description">Affordable everyday rides</div>
+                                    </div>
+
+                                    <div class="ride-price">₦1,800+</div>
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="ride-option"
+                                    data-type="comfort"
+                                    data-price="2500"
+                                >
+
+                                    <span class="recommended">POPULAR</span>
+
+                                    <div class="ride-icon">🚘</div>
+
+                                    <div>
+                                        <div class="ride-name">Comfort</div>
+                                        <div class="ride-description">Extra comfort & space</div>
+                                    </div>
+
+                                    <div class="ride-price">₦2,500+</div>
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="ride-option"
+                                    data-type="xl"
+                                    data-price="3500"
+                                >
+
+                                    <div class="ride-icon">🚙</div>
+
+                                    <div>
+                                        <div class="ride-name">XL / Family</div>
+                                        <div class="ride-description">More passengers & luggage</div>
+                                    </div>
+
+                                    <div class="ride-price">₦3,500+</div>
+
+                                </button>
+
+                            </div>
+
+
+                            <!-- OPTIONS -->
+
+                            <div class="options-row">
+
+                                <div class="option-box">
+
+                                    <div>
+                                        <div class="option-label">Passengers</div>
+                                        <div class="option-value" id="passengerText">
+                                            1 passenger
+                                        </div>
+                                    </div>
+
+                                    <div class="passenger-control">
+
+                                        <button
+                                            type="button"
+                                            class="passenger-btn"
+                                            id="minusPassenger"
+                                        >
+                                            −
+                                        </button>
+
+                                        <strong id="passengerCount">1</strong>
+
+                                        <button
+                                            type="button"
+                                            class="passenger-btn"
+                                            id="plusPassenger"
+                                        >
+                                            +
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="option-box">
+
+                                    <div>
+                                        <div class="option-label">Payment</div>
+                                        <div class="option-value">
+                                            💳 Card / Wallet
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ESTIMATE -->
+
+                            <div class="estimate-card">
+
+                                <div class="estimate-title">
+
+                                    <span>Fare estimate</span>
+
+                                    <span
+                                        class="estimate-price"
+                                        id="estimatePrice"
+                                    >
+                                        ₦1,800
+                                    </span>
+
+                                </div>
+
+                                <div class="estimate-details">
+
+                                    <div class="estimate-item">
+                                        <strong id="distanceValue">—</strong>
+                                        <span>Distance</span>
+                                    </div>
+
+                                    <div class="estimate-item">
+                                        <strong id="durationValue">—</strong>
+                                        <span>Trip time</span>
+                                    </div>
+
+                                    <div class="estimate-item">
+                                        <strong id="arrivalValue">—</strong>
+                                        <span>Driver ETA</span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- BOOK -->
+
+                            <button
+                                type="button"
+                                class="book-btn"
+                                id="bookRideBtn"
+                            >
+                                Request Ride
+                            </button>
+
+                            <div class="secure-note">
+                                🔒 Your payment and ride information are protected.
+                            </div>
+
+                        </section>
+
+
+                        <!-- MAP -->
+
+                        <section class="map-card">
+
+                            <div class="map-area">
+
+                                <div class="road one"></div>
+                                <div class="road two"></div>
+                                <div class="road three"></div>
+
+                                <span class="map-label label-one">
+                                    Victoria Island
+                                </span>
+
+                                <span class="map-label label-two">
+                                    Lekki
+                                </span>
+
+                                <span class="map-label label-three">
+                                    Ikoyi
+                                </span>
+
+
+                                <div class="map-route"></div>
+
+                                <div class="map-marker pickup-marker"></div>
+
+                                <div class="map-marker destination-marker"></div>
+
+
+                                <div class="map-info">
+
+                                    <strong>Ride preview</strong>
+
+                                    <span>
+                                        Route preview
+                                    </span>
+
+                                </div>
+
+
+                                <div class="map-controls">
+
+                                    <button
+                                        class="map-control"
+                                        type="button"
+                                        id="zoomIn"
+                                    >
+                                        +
+                                    </button>
+
+                                    <button
+                                        class="map-control"
+                                        type="button"
+                                        id="zoomOut"
+                                    >
+                                        −
+                                    </button>
+
+                                    <button
+                                        class="map-control"
+                                        type="button"
+                                        id="centerMap"
+                                    >
+                                        ◎
+                                    </button>
+
+                                </div>
+
+
+                                <div class="map-note">
+
+                                    📍 Map preview. Live route details will appear when the FAGA routing service is connected.
+                                    Connect your preferred map provider for live routing
+                                    and GPS tracking.
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+                    </div>
+
+                </main>
+
+
+                <!-- =========================
+                    RECENT LOCATIONS
+                ========================== -->
+
+                <section class="recent-section">
+
+                    <h2>Recent locations</h2>
+
+                    <div class="recent-grid">
 
                         <button
-                            class="location-button"
-                            id="locationBtn"
                             type="button"
+                            class="recent-card"
+                            data-location="Victoria Island"
                         >
-                            Use current
+
+                            <div class="recent-icon">⌖</div>
+
+                            <div>
+                                <strong>Victoria Island</strong>
+                                <span>Lagos, Nigeria</span>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="recent-card"
+                            data-location="Lekki Phase 1"
+                        >
+
+                            <div class="recent-icon">⌖</div>
+
+                            <div>
+                                <strong>Lekki Phase 1</strong>
+                                <span>Lagos, Nigeria</span>
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="recent-card"
+                            data-location="Ikeja City Mall"
+                        >
+
+                            <div class="recent-icon">⌖</div>
+
+                            <div>
+                                <strong>Ikeja City Mall</strong>
+                                <span>Ikeja, Lagos</span>
+                            </div>
+
                         </button>
 
                     </div>
 
-                    <div class="location-divider"></div>
+                </section>
 
-                    <div class="location-row">
 
-                        <span class="location-icon destination-dot"></span>
+                <!-- =========================
+                    HOW IT WORKS
+                ========================== -->
 
-                        <input
-                            type="text"
-                            id="destination"
-                            class="location-input"
-                            placeholder="Where to?"
-                            autocomplete="off"
-                        >
+                <section class="info-section">
+
+                    <h2>How FAGA rides work</h2>
+
+                    <div class="info-grid">
+
+                        <article class="info-card">
+
+                            <div class="info-icon">📍</div>
+
+                            <h3>1. Enter your destination</h3>
+
+                            <p>
+                                Tell us where you are and where you want to go.
+                                FAGA calculates the ride fare from the selected ride type and passenger count.
+                            </p>
+
+                        </article>
+
+
+                        <article class="info-card">
+
+                            <div class="info-icon">🚗</div>
+
+                            <h3>2. Request a driver</h3>
+
+                            <p>
+                                FAGA sends your ride request to the operational server.
+                                Driver assignment begins when the driver service is available.
+                            </p>
+
+                        </article>
+
+
+                        <article class="info-card">
+
+                            <div class="info-icon">🛰️</div>
+
+                            <h3>3. Track your ride</h3>
+
+                            <p>
+                                After a driver is assigned and GPS is available, the
+                                tracking page can show the latest driver location and ride status.
+
+                        </article>
 
                     </div>
 
-                </div>
+                </section>
 
 
-                <!-- RIDE TYPE -->
+                <!-- =========================
+                    FOOTER
+                ========================== -->
 
-                <div class="section-label">
-                    Choose a ride
-                </div>
+                <footer>
 
-                <div class="ride-types">
+                    <div class="footer-grid">
 
-                    <button
-                        type="button"
-                        class="ride-option selected"
-                        data-type="economy"
-                        data-price="1800"
-                    >
+                        <div class="footer-brand">
 
-                        <div class="ride-icon">🚗</div>
-
-                        <div>
-                            <div class="ride-name">Economy</div>
-                            <div class="ride-description">Affordable everyday rides</div>
-                        </div>
-
-                        <div class="ride-price">₦1,800+</div>
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="ride-option"
-                        data-type="comfort"
-                        data-price="2500"
-                    >
-
-                        <span class="recommended">POPULAR</span>
-
-                        <div class="ride-icon">🚘</div>
-
-                        <div>
-                            <div class="ride-name">Comfort</div>
-                            <div class="ride-description">Extra comfort & space</div>
-                        </div>
-
-                        <div class="ride-price">₦2,500+</div>
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="ride-option"
-                        data-type="xl"
-                        data-price="3500"
-                    >
-
-                        <div class="ride-icon">🚙</div>
-
-                        <div>
-                            <div class="ride-name">XL / Family</div>
-                            <div class="ride-description">More passengers & luggage</div>
-                        </div>
-
-                        <div class="ride-price">₦3,500+</div>
-
-                    </button>
-
-                </div>
-
-
-                <!-- OPTIONS -->
-
-                <div class="options-row">
-
-                    <div class="option-box">
-
-                        <div>
-                            <div class="option-label">Passengers</div>
-                            <div class="option-value" id="passengerText">
-                                1 passenger
+                            <div class="logo">
+                                <span class="logo-mark">F</span>
+                                FAGA
                             </div>
-                        </div>
 
-                        <div class="passenger-control">
-
-                            <button
-                                type="button"
-                                class="passenger-btn"
-                                id="minusPassenger"
-                            >
-                                −
-                            </button>
-
-                            <strong id="passengerCount">1</strong>
-
-                            <button
-                                type="button"
-                                class="passenger-btn"
-                                id="plusPassenger"
-                            >
-                                +
-                            </button>
+                            <p>
+                                FAGA brings logistics, rides, marketplace,
+                                food and on-demand services together in one platform.
+                            </p>
 
                         </div>
 
-                    </div>
-
-
-                    <div class="option-box">
 
                         <div>
-                            <div class="option-label">Payment</div>
-                            <div class="option-value">
-                                💳 Card / Wallet
-                            </div>
+
+                            <h4>Explore</h4>
+
+                            <ul>
+                                <li><a href="./logistics.html">Logistics</a></li>
+                                <li><a href="./marketplace.html">Marketplace</a></li>
+                                <li><a href="./services.html">Services</a></li>
+                                <li><a href="./food.html">Food</a></li>
+                            </ul>
+
+                        </div>
+
+
+                        <div>
+
+                            <h4>Rides</h4>
+
+                            <ul>
+                                <li><a href="./ride-booking.html">Book a Ride</a></li>
+                                <li><a href="./ride-tracking.html">Track Ride</a></li>
+                                <li><a href="./delivery-booking.html">Send Package</a></li>
+                                <li><a href="./track-order.html">Track Delivery</a></li>
+                            </ul>
+
+                        </div>
+
+
+                        <div>
+
+                            <h4>Support</h4>
+
+                            <ul>
+                                <li><a href="./help.html">Help Center</a></li>
+                                <li><a href="./safety.html">Safety</a></li>
+                                <li><a href="./contact.html">Contact Us</a></li>
+                                <li><a href="./privacy.html">Privacy</a></li>
+                                <li><a href="./terms.html">Terms</a></li>
+                            </ul>
+
                         </div>
 
                     </div>
 
-                </div>
 
-
-                <!-- ESTIMATE -->
-
-                <div class="estimate-card">
-
-                    <div class="estimate-title">
-
-                        <span>Fare estimate</span>
-
-                        <span
-                            class="estimate-price"
-                            id="estimatePrice"
-                        >
-                            ₦1,800
-                        </span>
-
-                    </div>
-
-                    <div class="estimate-details">
-
-                        <div class="estimate-item">
-                            <strong id="distanceValue">—</strong>
-                            <span>Distance</span>
-                        </div>
-
-                        <div class="estimate-item">
-                            <strong id="durationValue">—</strong>
-                            <span>Trip time</span>
-                        </div>
-
-                        <div class="estimate-item">
-                            <strong id="arrivalValue">—</strong>
-                            <span>Driver ETA</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- BOOK -->
-
-                <button
-                    type="button"
-                    class="book-btn"
-                    id="bookRideBtn"
-                >
-                    Request Ride
-                </button>
-
-                <div class="secure-note">
-                    🔒 Your payment and ride information are protected.
-                </div>
-
-            </section>
-
-
-            <!-- MAP -->
-
-            <section class="map-card">
-
-                <div class="map-area">
-
-                    <div class="road one"></div>
-                    <div class="road two"></div>
-                    <div class="road three"></div>
-
-                    <span class="map-label label-one">
-                        Victoria Island
-                    </span>
-
-                    <span class="map-label label-two">
-                        Lekki
-                    </span>
-
-                    <span class="map-label label-three">
-                        Ikoyi
-                    </span>
-
-
-                    <div class="map-route"></div>
-
-                    <div class="map-marker pickup-marker"></div>
-
-                    <div class="map-marker destination-marker"></div>
-
-
-                    <div class="map-info">
-
-                        <strong>Ride preview</strong>
+                    <div class="footer-bottom">
 
                         <span>
-                            Route preview
+                            © 2026 FAGA. All rights reserved.
+                        </span>
+
+                        <span>
+                            Built for convenient everyday movement.
                         </span>
 
                     </div>
 
+                </footer>
 
-                    <div class="map-controls">
 
-                        <button
-                            class="map-control"
-                            type="button"
-                            id="zoomIn"
-                        >
-                            +
-                        </button>
+                <!-- =========================
+                    CONFIRMATION MODAL
+                ========================== -->
 
-                        <button
-                            class="map-control"
-                            type="button"
-                            id="zoomOut"
-                        >
-                            −
-                        </button>
+                <div class="modal" id="bookingModal">
 
-                        <button
-                            class="map-control"
-                            type="button"
-                            id="centerMap"
-                        >
-                            ◎
-                        </button>
+                    <div class="modal-box">
+
+                        <div class="modal-icon">
+                            🚗
+                        </div>
+
+                        <h2>Ready to request your ride?</h2>
+
+                        <p id="modalText">
+                            We'll send your ride request to the FAGA server and search for an available driver.
+                        </p>
+
+                        <div class="modal-actions">
+
+                            <button
+                                type="button"
+                                class="cancel-modal"
+                                id="cancelModal"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                class="continue-modal"
+                                id="confirmBooking"
+                            >
+                                Request Ride
+                            </button>
+
+                        </div>
 
                     </div>
 
-
-                    <div class="map-note">
-
-                        📍 Map preview. Live route details will appear when the FAGA routing service is connected.
-                        Connect your preferred map provider for live routing
-                        and GPS tracking.
-
-                    </div>
-
                 </div>
 
-            </section>
 
-        </div>
+                <!-- =========================
+                    TOAST
+                ========================== -->
 
-    </main>
+                <div class="toast" id="toast"></div>
 
 
-    <!-- =========================
-         RECENT LOCATIONS
-    ========================== -->
+            <script src="../js/faga-api.js"></script>
 
-    <section class="recent-section">
+            <script>
 
-        <h2>Recent locations</h2>
+                    /* =====================================
+                    FAGA RIDE BOOKING FRONTEND
+                    ===================================== */
 
-        <div class="recent-grid">
+                    const pickupInput = document.getElementById("pickup");
+                    const destinationInput = document.getElementById("destination");
 
-            <button
-                type="button"
-                class="recent-card"
-                data-location="Victoria Island"
-            >
+                    const locationBtn = document.getElementById("locationBtn");
 
-                <div class="recent-icon">⌖</div>
+                    const rideOptions = document.querySelectorAll(".ride-option");
 
-                <div>
-                    <strong>Victoria Island</strong>
-                    <span>Lagos, Nigeria</span>
-                </div>
+                    const estimatePrice = document.getElementById("estimatePrice");
 
-            </button>
+                    const passengerCountElement =
+                        document.getElementById("passengerCount");
 
+                    const passengerText =
+                        document.getElementById("passengerText");
 
-            <button
-                type="button"
-                class="recent-card"
-                data-location="Lekki Phase 1"
-            >
+                    const minusPassenger =
+                        document.getElementById("minusPassenger");
 
-                <div class="recent-icon">⌖</div>
+                    const plusPassenger =
+                        document.getElementById("plusPassenger");
 
-                <div>
-                    <strong>Lekki Phase 1</strong>
-                    <span>Lagos, Nigeria</span>
-                </div>
+                    const bookRideBtn =
+                        document.getElementById("bookRideBtn");
 
-            </button>
+                    const bookingModal =
+                        document.getElementById("bookingModal");
 
+                    const cancelModal =
+                        document.getElementById("cancelModal");
 
-            <button
-                type="button"
-                class="recent-card"
-                data-location="Ikeja City Mall"
-            >
+                    const confirmBooking =
+                        document.getElementById("confirmBooking");
 
-                <div class="recent-icon">⌖</div>
+                    const modalText =
+                        document.getElementById("modalText");
 
-                <div>
-                    <strong>Ikeja City Mall</strong>
-                    <span>Ikeja, Lagos</span>
-                </div>
+                    const toast =
+                        document.getElementById("toast");
 
-            </button>
 
-        </div>
+                    let selectedRide = "economy";
+                    let basePrice = 1800;
+                    let passengers = 1;
 
-    </section>
-
-
-    <!-- =========================
-         HOW IT WORKS
-    ========================== -->
-
-    <section class="info-section">
-
-        <h2>How FAGA rides work</h2>
-
-        <div class="info-grid">
-
-            <article class="info-card">
-
-                <div class="info-icon">📍</div>
-
-                <h3>1. Enter your destination</h3>
-
-                <p>
-                    Tell us where you are and where you want to go.
-                    FAGA calculates the ride fare from the selected ride type and passenger count.
-                </p>
-
-            </article>
-
-
-            <article class="info-card">
-
-                <div class="info-icon">🚗</div>
-
-                <h3>2. Request a driver</h3>
-
-                <p>
-                    FAGA sends your ride request to the operational server.
-                    Driver assignment begins when the driver service is available.
-                </p>
-
-            </article>
-
-
-            <article class="info-card">
-
-                <div class="info-icon">🛰️</div>
-
-                <h3>3. Track your ride</h3>
-
-                <p>
-                    After a driver is assigned and GPS is available, the
-                    tracking page can show the latest driver location and ride status.
-
-            </article>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-    <footer>
-
-        <div class="footer-grid">
-
-            <div class="footer-brand">
-
-                <div class="logo">
-                    <span class="logo-mark">F</span>
-                    FAGA
-                </div>
-
-                <p>
-                    FAGA brings logistics, rides, marketplace,
-                    food and on-demand services together in one platform.
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h4>Explore</h4>
-
-                <ul>
-                    <li><a href="./logistics.html">Logistics</a></li>
-                    <li><a href="./marketplace.html">Marketplace</a></li>
-                    <li><a href="./services.html">Services</a></li>
-                    <li><a href="./food.html">Food</a></li>
-                </ul>
-
-            </div>
-
-
-            <div>
-
-                <h4>Rides</h4>
-
-                <ul>
-                    <li><a href="./ride-booking.html">Book a Ride</a></li>
-                    <li><a href="./ride-tracking.html">Track Ride</a></li>
-                    <li><a href="./delivery-booking.html">Send Package</a></li>
-                    <li><a href="./track-order.html">Track Delivery</a></li>
-                </ul>
-
-            </div>
-
-
-            <div>
-
-                <h4>Support</h4>
-
-                <ul>
-                    <li><a href="./help.html">Help Center</a></li>
-                    <li><a href="./safety.html">Safety</a></li>
-                    <li><a href="./contact.html">Contact Us</a></li>
-                    <li><a href="./privacy.html">Privacy</a></li>
-                    <li><a href="./terms.html">Terms</a></li>
-                </ul>
-
-            </div>
-
-        </div>
-
-
-        <div class="footer-bottom">
-
-            <span>
-                © 2026 FAGA. All rights reserved.
-            </span>
-
-            <span>
-                Built for convenient everyday movement.
-            </span>
-
-        </div>
-
-    </footer>
-
-
-    <!-- =========================
-         CONFIRMATION MODAL
-    ========================== -->
-
-    <div class="modal" id="bookingModal">
-
-        <div class="modal-box">
-
-            <div class="modal-icon">
-                🚗
-            </div>
-
-            <h2>Ready to request your ride?</h2>
-
-            <p id="modalText">
-                We'll send your ride request to the FAGA server and search for an available driver.
-            </p>
-
-            <div class="modal-actions">
-
-                <button
-                    type="button"
-                    class="cancel-modal"
-                    id="cancelModal"
-                >
-                    Cancel
-                </button>
-
-                <button
-                    type="button"
-                    class="continue-modal"
-                    id="confirmBooking"
-                >
-                    Request Ride
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         TOAST
-    ========================== -->
-
-    <div class="toast" id="toast"></div>
-
-
-<script src="../js/faga-api.js"></script>
-
-<script>
-
-        /* =====================================
-           FAGA RIDE BOOKING FRONTEND
-        ===================================== */
-
-        const pickupInput = document.getElementById("pickup");
-        const destinationInput = document.getElementById("destination");
-
-        const locationBtn = document.getElementById("locationBtn");
-
-        const rideOptions = document.querySelectorAll(".ride-option");
-
-        const estimatePrice = document.getElementById("estimatePrice");
-
-        const passengerCountElement =
-            document.getElementById("passengerCount");
-
-        const passengerText =
-            document.getElementById("passengerText");
-
-        const minusPassenger =
-            document.getElementById("minusPassenger");
-
-        const plusPassenger =
-            document.getElementById("plusPassenger");
-
-        const bookRideBtn =
-            document.getElementById("bookRideBtn");
-
-        const bookingModal =
-            document.getElementById("bookingModal");
-
-        const cancelModal =
-            document.getElementById("cancelModal");
-
-        const confirmBooking =
-            document.getElementById("confirmBooking");
-
-        const modalText =
-            document.getElementById("modalText");
-
-        const toast =
-            document.getElementById("toast");
-
-
-        let selectedRide = "economy";
-        let basePrice = 1800;
-        let passengers = 1;
-
-        window.fagaPickupCoordinates = null;
-        window.fagaDestinationCoordinates = null;
-
-
-        /* =====================================
-           RIDE TYPE
-        ===================================== */
-
-        rideOptions.forEach(option => {
-
-            option.addEventListener("click", () => {
-
-                rideOptions.forEach(item => {
-                    item.classList.remove("selected");
-                });
-
-                option.classList.add("selected");
-
-                selectedRide =
-                    option.dataset.type;
-
-                basePrice =
-                    Number(option.dataset.price);
-
-                updateEstimate();
-
-            });
-
-        });
-
-
-        /* =====================================
-           PASSENGERS
-        ===================================== */
-
-        plusPassenger.addEventListener("click", () => {
-
-            if (passengers < 6) {
-                passengers++;
-                updatePassengers();
-                updateEstimate();
-            }
-
-        });
-
-
-        minusPassenger.addEventListener("click", () => {
-
-            if (passengers > 1) {
-                passengers--;
-                updatePassengers();
-                updateEstimate();
-            }
-
-        });
-
-
-        function updatePassengers() {
-
-            passengerCountElement.textContent =
-                passengers;
-
-            passengerText.textContent =
-                passengers === 1
-                    ? "1 passenger"
-                    : passengers + " passengers";
-
-        }
-
-
-        /* =====================================
-           ESTIMATE
-        ===================================== */
-
-        function updateEstimate() {
-
-            let extraPassengerCost =
-                passengers > 1
-                    ? (passengers - 1) * 150
-                    : 0;
-
-            let finalPrice =
-                basePrice + extraPassengerCost;
-
-            estimatePrice.textContent =
-                "₦" + finalPrice.toLocaleString();
-
-        }
-
-
-       /* =====================================
-   INPUT CHANGES + ADDRESS GEOCODING
-===================================== */
-
-let pickupGeocodeTimer = null;
-let destinationGeocodeTimer = null;
-
-let pickupGeocodeRequest = 0;
-let destinationGeocodeRequest = 0;
-
-
-/*
- * Resolve a typed address through
- * the FAGA backend.
- */
-async function resolveFagaAddress(
-    address,
-    type
-) {
-
-    const cleanAddress =
-        String(address || "").trim();
-
-    if (!cleanAddress) {
-        return null;
-    }
-
-    if (
-        typeof FagaAPI === "undefined" ||
-        typeof FagaAPI.request !== "function"
-    ) {
-        console.error(
-            "FAGA API is unavailable."
-        );
-
-        return null;
-    }
-
-    try {
-
-        console.log(
-            `FAGA geocoding ${type}:`,
-            cleanAddress
-        );
-
-        const response =
-            await FagaAPI.request(
-                `/api/geocode?address=${encodeURIComponent(cleanAddress)}`,
-                {
-                    method: "GET"
-                }
-            );
-
-        const location =
-            response?.location;
-
-        if (
-            !location ||
-            !Number.isFinite(
-                Number(location.latitude)
-            ) ||
-            !Number.isFinite(
-                Number(location.longitude)
-            )
-        ) {
-
-            throw new Error(
-                "Invalid coordinates returned by FAGA."
-            );
-
-        }
-
-        const coordinates = {
-
-            latitude:
-                Number(location.latitude),
-
-            longitude:
-                Number(location.longitude)
-
-        };
-
-        console.log(
-            `FAGA ${type} coordinates:`,
-            coordinates.latitude,
-            coordinates.longitude
-        );
-
-        return coordinates;
-
-    } catch (error) {
-
-        console.error(
-            `FAGA ${type} geocoding error:`,
-            error?.data?.message ||
-            error?.message ||
-            error
-        );
-
-        return null;
-
-    }
-
-}
-
-
-/*
- * Pickup address typing
- */
-pickupInput.addEventListener(
-    "input",
-    () => {
-
-        const value =
-            pickupInput.value.trim();
-
-        /*
-         * If the user starts editing
-         * the current-location value,
-         * remove the old GPS coordinates.
-         */
-        if (
-            value !== "Current location"
-        ) {
-
-            window.fagaPickupCoordinates =
-                null;
-
-        }
-
-        window.fagaRouteData =
-            null;
-
-        window.clearTimeout(
-            pickupGeocodeTimer
-        );
-
-        pickupGeocodeTimer =
-            window.setTimeout(
-                async () => {
-
-                    const requestId =
-                        ++pickupGeocodeRequest;
-
-                    const address =
-                        pickupInput.value.trim();
-
-                    if (!address) {
-
-                        updateRoute();
-
-                        return;
-
-                    }
-
-                    /*
-                     * Do not geocode the special
-                     * current-location label.
-                     */
-                    if (
-                        address ===
-                        "Current location"
-                    ) {
-
-                        updateRoute();
-
-                        return;
-
-                    }
-
-                    const coordinates =
-                        await resolveFagaAddress(
-                            address,
-                            "pickup"
-                        );
-
-                    /*
-                     * Ignore an old request if
-                     * the user has typed again.
-                     */
-                    if (
-                        requestId !==
-                        pickupGeocodeRequest
-                    ) {
-
-                        return;
-
-                    }
-
-                    /*
-                     * Only apply coordinates if
-                     * the input still contains
-                     * the same address.
-                     */
-                    if (
-                        pickupInput.value.trim() !==
-                        address
-                    ) {
-
-                        return;
-
-                    }
-
-                    if (coordinates) {
-
-                        window.fagaPickupCoordinates =
-                            coordinates;
-
-                        console.log(
-                            "Pickup coordinates set:",
-                            coordinates
-                        );
-
-                    } else {
-
-                        window.fagaPickupCoordinates =
-                            null;
-
-                    }
-
-                    updateRoute();
-
-                },
-                700
-            );
-
-    }
-);
-
-
-/*
- * Destination address typing
- */
-destinationInput.addEventListener(
-    "input",
-    () => {
-
-        const value =
-            destinationInput.value.trim();
-
-        window.fagaDestinationCoordinates =
-            null;
-
-        window.fagaRouteData =
-            null;
-
-        window.clearTimeout(
-            destinationGeocodeTimer
-        );
-
-        destinationGeocodeTimer =
-            window.setTimeout(
-                async () => {
-
-                    const requestId =
-                        ++destinationGeocodeRequest;
-
-                    const address =
-                        destinationInput.value.trim();
-
-                    if (!address) {
-
-                        updateRoute();
-
-                        return;
-
-                    }
-
-                    const coordinates =
-                        await resolveFagaAddress(
-                            address,
-                            "destination"
-                        );
-
-                    /*
-                     * Ignore an old request if
-                     * the user has typed again.
-                     */
-                    if (
-                        requestId !==
-                        destinationGeocodeRequest
-                    ) {
-
-                        return;
-
-                    }
-
-                    /*
-                     * Only apply coordinates if
-                     * the input still contains
-                     * the same address.
-                     */
-                    if (
-                        destinationInput.value.trim() !==
-                        address
-                    ) {
-
-                        return;
-
-                    }
-
-                    if (coordinates) {
-
-                        window.fagaDestinationCoordinates =
-                            coordinates;
-
-                        console.log(
-                            "Destination coordinates set:",
-                            coordinates
-                        );
-
-                    } else {
-
-                        window.fagaDestinationCoordinates =
-                            null;
-
-                    }
-
-                    updateRoute();
-
-                },
-                700
-            );
-
-    }
-);
-
-
-
-
-let routeEstimateTimer = null;
-let routeEstimateRequest = 0;
-
-async function updateRoute() {
-
-    const distanceValue =
-        document.getElementById("distanceValue");
-
-    const durationValue =
-        document.getElementById("durationValue");
-
-    const arrivalValue =
-        document.getElementById("arrivalValue");
-
-    const pickup =
-        pickupInput.value.trim();
-
-    const destination =
-        destinationInput.value.trim();
-
-    if (!pickup || !destination) {
-
-        distanceValue.textContent = "—";
-        durationValue.textContent = "—";
-        arrivalValue.textContent = "—";
-
-        return;
-    }
-
-    if (
-        typeof FagaAPI === "undefined" ||
-        !FagaAPI.isLoggedIn()
-    ) {
-
-        distanceValue.textContent =
-            "Sign in";
-
-        durationValue.textContent =
-            "Sign in";
-
-        arrivalValue.textContent =
-            "Sign in";
-
-        return;
-    }
-
-    window.clearTimeout(
-        routeEstimateTimer
-    );
-
-    routeEstimateTimer =
-        window.setTimeout(
-            loadRealRouteEstimate,
-            500
-        );
-}
-
-
-async function loadRealRouteEstimate() {
-
-    const requestId =
-        ++routeEstimateRequest;
-
-    const distanceValue =
-        document.getElementById("distanceValue");
-
-    const durationValue =
-        document.getElementById("durationValue");
-
-    const arrivalValue =
-        document.getElementById("arrivalValue");
-
-    const pickup =
-        pickupInput.value.trim();
-
-    const destination =
-        destinationInput.value.trim();
-
-    if (!pickup || !destination) {
-        return;
-    }
-    /*
- * Wait until typed addresses have been
- * resolved into coordinates.
- */
-const pickupCoordinates =
-    window.fagaPickupCoordinates;
-
-const destinationCoordinates =
-    window.fagaDestinationCoordinates;
-
-if (
-    !pickupCoordinates ||
-    !Number.isFinite(
-        Number(pickupCoordinates.latitude)
-    ) ||
-    !Number.isFinite(
-        Number(pickupCoordinates.longitude)
-    )
-) {
-
-    console.log(
-        "Waiting for pickup coordinates..."
-    );
-
-    return;
-
-}
-
-if (
-    !destinationCoordinates ||
-    !Number.isFinite(
-        Number(destinationCoordinates.latitude)
-    ) ||
-    !Number.isFinite(
-        Number(destinationCoordinates.longitude)
-    )
-) {
-
-    console.log(
-        "Waiting for destination coordinates..."
-    );
-
-    return;
-
-}
-    distanceValue.textContent =
-        "Calculating...";
-
-    durationValue.textContent =
-        "Calculating...";
-
-    arrivalValue.textContent =
-        "Calculating...";
-
-    try {
-
-        const response =
-            await FagaAPI.request(
-                "/api/rides/estimate",
-                {
-                    method: "POST",
-
-                    body: JSON.stringify({
-
-                        pickupAddress:
-                            pickup,
-
-                        destinationAddress:
-                            destination,
-
-                        rideType:
-                            selectedRide,
-
-                        passengers:
-                            passengers,
-
-                        pickupLatitude:
-                        pickupCoordinates.latitude,
-
-                        pickupLongitude:
-                        pickupCoordinates.longitude,
-
-                        destinationLatitude:
-                        destinationCoordinates.latitude,
-
-                        destinationLongitude:
-                        destinationCoordinates.longitude
-                    })
-                }
-            );
-
-        if (
-            requestId !==
-            routeEstimateRequest
-        ) {
-            return;
-        }
-
-        const estimate =
-            response?.estimate;
-
-        if (!estimate) {
-            throw new Error(
-                "Invalid route estimate."
-            );
-        }
-
-        const distanceKm =
-            Number(
-                estimate.distanceKm
-            );
-
-        const durationMinutes =
-            Number(
-                estimate.durationMinutes
-            );
-
-        if (
-            !Number.isFinite(
-                distanceKm
-            ) ||
-            !Number.isFinite(
-                durationMinutes
-            )
-        ) {
-            throw new Error(
-                "Invalid distance or duration."
-            );
-        }
-
-        distanceValue.textContent =
-            `${distanceKm.toFixed(1)} km`;
-
-        durationValue.textContent =
-            formatDuration(
-                durationMinutes
-            );
-
-        arrivalValue.textContent =
-            formatArrivalTime(
-                estimate.estimatedArrivalAt
-            );
-
-        const serverFare =
-            Number(
-                estimate.fare
-            );
-
-        if (
-            Number.isFinite(
-                serverFare
-            )
-        ) {
-
-            estimatePrice.textContent =
-                "₦" +
-                serverFare.toLocaleString();
-        }
-
-   } catch (error) {
-
-    console.error(
-        "FAGA route estimate error:",
-        error?.data?.message ||
-        error?.message ||
-        error
-    );
-
-    console.error(
-        "FAGA route estimate full error:",
-        error
-    );
-
-    distanceValue.textContent = "Unavailable";
-
-    durationValue.textContent = "Unavailable";
-
-    arrivalValue.textContent = "Unavailable";
-}
-
-        distanceValue.textContent =
-            "Unavailable";
-
-        durationValue.textContent =
-            "Unavailable";
-
-        arrivalValue.textContent =
-            "Unavailable";
-    }
-
-
-
-function formatDuration(
-    minutes
-) {
-
-    const totalMinutes =
-        Math.max(
-            1,
-            Math.round(minutes)
-        );
-
-    const hours =
-        Math.floor(
-            totalMinutes / 60
-        );
-
-    const remainingMinutes =
-        totalMinutes % 60;
-
-    if (hours > 0) {
-
-        return `${hours} hr ${remainingMinutes} min`;
-
-    }
-
-    return `${remainingMinutes} min`;
-}
-
-
-function formatArrivalTime(
-    value
-) {
-
-    const date =
-        new Date(value);
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-        return "—";
-    }
-
-    return date.toLocaleTimeString(
-        [],
-        {
-            hour: "2-digit",
-            minute: "2-digit"
-        }
-    );
-}
-
-        /* =====================================
-           CURRENT LOCATION
-        ===================================== */
-
-        locationBtn.addEventListener("click", () => {
-
-            if (!navigator.geolocation) {
-
-                showToast(
-                    "Location services are not supported by this browser."
-                );
-
-                return;
-
-            }
-
-            locationBtn.textContent =
-                "Locating...";
-
-            navigator.geolocation.getCurrentPosition(
-
-                position => {
-
-                    const latitude =
-                        position.coords.latitude;
-
-                    const longitude =
-                        position.coords.longitude;
-
-                    console.log(
-                        "Current coordinates:",
-                        latitude,
-                        longitude
-                    );
-
-                    window.fagaPickupCoordinates = {
-                        latitude,
-                        longitude
-                    };
-
-                    // Destination coordinates are optional until a routing/geocoding
-                    // service supplies them.
+                    window.fagaPickupCoordinates = null;
                     window.fagaDestinationCoordinates = null;
 
-                    pickupInput.value =
-                        "Current location";
 
-                    locationBtn.textContent =
-                        "Located";
+                    /* =====================================
+                    RIDE TYPE
+                    ===================================== */
 
-                    showToast(
-                        "Pickup location detected."
-                    );
-                        updateRoute();
-                },
+                    rideOptions.forEach(option => {
 
-                
+                        option.addEventListener("click", () => {
+
+                            rideOptions.forEach(item => {
+                                item.classList.remove("selected");
+                            });
+
+                            option.classList.add("selected");
+
+                            selectedRide =
+                                option.dataset.type;
+
+                            basePrice =
+                                Number(option.dataset.price);
+
+                            updateEstimate();
+
+                        });
+
+                    });
 
 
+                    /* =====================================
+                    PASSENGERS
+                    ===================================== */
 
-                error => {
+                    plusPassenger.addEventListener("click", () => {
 
-                    console.error(error);
+                        if (passengers < 6) {
+                            passengers++;
+                            updatePassengers();
+                            updateEstimate();
+                        }
 
-                    locationBtn.textContent =
-                        "Use current";
+                    });
 
-                    showToast(
-                        "Unable to get your location. Please enter it manually."
-                    );
 
+                    minusPassenger.addEventListener("click", () => {
+
+                        if (passengers > 1) {
+                            passengers--;
+                            updatePassengers();
+                            updateEstimate();
+                        }
+
+                    });
+
+
+                    function updatePassengers() {
+
+                        passengerCountElement.textContent =
+                            passengers;
+
+                        passengerText.textContent =
+                            passengers === 1
+                                ? "1 passenger"
+                                : passengers + " passengers";
+
+                    }
+
+
+                    /* =====================================
+                    ESTIMATE
+                    ===================================== */
+
+                    function updateEstimate() {
+
+                        let extraPassengerCost =
+                            passengers > 1
+                                ? (passengers - 1) * 150
+                                : 0;
+
+                        let finalPrice =
+                            basePrice + extraPassengerCost;
+
+                        estimatePrice.textContent =
+                            "₦" + finalPrice.toLocaleString();
+
+                    }
+
+
+                /* =====================================
+            INPUT CHANGES + ADDRESS GEOCODING
+            ===================================== */
+
+            let pickupGeocodeTimer = null;
+            let destinationGeocodeTimer = null;
+
+            let pickupGeocodeRequest = 0;
+            let destinationGeocodeRequest = 0;
+
+
+            /*
+            * Resolve a typed address through
+            * the FAGA backend.
+            */
+            async function resolveFagaAddress(
+                address,
+                type
+            ) {
+
+                const cleanAddress =
+                    String(address || "").trim();
+
+                if (!cleanAddress) {
+                    return null;
                 }
 
-            );
+                if (
+                    typeof FagaAPI === "undefined" ||
+                    typeof FagaAPI.request !== "function"
+                ) {
+                    console.error(
+                        "FAGA API is unavailable."
+                    );
 
-        });
+                    return null;
+                }
 
+                try {
 
-        /* =====================================
-           RECENT LOCATIONS
-        ===================================== */
+                    console.log(
+                        `FAGA geocoding ${type}:`,
+                        cleanAddress
+                    );
 
-        document.querySelectorAll(".recent-card")
-            .forEach(card => {
-
-                card.addEventListener("click", () => {
-
-                    const location =
-                        card.dataset.location;
-
-                    if (!pickupInput.value.trim()) {
-
-                        pickupInput.value =
-                            location;
-
-                        window.fagaPickupCoordinates = null;
-
-                        showToast(
-                            "Pickup location selected."
+                    const response =
+                        await FagaAPI.request(
+                            `/api/geocode?address=${encodeURIComponent(cleanAddress)}`,
+                            {
+                                method: "GET"
+                            }
                         );
 
-                    } else {
+                    const location =
+                        response?.location;
 
-                        destinationInput.value =
-                            location;
+                    if (
+                        !location ||
+                        !Number.isFinite(
+                            Number(location.latitude)
+                        ) ||
+                        !Number.isFinite(
+                            Number(location.longitude)
+                        )
+                    ) {
 
-                        showToast(
-                            "Destination selected."
+                        throw new Error(
+                            "Invalid coordinates returned by FAGA."
                         );
 
                     }
 
-                    updateRoute();
+                    const coordinates = {
 
-                });
+                        latitude:
+                            Number(location.latitude),
 
-            });
+                        longitude:
+                            Number(location.longitude)
 
-
-        /* =====================================
-           BOOK RIDE
-        ===================================== */
-
-        /* =====================================
-           LIVE RIDE BOOKING
-        ===================================== */
-
-        async function createLiveRide() {
-            const pickup = pickupInput.value.trim();
-            const destination = destinationInput.value.trim();
-
-            if (!pickup || !destination) {
-                showToast("Please enter pickup and destination.");
-                return;
-            }
-
-            if (typeof FagaAPI === "undefined" || typeof FagaAPI.request !== "function") {
-                showToast("FAGA connection is unavailable. Please refresh and try again.");
-                return;
-            }
-
-            if (!FagaAPI.isLoggedIn()) {
-                showToast("Please sign in before booking a ride.");
-                setTimeout(() => {
-                    window.location.href =
-                        "../user-portal/login.html?redirect=" +
-                        encodeURIComponent("../Public-website/ride-booking.html");
-                }, 700);
-                return;
-            }
-
-            confirmBooking.disabled = true;
-            confirmBooking.textContent = "Booking...";
-
-            try {
-                const response = await FagaAPI.request("/api/rides", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        pickupAddress: pickup,
-                        destinationAddress: destination,
-                        rideType: selectedRide,
-                        passengers: passengers,
-                        pickupLatitude: window.fagaPickupCoordinates?.latitude ?? null,
-                        pickupLongitude: window.fagaPickupCoordinates?.longitude ?? null,
-                        destinationLatitude: window.fagaDestinationCoordinates?.latitude ?? null,
-                        destinationLongitude: window.fagaDestinationCoordinates?.longitude ?? null
-                    })
-                });
-
-                const ride = response?.ride || response?.data || response;
-
-                const rideId =
-                    ride?.id ??
-                    ride?.rideId ??
-                    response?.rideId ??
-                    response?.id;
-
-                if (!rideId) {
-                    throw {
-                        data: {
-                            message: "The ride service returned an invalid booking response."
-                        }
                     };
+
+                    console.log(
+                        `FAGA ${type} coordinates:`,
+                        coordinates.latitude,
+                        coordinates.longitude
+                    );
+
+                    return coordinates;
+
+                } catch (error) {
+
+                    console.error(
+                        `FAGA ${type} geocoding error:`,
+                        error?.data?.message ||
+                        error?.message ||
+                        error
+                    );
+
+                    return null;
+
                 }
 
-                bookingModal.classList.remove("show");
+            }
 
-                const serverFare = Number(ride?.fare ?? response?.fare);
-                if (Number.isFinite(serverFare) && serverFare > 0) {
-                    estimatePrice.textContent = "₦" + serverFare.toLocaleString();
+
+            /*
+            * Pickup address typing
+            */
+            pickupInput.addEventListener(
+                "input",
+                () => {
+
+                    const value =
+                        pickupInput.value.trim();
+
+                    /*
+                    * If the user starts editing
+                    * the current-location value,
+                    * remove the old GPS coordinates.
+                    */
+                    if (
+                        value !== "Current location"
+                    ) {
+
+                        window.fagaPickupCoordinates =
+                            null;
+
+                    }
+
+                    window.fagaRouteData =
+                        null;
+
+                    window.clearTimeout(
+                        pickupGeocodeTimer
+                    );
+
+                    pickupGeocodeTimer =
+                        window.setTimeout(
+                            async () => {
+
+                                const requestId =
+                                    ++pickupGeocodeRequest;
+
+                                const address =
+                                    pickupInput.value.trim();
+
+                                if (!address) {
+
+                                    updateRoute();
+
+                                    return;
+
+                                }
+
+                                /*
+                                * Do not geocode the special
+                                * current-location label.
+                                */
+                                if (
+                                    address ===
+                                    "Current location"
+                                ) {
+
+                                    updateRoute();
+
+                                    return;
+
+                                }
+
+                                const coordinates =
+                                    await resolveFagaAddress(
+                                        address,
+                                        "pickup"
+                                    );
+
+                                /*
+                                * Ignore an old request if
+                                * the user has typed again.
+                                */
+                                if (
+                                    requestId !==
+                                    pickupGeocodeRequest
+                                ) {
+
+                                    return;
+
+                                }
+
+                                /*
+                                * Only apply coordinates if
+                                * the input still contains
+                                * the same address.
+                                */
+                                if (
+                                    pickupInput.value.trim() !==
+                                    address
+                                ) {
+
+                                    return;
+
+                                }
+
+                                if (coordinates) {
+
+                                    window.fagaPickupCoordinates =
+                                        coordinates;
+
+                                    console.log(
+                                        "Pickup coordinates set:",
+                                        coordinates
+                                    );
+
+                                } else {
+
+                                    window.fagaPickupCoordinates =
+                                        null;
+
+                                }
+
+                                updateRoute();
+
+                            },
+                            700
+                        );
+
+                }
+            );
+
+
+            /*
+            * Destination address typing
+            */
+            destinationInput.addEventListener(
+                "input",
+                () => {
+
+                    const value =
+                        destinationInput.value.trim();
+
+                    window.fagaDestinationCoordinates =
+                        null;
+
+                    window.fagaRouteData =
+                        null;
+
+                    window.clearTimeout(
+                        destinationGeocodeTimer
+                    );
+
+                    destinationGeocodeTimer =
+                        window.setTimeout(
+                            async () => {
+
+                                const requestId =
+                                    ++destinationGeocodeRequest;
+
+                                const address =
+                                    destinationInput.value.trim();
+
+                                if (!address) {
+
+                                    updateRoute();
+
+                                    return;
+
+                                }
+
+                                const coordinates =
+                                    await resolveFagaAddress(
+                                        address,
+                                        "destination"
+                                    );
+
+                                /*
+                                * Ignore an old request if
+                                * the user has typed again.
+                                */
+                                if (
+                                    requestId !==
+                                    destinationGeocodeRequest
+                                ) {
+
+                                    return;
+
+                                }
+
+                                /*
+                                * Only apply coordinates if
+                                * the input still contains
+                                * the same address.
+                                */
+                                if (
+                                    destinationInput.value.trim() !==
+                                    address
+                                ) {
+
+                                    return;
+
+                                }
+
+                                if (coordinates) {
+
+                                    window.fagaDestinationCoordinates =
+                                        coordinates;
+
+                                    console.log(
+                                        "Destination coordinates set:",
+                                        coordinates
+                                    );
+
+                                } else {
+
+                                    window.fagaDestinationCoordinates =
+                                        null;
+
+                                }
+
+                                updateRoute();
+
+                            },
+                            700
+                        );
+
+                }
+            );
+
+
+
+
+            let routeEstimateTimer = null;
+            let routeEstimateRequest = 0;
+
+            async function updateRoute() {
+
+                const distanceValue =
+                    document.getElementById("distanceValue");
+
+                const durationValue =
+                    document.getElementById("durationValue");
+
+                const arrivalValue =
+                    document.getElementById("arrivalValue");
+
+                const pickup =
+                    pickupInput.value.trim();
+
+                const destination =
+                    destinationInput.value.trim();
+
+                if (!pickup || !destination) {
+
+                    distanceValue.textContent = "—";
+                    durationValue.textContent = "—";
+                    arrivalValue.textContent = "—";
+
+                    return;
                 }
 
-                showToast("Ride request created successfully.");
+                if (
+                    typeof FagaAPI === "undefined" ||
+                    !FagaAPI.isLoggedIn()
+                ) {
 
-                setTimeout(() => {
-                    window.location.href =
-                        "./ride-tracking.html?rideId=" +
-                        encodeURIComponent(rideId);
-                }, 700);
+                    distanceValue.textContent =
+                        "Sign in";
 
-            } catch (error) {
-                console.error("FAGA ride booking error:", error);
+                    durationValue.textContent =
+                        "Sign in";
 
-                let message =
-                    "We could not create your ride. Please try again.";
+                    arrivalValue.textContent =
+                        "Sign in";
 
-                if (error?.data?.message) {
-                    message = error.data.message;
-                } else if (error?.data?.error) {
-                    message = error.data.error;
+                    return;
                 }
 
-                showToast(message);
-                confirmBooking.disabled = false;
-                confirmBooking.textContent = "Request Ride";
-            }
-        }
-
-        bookRideBtn.addEventListener("click", () => {
-            const pickup = pickupInput.value.trim();
-            const destination = destinationInput.value.trim();
-
-            if (!pickup) {
-                showToast("Please enter your pickup location.");
-                pickupInput.focus();
-                return;
-            }
-
-            if (!destination) {
-                showToast("Please enter your destination.");
-                destinationInput.focus();
-                return;
-            }
-
-            if (typeof FagaAPI !== "undefined" && !FagaAPI.isLoggedIn()) {
-                modalText.textContent =
-                    "Please sign in to your FAGA account before requesting a ride.";
-            } else {
-                modalText.textContent =
-                    `Request a ${selectedRide} ride from ${pickup} to ${destination}?`;
-            }
-
-            bookingModal.classList.add("show");
-        });
-
-        cancelModal.addEventListener("click", () => {
-            bookingModal.classList.remove("show");
-            confirmBooking.disabled = false;
-            confirmBooking.textContent = "Request Ride";
-        });
-
-        bookingModal.addEventListener("click", event => {
-            if (event.target === bookingModal) {
-                bookingModal.classList.remove("show");
-                confirmBooking.disabled = false;
-                confirmBooking.textContent = "Request Ride";
-            }
-        });
-
-        confirmBooking.addEventListener("click", createLiveRide);
-
-        /* =====================================
-           MAP CONTROLS
-        ===================================== */
-
-        let mapScale = 1;
-
-        const mapArea =
-            document.querySelector(".map-area");
-
-        document.getElementById("zoomIn")
-            .addEventListener("click", () => {
-
-                mapScale =
-                    Math.min(mapScale + 0.1, 1.5);
-
-                mapArea.style.transform =
-                    `scale(${mapScale})`;
-
-            });
-
-
-        document.getElementById("zoomOut")
-            .addEventListener("click", () => {
-
-                mapScale =
-                    Math.max(mapScale - 0.1, 0.8);
-
-                mapArea.style.transform =
-                    `scale(${mapScale})`;
-
-            });
-
-
-        document.getElementById("centerMap")
-            .addEventListener("click", () => {
-
-                mapScale = 1;
-
-                mapArea.style.transform =
-                    "scale(1)";
-
-                showToast(
-                    "Map centered."
+                window.clearTimeout(
+                    routeEstimateTimer
                 );
 
-            });
+                routeEstimateTimer =
+                    window.setTimeout(
+                        loadRealRouteEstimate,
+                        500
+                    );
+            }
 
 
-        /* =====================================
-           TOAST
-        ===================================== */
+            async function loadRealRouteEstimate() {
 
-        function showToast(message) {
+                const requestId =
+                    ++routeEstimateRequest;
 
-            toast.textContent =
-                message;
+                const distanceValue =
+                    document.getElementById("distanceValue");
 
-            toast.classList.add("show");
+                const durationValue =
+                    document.getElementById("durationValue");
 
-            setTimeout(() => {
+                const arrivalValue =
+                    document.getElementById("arrivalValue");
 
-                toast.classList.remove("show");
+                const pickup =
+                    pickupInput.value.trim();
 
-            }, 3000);
+                const destination =
+                    destinationInput.value.trim();
 
-        }
+                if (!pickup || !destination) {
+                    return;
+                }
+                /*
+            * Wait until typed addresses have been
+            * resolved into coordinates.
+            */
+            const pickupCoordinates =
+                window.fagaPickupCoordinates;
 
+            const destinationCoordinates =
+                window.fagaDestinationCoordinates;
 
-        /* =====================================
-           MOBILE MENU
-        ===================================== */
+            if (
+                !pickupCoordinates ||
+                !Number.isFinite(
+                    Number(pickupCoordinates.latitude)
+                ) ||
+                !Number.isFinite(
+                    Number(pickupCoordinates.longitude)
+                )
+            ) {
 
-        const mobileMenu =
-            document.getElementById("mobileMenu");
+                console.log(
+                    "Waiting for pickup coordinates..."
+                );
 
-        mobileMenu.addEventListener("click", () => {
-
-            const nav =
-                document.querySelector(".nav-links");
-
-            if (nav.style.display === "flex") {
-
-                nav.style.display = "none";
-
-            } else {
-
-                nav.style.display = "flex";
-
-                nav.style.position = "absolute";
-                nav.style.top = "72px";
-                nav.style.left = "0";
-                nav.style.right = "0";
-                nav.style.background = "#071a33";
-                nav.style.padding = "20px";
-                nav.style.flexDirection = "column";
-                nav.style.alignItems = "flex-start";
+                return;
 
             }
 
-        });
+            if (
+                !destinationCoordinates ||
+                !Number.isFinite(
+                    Number(destinationCoordinates.latitude)
+                ) ||
+                !Number.isFinite(
+                    Number(destinationCoordinates.longitude)
+                )
+            ) {
+
+                console.log(
+                    "Waiting for destination coordinates..."
+                );
+
+                return;
+
+            }
+                distanceValue.textContent =
+                    "Calculating...";
+
+                durationValue.textContent =
+                    "Calculating...";
+
+                arrivalValue.textContent =
+                    "Calculating...";
+
+                try {
+
+                    const response =
+                        await FagaAPI.request(
+                            "/api/rides/estimate",
+                            {
+                                method: "POST",
+
+                                body: JSON.stringify({
+
+                                    pickupAddress:
+                                        pickup,
+
+                                    destinationAddress:
+                                        destination,
+
+                                    rideType:
+                                        selectedRide,
+
+                                    passengers:
+                                        passengers,
+
+                                    pickupLatitude:
+                                    pickupCoordinates.latitude,
+
+                                    pickupLongitude:
+                                    pickupCoordinates.longitude,
+
+                                    destinationLatitude:
+                                    destinationCoordinates.latitude,
+
+                                    destinationLongitude:
+                                    destinationCoordinates.longitude
+                                })
+                            }
+                        );
+
+                    if (
+                        requestId !==
+                        routeEstimateRequest
+                    ) {
+                        return;
+                    }
+
+                    const estimate =
+                        response?.estimate;
+
+                    if (!estimate) {
+                        throw new Error(
+                            "Invalid route estimate."
+                        );
+                    }
+
+                    const distanceKm =
+                        Number(
+                            estimate.distanceKm
+                        );
+
+                    const durationMinutes =
+                        Number(
+                            estimate.durationMinutes
+                        );
+
+                    if (
+                        !Number.isFinite(
+                            distanceKm
+                        ) ||
+                        !Number.isFinite(
+                            durationMinutes
+                        )
+                    ) {
+                        throw new Error(
+                            "Invalid distance or duration."
+                        );
+                    }
+
+                    distanceValue.textContent =
+                        `${distanceKm.toFixed(1)} km`;
+
+                    durationValue.textContent =
+                        formatDuration(
+                            durationMinutes
+                        );
+
+                    arrivalValue.textContent =
+                        formatArrivalTime(
+                            estimate.estimatedArrivalAt
+                        );
+
+                    const serverFare =
+                        Number(
+                            estimate.fare
+                        );
+
+                    if (
+                        Number.isFinite(
+                            serverFare
+                        )
+                    ) {
+
+                        estimatePrice.textContent =
+                            "₦" +
+                            serverFare.toLocaleString();
+                    }
+
+                                    } catch (error) {
+
+                            console.error(
+                                "FAGA route estimate error:",
+                                error?.data?.message ||
+                                error?.message ||
+                                error
+                            );
+
+                            console.error(
+                                "FAGA route estimate full error:",
+                                error
+                            );
+
+                            distanceValue.textContent =
+                                "Unavailable";
+
+                            durationValue.textContent =
+                                "Unavailable";
+
+                            arrivalValue.textContent =
+                                "Unavailable";
+                        }
+                    }
+
+
+
+            function formatDuration(
+                minutes
+            ) {
+
+                const totalMinutes =
+                    Math.max(
+                        1,
+                        Math.round(minutes)
+                    );
+
+                const hours =
+                    Math.floor(
+                        totalMinutes / 60
+                    );
+
+                const remainingMinutes =
+                    totalMinutes % 60;
+
+                if (hours > 0) {
+
+                    return `${hours} hr ${remainingMinutes} min`;
+
+                }
+
+                return `${remainingMinutes} min`;
+            }
+
+
+            function formatArrivalTime(
+                value
+            ) {
+
+                const date =
+                    new Date(value);
+
+                if (
+                    Number.isNaN(
+                        date.getTime()
+                    )
+                ) {
+                    return "—";
+                }
+
+                return date.toLocaleTimeString(
+                    [],
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                );
+            }
+
+                    /* =====================================
+                    CURRENT LOCATION
+                    ===================================== */
+
+                    locationBtn.addEventListener("click", () => {
+
+                        if (!navigator.geolocation) {
+
+                            showToast(
+                                "Location services are not supported by this browser."
+                            );
+
+                            return;
+
+                        }
+
+                        locationBtn.textContent =
+                            "Locating...";
+
+                        navigator.geolocation.getCurrentPosition(
+
+                            position => {
+
+                                const latitude =
+                                    position.coords.latitude;
+
+                                const longitude =
+                                    position.coords.longitude;
+
+                                console.log(
+                                    "Current coordinates:",
+                                    latitude,
+                                    longitude
+                                );
+
+                                window.fagaPickupCoordinates = {
+                                    latitude,
+                                    longitude
+                                };
+
+                                // Destination coordinates are optional until a routing/geocoding
+                                // service supplies them.
+                                window.fagaDestinationCoordinates = null;
+
+                                pickupInput.value =
+                                    "Current location";
+
+                                locationBtn.textContent =
+                                    "Located";
+
+                                showToast(
+                                    "Pickup location detected."
+                                );
+                                    updateRoute();
+                            },
+
+                            
+
+
+
+                            error => {
+
+                                console.error(error);
+
+                                locationBtn.textContent =
+                                    "Use current";
+
+                                showToast(
+                                    "Unable to get your location. Please enter it manually."
+                                );
+
+                            }
+
+                        );
+
+                    });
+
+
+                    /* =====================================
+                    RECENT LOCATIONS
+                    ===================================== */
+
+                    document.querySelectorAll(".recent-card")
+                        .forEach(card => {
+
+                            card.addEventListener("click", () => {
+
+                                const location =
+                                    card.dataset.location;
+
+                                if (!pickupInput.value.trim()) {
+
+                                    pickupInput.value =
+                                        location;
+
+                                    window.fagaPickupCoordinates = null;
+
+                                    showToast(
+                                        "Pickup location selected."
+                                    );
+
+                                } else {
+
+                                    destinationInput.value =
+                                        location;
+
+                                    showToast(
+                                        "Destination selected."
+                                    );
+
+                                }
+
+                                updateRoute();
+
+                            });
+
+                        });
+
+
+                    /* =====================================
+                    BOOK RIDE
+                    ===================================== */
+
+                    /* =====================================
+                    LIVE RIDE BOOKING
+                    ===================================== */
+
+                    async function createLiveRide() {
+                        const pickup = pickupInput.value.trim();
+                        const destination = destinationInput.value.trim();
+
+                        if (!pickup || !destination) {
+                            showToast("Please enter pickup and destination.");
+                            return;
+                        }
+
+                        if (typeof FagaAPI === "undefined" || typeof FagaAPI.request !== "function") {
+                            showToast("FAGA connection is unavailable. Please refresh and try again.");
+                            return;
+                        }
+
+                        if (!FagaAPI.isLoggedIn()) {
+                            showToast("Please sign in before booking a ride.");
+                            setTimeout(() => {
+                                window.location.href =
+                                    "../user-portal/login.html?redirect=" +
+                                    encodeURIComponent("../Public-website/ride-booking.html");
+                            }, 700);
+                            return;
+                        }
+
+                        confirmBooking.disabled = true;
+                        confirmBooking.textContent = "Booking...";
+
+                        try {
+                            const response = await FagaAPI.request("/api/rides", {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    pickupAddress: pickup,
+                                    destinationAddress: destination,
+                                    rideType: selectedRide,
+                                    passengers: passengers,
+                                    pickupLatitude: window.fagaPickupCoordinates?.latitude ?? null,
+                                    pickupLongitude: window.fagaPickupCoordinates?.longitude ?? null,
+                                    destinationLatitude: window.fagaDestinationCoordinates?.latitude ?? null,
+                                    destinationLongitude: window.fagaDestinationCoordinates?.longitude ?? null
+                                })
+                            });
+
+                            const ride = response?.ride || response?.data || response;
+
+                            const rideId =
+                                ride?.id ??
+                                ride?.rideId ??
+                                response?.rideId ??
+                                response?.id;
+
+                            if (!rideId) {
+                                throw {
+                                    data: {
+                                        message: "The ride service returned an invalid booking response."
+                                    }
+                                };
+                            }
+
+                            bookingModal.classList.remove("show");
+
+                            const serverFare = Number(ride?.fare ?? response?.fare);
+                            if (Number.isFinite(serverFare) && serverFare > 0) {
+                                estimatePrice.textContent = "₦" + serverFare.toLocaleString();
+                            }
+
+                            showToast("Ride request created successfully.");
+
+                            setTimeout(() => {
+                                window.location.href =
+                                    "./ride-tracking.html?rideId=" +
+                                    encodeURIComponent(rideId);
+                            }, 700);
+
+                        } catch (error) {
+                            console.error("FAGA ride booking error:", error);
+
+                            let message =
+                                "We could not create your ride. Please try again.";
+
+                            if (error?.data?.message) {
+                                message = error.data.message;
+                            } else if (error?.data?.error) {
+                                message = error.data.error;
+                            }
+
+                            showToast(message);
+                            confirmBooking.disabled = false;
+                            confirmBooking.textContent = "Request Ride";
+                        }
+                    }
+
+                    bookRideBtn.addEventListener("click", () => {
+                        const pickup = pickupInput.value.trim();
+                        const destination = destinationInput.value.trim();
+
+                        if (!pickup) {
+                            showToast("Please enter your pickup location.");
+                            pickupInput.focus();
+                            return;
+                        }
+
+                        if (!destination) {
+                            showToast("Please enter your destination.");
+                            destinationInput.focus();
+                            return;
+                        }
+
+                        if (typeof FagaAPI !== "undefined" && !FagaAPI.isLoggedIn()) {
+                            modalText.textContent =
+                                "Please sign in to your FAGA account before requesting a ride.";
+                        } else {
+                            modalText.textContent =
+                                `Request a ${selectedRide} ride from ${pickup} to ${destination}?`;
+                        }
+
+                        bookingModal.classList.add("show");
+                    });
+
+                    cancelModal.addEventListener("click", () => {
+                        bookingModal.classList.remove("show");
+                        confirmBooking.disabled = false;
+                        confirmBooking.textContent = "Request Ride";
+                    });
+
+                    bookingModal.addEventListener("click", event => {
+                        if (event.target === bookingModal) {
+                            bookingModal.classList.remove("show");
+                            confirmBooking.disabled = false;
+                            confirmBooking.textContent = "Request Ride";
+                        }
+                    });
+
+                    confirmBooking.addEventListener("click", createLiveRide);
+
+                    /* =====================================
+                    MAP CONTROLS
+                    ===================================== */
+
+                    let mapScale = 1;
+
+                    const mapArea =
+                        document.querySelector(".map-area");
+
+                    document.getElementById("zoomIn")
+                        .addEventListener("click", () => {
+
+                            mapScale =
+                                Math.min(mapScale + 0.1, 1.5);
+
+                            mapArea.style.transform =
+                                `scale(${mapScale})`;
+
+                        });
+
+
+                    document.getElementById("zoomOut")
+                        .addEventListener("click", () => {
+
+                            mapScale =
+                                Math.max(mapScale - 0.1, 0.8);
+
+                            mapArea.style.transform =
+                                `scale(${mapScale})`;
+
+                        });
+
+
+                    document.getElementById("centerMap")
+                        .addEventListener("click", () => {
+
+                            mapScale = 1;
+
+                            mapArea.style.transform =
+                                "scale(1)";
+
+                            showToast(
+                                "Map centered."
+                            );
+
+                        });
+
+
+                    /* =====================================
+                    TOAST
+                    ===================================== */
+
+                    function showToast(message) {
+
+                        toast.textContent =
+                            message;
+
+                        toast.classList.add("show");
+
+                        setTimeout(() => {
+
+                            toast.classList.remove("show");
+
+                        }, 3000);
+
+                    }
+
+
+                    /* =====================================
+                    MOBILE MENU
+                    ===================================== */
+
+                    const mobileMenu =
+                        document.getElementById("mobileMenu");
+
+                    mobileMenu.addEventListener("click", () => {
+
+                        const nav =
+                            document.querySelector(".nav-links");
+
+                        if (nav.style.display === "flex") {
+
+                            nav.style.display = "none";
+
+                        } else {
+
+                            nav.style.display = "flex";
+
+                            nav.style.position = "absolute";
+                            nav.style.top = "72px";
+                            nav.style.left = "0";
+                            nav.style.right = "0";
+                            nav.style.background = "#071a33";
+                            nav.style.padding = "20px";
+                            nav.style.flexDirection = "column";
+                            nav.style.alignItems = "flex-start";
+
+                        }
+
+                    });
 
 
 
 
-    </script>
+                </script>
 
-</body>
-</html>
+            </body>
+            </html>
