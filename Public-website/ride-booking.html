@@ -2108,19 +2108,10 @@ async function resolveFagaAddress(address, type) {
     const cleanAddress =
         String(address || "").trim();
 
-    if (!cleanAddress || cleanAddress.length < 3) {
+    if (!cleanAddress || cleanAddress.length < 4) {
         return null;
     }
 
-    /*
-     * FAGA currently operates in Lagos.
-     *
-     * Nominatim can return another Nigerian location
-     * when the user enters only a neighbourhood name
-     * such as "Yaba", "Ikeja", "Ajah", etc.
-     *
-     * Therefore, make short/local addresses Lagos-specific.
-     */
     const geocodingAddress =
         /lagos/i.test(cleanAddress) ||
         /nigeria/i.test(cleanAddress)
@@ -2131,15 +2122,11 @@ async function resolveFagaAddress(address, type) {
         typeof FagaAPI === "undefined" ||
         typeof FagaAPI.request !== "function"
     ) {
-        console.error(
-            "FAGA API is unavailable."
-        );
-
+        console.error("FAGA API is unavailable.");
         return null;
     }
 
     try {
-
         console.log(
             `FAGA geocoding ${type}:`,
             geocodingAddress
@@ -2150,36 +2137,22 @@ async function resolveFagaAddress(address, type) {
                 `/api/geocode?address=${encodeURIComponent(
                     geocodingAddress
                 )}`,
-                {
-                    method: "GET"
-                }
+                { method: "GET" }
             );
 
-        const location =
-            response?.location;
+        const location = response?.location;
 
         if (
             !location ||
-            !Number.isFinite(
-                Number(location.latitude)
-            ) ||
-            !Number.isFinite(
-                Number(location.longitude)
-            )
+            !Number.isFinite(Number(location.latitude)) ||
+            !Number.isFinite(Number(location.longitude))
         ) {
-            throw new Error(
-                "Invalid coordinates returned by FAGA."
-            );
+            throw new Error("Invalid coordinates returned by FAGA.");
         }
 
         const coordinates = {
-
-            latitude:
-                Number(location.latitude),
-
-            longitude:
-                Number(location.longitude)
-
+            latitude: Number(location.latitude),
+            longitude: Number(location.longitude)
         };
 
         console.log(
@@ -2189,16 +2162,13 @@ async function resolveFagaAddress(address, type) {
         );
 
         return coordinates;
-
     } catch (error) {
-
-        console.error(
-            `FAGA ${type} geocoding error:`,
+        console.warn(
+            `FAGA ${type} geocoding unavailable for current input:`,
             error?.data?.message ||
             error?.message ||
             error
         );
-
         return null;
     }
 }
@@ -2233,7 +2203,7 @@ pickupInput.addEventListener(
          * Do not geocode very short input.
          */
         if (
-            address.length < 3 ||
+            address.length < 4 ||
             address === "Current location"
         ) {
             updateRoute();
@@ -2251,7 +2221,7 @@ pickupInput.addEventListener(
                         pickupInput.value.trim();
 
                     if (
-                        currentAddress.length < 3 ||
+                        currentAddress.length < 4 ||
                         currentAddress === "Current location"
                     ) {
                         return;
@@ -2303,7 +2273,7 @@ pickupInput.addEventListener(
                     updateRoute();
 
                 },
-                900
+                1200
             );
 
     }
@@ -2335,7 +2305,7 @@ destinationInput.addEventListener(
          * Do not geocode very short input.
          */
         if (
-            address.length < 3
+            address.length < 4
         ) {
             updateRoute();
             return;
@@ -2352,7 +2322,7 @@ destinationInput.addEventListener(
                         destinationInput.value.trim();
 
                     if (
-                        currentAddress.length < 3
+                        currentAddress.length < 4
                     ) {
                         return;
                     }
@@ -2403,7 +2373,7 @@ destinationInput.addEventListener(
                     updateRoute();
 
                 },
-                900
+                1200
             );
 
     }
