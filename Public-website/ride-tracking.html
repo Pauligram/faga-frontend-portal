@@ -1288,32 +1288,7 @@
 
                 <div class="map-area" id="mapArea">
 
-                    <div class="road road-1"></div>
-                    <div class="road road-2"></div>
-                    <div class="road road-3"></div>
-                    <div class="road road-4"></div>
-
-                    <span class="map-place place-1">
-                        Victoria Island
-                    </span>
-
-                    <span class="map-place place-2">
-                        Lekki
-                    </span>
-
-                    <span class="map-place place-3">
-                        Ikoyi
-                    </span>
-
-                    <span class="map-place place-4">
-                        Oniru
-                    </span>
-
-
-                    <div class="route-line"></div>
-
-
-                    <div class="destination-marker"></div>
+                    
 
 
                     <div
@@ -1518,124 +1493,152 @@
 
                 <!-- VEHICLE -->
 
-                <div class="card vehicle-card">
+                <div
+    class="card vehicle-card"
+    id="vehicleCard"
+    style="display:none;"
+>
 
-                    <div class="vehicle-icon">
-                        🚘
-                    </div>
+    <div class="vehicle-icon">
+        🚘
+    </div>
 
-                    <div class="vehicle-info">
+    <div class="vehicle-info">
 
-                        <strong>
-                            Toyota Corolla
-                        </strong>
+        <strong id="vehicleName">
+            Vehicle
+        </strong>
 
-                        <span>
-                            Black · 2022
-                        </span>
+        <span id="vehicleDetails">
+            Vehicle details
+        </span>
 
-                    </div>
+    </div>
 
-                    <div class="plate">
-                        KSF 428 AB
-                    </div>
+    <div
+        class="plate"
+        id="vehiclePlate"
+    >
+        --
+    </div>
 
-                </div>
+</div>
 
 
                 <!-- TRIP -->
 
-                <div class="card trip-card">
+               <div class="card trip-card">
 
-                    <h3>Trip details</h3>
+    <h3>Trip details</h3>
 
-                    <div class="trip-route">
+    <div class="trip-route">
 
-                        <div class="trip-point">
+        <div class="trip-point">
 
-                            <span>
-                                PICKUP
-                            </span>
+            <span>
+                PICKUP
+            </span>
 
-                            <strong>
-                                Victoria Island
-                            </strong>
+            <strong id="tripPickup">
+                Loading...
+            </strong>
 
-                        </div>
+        </div>
 
+        <div class="trip-point destination">
 
-                        <div class="trip-point destination">
+            <span>
+                DESTINATION
+            </span>
 
-                            <span>
-                                DESTINATION
-                            </span>
+            <strong id="tripDestination">
+                Loading...
+            </strong>
 
-                            <strong>
-                                Lekki Phase 1
-                            </strong>
+        </div>
 
-                        </div>
+    </div>
 
-                    </div>
-
-                </div>
+</div>
 
 
                 <!-- FARE -->
 
                 <div class="card">
 
-                    <div class="fare-row">
+    <div class="fare-row">
 
-                        <span>
-                            Estimated fare
-                        </span>
+        <span>
+            Estimated fare
+        </span>
 
-                        <strong>
-                            ₦2,400
-                        </strong>
+        <strong id="rideFare">
+            --
+        </strong>
 
-                    </div>
+    </div>
 
-                    <div class="fare-row">
+    <div class="fare-row">
 
-                        <span>
-                            Ride type
-                        </span>
+        <span>
+            Ride type
+        </span>
 
-                        <strong>
-                            Economy
-                        </strong>
+        <strong id="rideType">
+            --
+        </strong>
 
-                    </div>
+    </div>
 
-                    <div class="fare-row">
+    <div class="fare-row">
 
-                        <span>
-                            Payment
-                        </span>
+        <span>
+            Passengers
+        </span>
 
-                        <strong>
-                            Card
-                        </strong>
+        <strong id="ridePassengers">
+            --
+        </strong>
 
-                    </div>
+    </div>
 
+    <div class="fare-row">
 
-                    <div class="fare-total">
+        <span>
+            Distance
+        </span>
 
-                        <span>
-                            Total estimate
-                        </span>
+        <strong id="rideDistance">
+            --
+        </strong>
 
-                        <span>
-                            ₦2,400
-                        </span>
+    </div>
 
-                    </div>
+    <div class="fare-row">
 
-                </div>
+        <span>
+            Trip time
+        </span>
 
+        <strong id="rideDuration">
+            --
+        </strong>
+
+    </div>
+
+    <div class="fare-total">
+
+        <span>
+            Total estimate
+        </span>
+
+        <span id="rideTotal">
+            --
+        </span>
+
+    </div>
+
+</div>
 
                 <!-- SAFETY -->
 
@@ -2324,55 +2327,279 @@
                 "Waiting for live location";
         }
 
-        function updateRideUI(ride, tracking) {
-            latestRide = ride;
-            latestTracking = tracking;
+        function updateRideUI(
+    ride,
+    tracking
+) {
 
-            const status = getRideStatus(ride);
+    latestRide = ride;
+    latestTracking = tracking;
 
-            rideStatus.textContent =
-                statusText[status] || status.replaceAll("_", " ");
+    const status =
+        getRideStatus(ride);
 
-            const progress =
-                statusProgress[status] ?? 10;
+    rideStatus.textContent =
+        statusText[status] ||
+        status.replaceAll(
+            "_",
+            " "
+        );
 
-            progressBar.style.width =
-                `${progress}%`;
+    const progress =
+        statusProgress[status] ?? 10;
 
-            const etaMinutes =
-                Number(ride?.driverEtaMinutes);
+    progressBar.style.width =
+        `${progress}%`;
 
-            if (Number.isFinite(etaMinutes) && etaMinutes >= 0) {
-                eta.textContent =
-                    etaMinutes === 0
-                        ? "Now"
-                        : `${etaMinutes} min`;
-            } else if (["COMPLETED"].includes(status)) {
-                eta.textContent = "Arrived";
-            } else if (["CANCELLED"].includes(status)) {
-                eta.textContent = "--";
-            } else {
-                eta.textContent = "--";
-            }
+    /*
+     * REAL DRIVER ETA
+     */
+    const driverEta =
+        Number(
+            tracking?.driverEtaMinutes ??
+            ride?.driverEtaMinutes
+        );
 
-            updateDriverCard(ride);
-            updateMapFromTracking(tracking);
-            updateTimeline(status);
+    if (
+        Number.isFinite(
+            driverEta
+        ) &&
+        driverEta >= 0
+    ) {
 
-            if (status === "CANCELLED") {
-                document.getElementById("cancelRide").disabled = true;
-                document.getElementById("cancelRide").textContent =
-                    "Ride Cancelled";
-            } else if (status === "COMPLETED") {
-                document.getElementById("cancelRide").disabled = true;
-                document.getElementById("cancelRide").textContent =
-                    "Ride Completed";
-            } else {
-                document.getElementById("cancelRide").disabled = false;
-                document.getElementById("cancelRide").textContent =
-                    "Cancel Ride";
-            }
-        }
+        eta.textContent =
+            driverEta === 0
+                ? "Now"
+                : `${driverEta} min`;
+
+    } else if (
+        status === "COMPLETED"
+    ) {
+
+        eta.textContent =
+            "Arrived";
+
+    } else if (
+        status === "CANCELLED"
+    ) {
+
+        eta.textContent =
+            "--";
+
+    } else {
+
+        eta.textContent =
+            "--";
+    }
+
+    /*
+     * REAL TRIP DETAILS
+     */
+
+    const tripPickup =
+        document.getElementById(
+            "tripPickup"
+        );
+
+    const tripDestination =
+        document.getElementById(
+            "tripDestination"
+        );
+
+    const rideFare =
+        document.getElementById(
+            "rideFare"
+        );
+
+    const rideType =
+        document.getElementById(
+            "rideType"
+        );
+
+    const ridePassengers =
+        document.getElementById(
+            "ridePassengers"
+        );
+
+    const rideDistance =
+        document.getElementById(
+            "rideDistance"
+        );
+
+    const rideDuration =
+        document.getElementById(
+            "rideDuration"
+        );
+
+    const rideTotal =
+        document.getElementById(
+            "rideTotal"
+        );
+
+    if (tripPickup) {
+
+        tripPickup.textContent =
+            ride?.pickupAddress ||
+            "--";
+    }
+
+    if (tripDestination) {
+
+        tripDestination.textContent =
+            ride?.destinationAddress ||
+            "--";
+    }
+
+    if (rideFare) {
+
+        const fare =
+            Number(ride?.fare);
+
+        rideFare.textContent =
+            Number.isFinite(fare)
+                ? "₦" +
+                  fare.toLocaleString()
+                : "--";
+    }
+
+    if (rideTotal) {
+
+        const fare =
+            Number(ride?.fare);
+
+        rideTotal.textContent =
+            Number.isFinite(fare)
+                ? "₦" +
+                  fare.toLocaleString()
+                : "--";
+    }
+
+    if (rideType) {
+
+        rideType.textContent =
+            ride?.rideType
+                ? String(
+                    ride.rideType
+                ).toUpperCase()
+                : "--";
+    }
+
+    if (ridePassengers) {
+
+        ridePassengers.textContent =
+            Number.isFinite(
+                Number(
+                    ride?.passengers
+                )
+            )
+                ? ride.passengers
+                : "--";
+    }
+
+    if (rideDistance) {
+
+        const distance =
+            Number(
+                ride?.distanceKm
+            );
+
+        rideDistance.textContent =
+            Number.isFinite(
+                distance
+            )
+                ? `${distance.toFixed(1)} km`
+                : "--";
+    }
+
+    if (rideDuration) {
+
+        const duration =
+            Number(
+                ride?.durationMinutes
+            );
+
+        rideDuration.textContent =
+            Number.isFinite(
+                duration
+            )
+                ? formatDuration(
+                    duration
+                )
+                : "--";
+    }
+
+    updateDriverCard(
+        ride
+    );
+
+    updateMapFromTracking(
+        tracking
+    );
+
+    updateTimeline(
+        status
+    );
+
+    const cancelButton =
+        document.getElementById(
+            "cancelRide"
+        );
+
+    if (
+        status === "CANCELLED"
+    ) {
+
+        cancelButton.disabled =
+            true;
+
+        cancelButton.textContent =
+            "Ride Cancelled";
+
+    } else if (
+        status === "COMPLETED"
+    ) {
+
+        cancelButton.disabled =
+            true;
+
+        cancelButton.textContent =
+            "Ride Completed";
+
+    } else {
+
+        cancelButton.disabled =
+            false;
+
+        cancelButton.textContent =
+            "Cancel Ride";
+    }
+}
+
+
+function formatDuration(minutes) {
+
+    const total =
+        Math.max(
+            1,
+            Math.round(
+                Number(minutes)
+            )
+        );
+
+    const hours =
+        Math.floor(
+            total / 60
+        );
+
+    const mins =
+        total % 60;
+
+    if (hours > 0) {
+        return `${hours} hr ${mins} min`;
+    }
+
+    return `${mins} min`;
+}
 
         async function loadRide() {
             if (!rideId) {

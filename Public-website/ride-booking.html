@@ -2095,30 +2095,24 @@ button, a, input, select {
         ===================================== */
 
         pickupInput.addEventListener("input", () => {
+    window.fagaPickupCoordinates = null;
+    window.fagaRouteData = null;
+    updateRoute();
+});
 
-            if (pickupInput.value.trim() !== "Current location") {
-                window.fagaPickupCoordinates = null;
-            }
-
-            updateRoute();
-
-        });
-
-        destinationInput.addEventListener("input", () => {
-
-            window.fagaDestinationCoordinates = null;
-            updateRoute();
-
-        });
+destinationInput.addEventListener("input", () => {
+    window.fagaDestinationCoordinates = null;
+    window.fagaRouteData = null;
+    updateRoute();
+});
 
 
         function updateRoute() {
 
-    const hasPickup =
-        pickupInput.value.trim().length > 0;
+   let routeEstimateTimer = null;
+let routeEstimateRequest = 0;
 
-    const hasDestination =
-        destinationInput.value.trim().length > 0;
+async function updateRoute() {
 
     const distanceValue =
         document.getElementById("distanceValue");
@@ -2129,26 +2123,266 @@ button, a, input, select {
     const arrivalValue =
         document.getElementById("arrivalValue");
 
-    if (!hasPickup || !hasDestination) {
+    const pickup =
+        pickupInput.value.trim();
 
-        distanceValue.textContent = "--";
-        durationValue.textContent = "--";
-        arrivalValue.textContent = "--";
+    const destination =
+        destinationInput.value.trim();
+
+    if (!pickup || !destination) {
+
+        distanceValue.textContent = "—";
+        durationValue.textContent = "—";
+        arrivalValue.textContent = "—";
 
         return;
     }
 
-    /*
-     * Route distance and ETA will be supplied by
-     * the live routing service when integrated.
-     *
-     * Do not display fake/demo values.
-     */
-    distanceValue.textContent = "--";
-    durationValue.textContent = "--";
-    arrivalValue.textContent = "--";
+    if (
+        typeof FagaAPI === "undefined" ||
+        !FagaAPI.isLoggedIn()
+    ) {
+
+        distanceValue.textContent =
+            "Sign in";
+
+        durationValue.textContent =
+            "Sign in";
+
+        arrivalValue.textContent =
+            "Sign in";
+
+        return;
+    }
+
+    window.clearTimeout(
+        routeEstimateTimer
+    );
+
+    routeEstimateTimer =
+        window.setTimeout(
+            loadRealRouteEstimate,
+            500
+        );
 }
 
+
+async function loadRealRouteEstimate() {
+
+    const requestId =
+        ++routeEstimateRequest;
+
+    const distanceValue =
+        document.getElementById("distanceValue");
+
+    const durationValue =
+        document.getElementById("durationValue");
+
+    const arrivalValue =
+        document.getElementById("arrivalValue");
+
+    const pickup =
+        pickupInput.value.trim();
+
+    const destination =
+        destinationInput.value.trim();
+
+    if (!pickup || !destination) {
+        return;
+    }
+
+    distanceValue.textContent =
+        "Calculating...";
+
+    durationValue.textContent =
+        "Calculating...";
+
+    arrivalValue.textContent =
+        "Calculating...";
+
+    try {
+
+        const response =
+            await FagaAPI.request(
+                "/api/rides/estimate",
+                {
+                    method: "POST",
+
+                    body: JSON.stringify({
+
+                        pickupAddress:
+                            pickup,
+
+                        destinationAddress:
+                            destination,
+
+                        rideType:
+                            selectedRide,
+
+                        passengers:
+                            passengers,
+
+                        pickupLatitude:
+                            window
+                                .fagaPickupCoordinates
+                                ?.latitude ?? null,
+
+                        pickupLongitude:
+                            window
+                                .fagaPickupCoordinates
+                                ?.longitude ?? null,
+
+                        destinationLatitude:
+                            window
+                                .fagaDestinationCoordinates
+                                ?.latitude ?? null,
+
+                        destinationLongitude:
+                            window
+                                .fagaDestinationCoordinates
+                                ?.longitude ?? null
+                    })
+                }
+            );
+
+        if (
+            requestId !==
+            routeEstimateRequest
+        ) {
+            return;
+        }
+
+        const estimate =
+            response?.estimate;
+
+        if (!estimate) {
+            throw new Error(
+                "Invalid route estimate."
+            );
+        }
+
+        const distanceKm =
+            Number(
+                estimate.distanceKm
+            );
+
+        const durationMinutes =
+            Number(
+                estimate.durationMinutes
+            );
+
+        if (
+            !Number.isFinite(
+                distanceKm
+            ) ||
+            !Number.isFinite(
+                durationMinutes
+            )
+        ) {
+            throw new Error(
+                "Invalid distance or duration."
+            );
+        }
+
+        distanceValue.textContent =
+            `${distanceKm.toFixed(1)} km`;
+
+        durationValue.textContent =
+            formatDuration(
+                durationMinutes
+            );
+
+        arrivalValue.textContent =
+            formatArrivalTime(
+                estimate.estimatedArrivalAt
+            );
+
+        const serverFare =
+            Number(
+                estimate.fare
+            );
+
+        if (
+            Number.isFinite(
+                serverFare
+            )
+        ) {
+
+            estimatePrice.textContent =
+                "₦" +
+                serverFare.toLocaleString();
+        }
+
+    } catch (error) {
+
+        console.error(
+            "FAGA route estimate error:",
+            error
+        );
+
+        distanceValue.textContent =
+            "Unavailable";
+
+        durationValue.textContent =
+            "Unavailable";
+
+        arrivalValue.textContent =
+            "Unavailable";
+    }
+}
+
+
+function formatDuration(
+    minutes
+) {
+
+    const totalMinutes =
+        Math.max(
+            1,
+            Math.round(minutes)
+        );
+
+    const hours =
+        Math.floor(
+            totalMinutes / 60
+        );
+
+    const remainingMinutes =
+        totalMinutes % 60;
+
+    if (hours > 0) {
+
+        return `${hours} hr ${remainingMinutes} min`;
+
+    }
+
+    return `${remainingMinutes} min`;
+}
+
+
+function formatArrivalTime(
+    value
+) {
+
+    const date =
+        new Date(value);
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+        return "—";
+    }
+
+    return date.toLocaleTimeString(
+        [],
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+}
 
         /* =====================================
            CURRENT LOCATION
@@ -2203,7 +2437,7 @@ button, a, input, select {
                     showToast(
                         "Pickup location detected."
                     );
-
+                        updateRoute();
                 },
 
                 error => {
