@@ -2088,7 +2088,7 @@
                             "₦" + finalPrice.toLocaleString();
 
                     }
-                    
+
 
             /*
             * Pickup address typing
@@ -2107,6 +2107,106 @@ async function resolveFagaAddress(address, type) {
 
     const cleanAddress =
         String(address || "").trim();
+
+        async function resolveFagaAddress(address, type) {
+
+    const cleanAddress =
+        String(address || "").trim();
+
+    if (!cleanAddress || cleanAddress.length < 3) {
+        return null;
+    }
+
+    /*
+     * FAGA currently operates in Lagos.
+     *
+     * Nominatim can return another Nigerian location
+     * when the user enters only a neighbourhood name
+     * such as "Yaba", "Ikeja", "Ajah", etc.
+     *
+     * Therefore, make short/local addresses Lagos-specific.
+     */
+    const geocodingAddress =
+        /lagos/i.test(cleanAddress) ||
+        /nigeria/i.test(cleanAddress)
+            ? cleanAddress
+            : `${cleanAddress}, Lagos, Nigeria`;
+
+    if (
+        typeof FagaAPI === "undefined" ||
+        typeof FagaAPI.request !== "function"
+    ) {
+        console.error(
+            "FAGA API is unavailable."
+        );
+
+        return null;
+    }
+
+    try {
+
+        console.log(
+            `FAGA geocoding ${type}:`,
+            geocodingAddress
+        );
+
+        const response =
+            await FagaAPI.request(
+                `/api/geocode?address=${encodeURIComponent(
+                    geocodingAddress
+                )}`,
+                {
+                    method: "GET"
+                }
+            );
+
+        const location =
+            response?.location;
+
+        if (
+            !location ||
+            !Number.isFinite(
+                Number(location.latitude)
+            ) ||
+            !Number.isFinite(
+                Number(location.longitude)
+            )
+        ) {
+            throw new Error(
+                "Invalid coordinates returned by FAGA."
+            );
+        }
+
+        const coordinates = {
+
+            latitude:
+                Number(location.latitude),
+
+            longitude:
+                Number(location.longitude)
+
+        };
+
+        console.log(
+            `FAGA ${type} coordinates:`,
+            coordinates.latitude,
+            coordinates.longitude
+        );
+
+        return coordinates;
+
+    } catch (error) {
+
+        console.error(
+            `FAGA ${type} geocoding error:`,
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+
+        return null;
+    }
+}
 
     if (!cleanAddress || cleanAddress.length < 3) {
         return null;
