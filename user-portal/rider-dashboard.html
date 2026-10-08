@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAGA | Rider Dashboard</title>
+  <script src="../js/faga-api.js"></script>
+  <script>
+    if (typeof FagaAPI === "undefined" || !FagaAPI.isLoggedIn()) {
+      window.location.href = "./login.html";
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{--navy:#071a33;--navy2:#0c2748;--orange:#f7931e;--orange-dark:#dc7808;--orange-light:#fff1df;--green:#16a34a;--green-light:#eaf8ef;--red:#dc2626;--red-light:#feecec;--blue:#2563eb;--blue-light:#eaf1ff;--bg:#f5f7fa;--card:#fff;--text:#172033;--muted:#687386;--border:#e5e9ef;--shadow:0 8px 30px rgba(7,26,51,.07);--radius:16px;--sidebar-width:250px}
+    *{margin:0;padding:0;box-sizing:border-box} body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}button{font:inherit;cursor:pointer}a{text-decoration:none;color:inherit}.app{min-height:100vh}
+    .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-width);height:100vh;background:var(--navy);color:#fff;z-index:1000;overflow-y:auto;transition:.3s}.logo{height:76px;padding:0 22px;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);font-size:25px;font-weight:800}.logo span{color:var(--orange)}.nav{padding:20px 12px}.nav a{display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:10px;color:#dbe5f1;margin-bottom:5px}.nav a:hover,.nav a.active{background:rgba(247,147,30,.15);color:#fff}.nav i{width:20px;text-align:center}.main{margin-left:var(--sidebar-width);min-height:100vh}.topbar{height:76px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}.topbar h1{font-size:22px}.profile{display:flex;align-items:center;gap:10px}.avatar{width:40px;height:40px;border-radius:50%;background:var(--orange-light);color:var(--orange-dark);display:grid;place-items:center;font-weight:800}.content{padding:28px;max-width:1400px;margin:auto}.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:20px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.hero h2{font-size:28px;margin-bottom:7px}.hero p{color:#c9d5e5}.online-wrap{display:flex;align-items:center;gap:12px}.online-badge{padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.1);font-weight:700}.toggle{width:54px;height:30px;border-radius:30px;background:#64748b;border:0;padding:3px}.toggle span{display:block;width:24px;height:24px;background:#fff;border-radius:50%;transition:.2s}.toggle.on{background:var(--green)}.toggle.on span{transform:translateX(24px)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}.stat-label{color:var(--muted);font-size:13px;font-weight:600}.stat-value{font-size:27px;font-weight:800;margin-top:5px}.section{margin-bottom:24px}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}.section-head h3{font-size:18px}.refresh{border:1px solid var(--border);background:#fff;border-radius:9px;padding:9px 13px}.ride-list{display:grid;gap:14px}.ride{border:1px solid var(--border);border-radius:14px;padding:18px;background:#fff}.ride-top{display:flex;justify-content:space-between;gap:12px}.ride-id{font-weight:800}.status{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;background:var(--blue-light);color:var(--blue)}.status.assigned{background:var(--orange-light);color:var(--orange-dark)}.status.progress{background:var(--green-light);color:var(--green)}.status.completed{background:#eef2f7;color:#475569}.route{display:grid;gap:8px;margin:14px 0;color:#475569}.route-row{display:flex;gap:10px;align-items:flex-start}.dot{width:10px;height:10px;border-radius:50%;background:var(--orange);margin-top:6px;flex:none}.dot.dest{background:var(--navy)}.actions{display:flex;flex-wrap:wrap;gap:9px}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700}.btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:var(--orange-dark)}.btn-secondary{background:#eef2f7;color:var(--navy)}.btn-success{background:var(--green);color:#fff}.btn-danger{background:var(--red);color:#fff}.empty{text-align:center;color:var(--muted);padding:30px}.gps{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}.gps-dot{width:10px;height:10px;border-radius:50%;background:#94a3b8}.gps-dot.live{background:var(--green);box-shadow:0 0 0 5px var(--green-light)}.toast{position:fixed;right:20px;bottom:20px;background:var(--navy);color:#fff;padding:13px 17px;border-radius:10px;box-shadow:var(--shadow);display:none;z-index:3000}.menu{display:none;background:none;border:0;font-size:22px;color:var(--navy)}
+    @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu{display:block}.topbar{padding:0 17px}.content{padding:18px}.hero{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.hero h2{font-size:23px}}
+    @media(max-width:500px){.grid{grid-template-columns:1fr}.topbar h1{font-size:18px}.actions .btn{width:100%}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">FA<span>GA</span></div>
+    <nav class="nav">
+      <a class="active" href="./rider-dashboard.html"><i class="fa-solid fa-gauge"></i> Rider Dashboard</a>
+      <a href="./dashboard.html"><i class="fa-solid fa-user"></i> Customer Dashboard</a>
+      <a href="./ride-booking.html"><i class="fa-solid fa-car"></i> Book a Ride</a>
+      <a href="./delivery-booking.html"><i class="fa-solid fa-box"></i> Deliveries</a>
+      <a href="./help.html"><i class="fa-solid fa-circle-question"></i> Help</a>
+      <a href="#" id="logoutLink"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:14px"><button class="menu" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button><h1>Rider Dashboard</h1></div>
+      <div class="profile"><span id="driverName">Driver</span><div class="avatar" id="avatar">D</div></div>
+    </header>
+
+    <div class="content">
+      <section class="hero">
+        <div><h2>Drive with FAGA</h2><p>Accept real ride requests and share your live GPS location securely.</p><div class="gps" style="margin-top:13px;color:#c9d5e5"><span class="gps-dot" id="gpsDot"></span><span id="gpsText">GPS is off</span></div></div>
+        <div class="online-wrap"><span class="online-badge" id="onlineText">Offline</span><button class="toggle" id="onlineToggle" aria-label="Toggle rider online status"><span></span></button></div>
+      </section>
+
+      <section class="grid">
+        <div class="card"><div class="stat-label">Available rides</div><div class="stat-value" id="availableCount">0</div></div>
+        <div class="card"><div class="stat-label">Active ride</div><div class="stat-value" id="activeRideValue">None</div></div>
+        <div class="card"><div class="stat-label">Completed today</div><div class="stat-value" id="completedCount">0</div></div>
+        <div class="card"><div class="stat-label">GPS updates</div><div class="stat-value" id="gpsCount">0</div></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><h3>Ride requests</h3><button class="refresh" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+        <div class="ride-list" id="rideList"><div class="card empty">Loading ride requests...</div></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><h3>Current ride</h3></div>
+        <div id="activeRidePanel" class="card empty">No active ride. Accept a ride request to begin.</div>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  let driverGpsWatchId = null;
+  let lastGpsSentAt = 0;
+  let gpsUpdateCount = 0;
+  let activeRide = null;
+  let refreshTimer = null;
+  let isOnline = false;
+
+  const $ = id => document.getElementById(id);
+
+  function showToast(message) {
+    const el = $("toast");
+    el.textContent = message;
+    el.style.display = "block";
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => el.style.display = "none", 3500);
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[ch]));
+  }
+
+  function normalizeRide(ride) {
+    if (!ride || !ride.id) return null;
+    return ride;
+  }
+
+  function statusClass(status) {
+    const s = String(status || "").toUpperCase();
+    if (s === "IN_PROGRESS") return "progress";
+    if (s === "DRIVER_ASSIGNED" || s === "DRIVER_ARRIVING" || s === "DRIVER_ARRIVED") return "assigned";
+    if (s === "COMPLETED") return "completed";
+    return "";
+  }
+
+  function renderRideCard(ride) {
+    const status = String(ride.status || "SEARCHING").toUpperCase();
+    const active = activeRide && Number(activeRide.id) === Number(ride.id);
+    return `
+      <article class="ride">
+        <div class="ride-top">
+          <div><div class="ride-id">Ride #${escapeHtml(ride.id)}</div><small style="color:var(--muted)">${escapeHtml(ride.rideType || "Economy")} · ${escapeHtml(ride.passengers || 1)} passenger(s)</small></div>
+          <span class="status ${statusClass(status)}">${escapeHtml(status.replaceAll("_", " "))}</span>
+        </div>
+        <div class="route">
+          <div class="route-row"><span class="dot"></span><span><strong>Pickup</strong><br>${escapeHtml(ride.pickupAddress || "Not provided")}</span></div>
+          <div class="route-row"><span class="dot dest"></span><span><strong>Destination</strong><br>${escapeHtml(ride.destinationAddress || "Not provided")}</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:13px;color:var(--muted);font-size:13px">
+          <span>Fare: <strong style="color:var(--text)">₦${Number(ride.fare || 0).toLocaleString("en-NG")}</strong></span>
+          <span>${ride.distanceKm != null ? Number(ride.distanceKm).toFixed(1) + " km" : "Distance pending"}</span>
+        </div>
+        <div class="actions">
+          ${!active && (status === "SEARCHING" || status === "REQUESTED") ? `<button class="btn btn-primary" data-action="accept" data-id="${escapeHtml(ride.id)}"><i class="fa-solid fa-check"></i> Accept Ride</button>` : ""}
+          ${active && status === "DRIVER_ASSIGNED" ? `<button class="btn btn-primary" data-action="arriving" data-id="${escapeHtml(ride.id)}">Start Driving to Pickup</button>` : ""}
+          ${active && status === "DRIVER_ARRIVING" ? `<button class="btn btn-success" data-action="arrived" data-id="${escapeHtml(ride.id)}">I've Arrived</button>` : ""}
+          ${active && status === "DRIVER_ARRIVED" ? `<button class="btn btn-success" data-action="start" data-id="${escapeHtml(ride.id)}">Start Trip</button>` : ""}
+          ${active && status === "IN_PROGRESS" ? `<button class="btn btn-success" data-action="complete" data-id="${escapeHtml(ride.id)}">Complete Trip</button>` : ""}
+        </div>
+      </article>`;
+  }
+
+  function renderRides(rides) {
+    const list = $("rideList");
+    const available = rides.filter(r => ["SEARCHING","REQUESTED"].includes(String(r.status || "").toUpperCase()));
+    $("availableCount").textContent = available.length;
+    if (!rides.length) {
+      list.innerHTML = `<div class="card empty">No ride requests are available right now.</div>`;
+      return;
+    }
+    list.innerHTML = rides.map(renderRideCard).join("");
+  }
+
+  function renderActiveRide() {
+    const panel = $("activeRidePanel");
+    if (!activeRide) {
+      panel.className = "card empty";
+      panel.innerHTML = "No active ride. Accept a ride request to begin.";
+      $("activeRideValue").textContent = "None";
+      return;
+    }
+    panel.className = "card";
+    panel.innerHTML = `<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><strong>Ride #${escapeHtml(activeRide.id)}</strong><p style="color:var(--muted);margin-top:5px">${escapeHtml(activeRide.pickupAddress || "")} → ${escapeHtml(activeRide.destinationAddress || "")}</p></div><span class="status ${statusClass(activeRide.status)}">${escapeHtml(String(activeRide.status || "").replaceAll("_"," "))}</span></div><div class="gps" style="margin-top:16px"><span class="gps-dot" id="activeGpsDot"></span><span id="activeGpsText">GPS is waiting to start.</span></div>`;
+    $("activeRideValue").textContent = "#" + activeRide.id;
+  }
+
+  async function loadProfile() {
+    try {
+      const user = await FagaAPI.getProfile();
+      const role = String(user?.role || "").toLowerCase();
+      if (role && role !== "rider" && role !== "admin") {
+        showToast("This dashboard is for approved FAGA riders.");
+      }
+      const name = user?.name || "Driver";
+      $("driverName").textContent = name;
+      $("avatar").textContent = name.charAt(0).toUpperCase();
+    } catch (error) {
+      console.warn("Unable to load rider profile", error);
+    }
+  }
+
+  async function loadRides() {
+    try {
+      // This endpoint is the rider-facing source of available/assigned rides.
+      const response = await FagaAPI.request("/api/rider/rides");
+      const rides = Array.isArray(response) ? response : (response?.rides || response?.data || []);
+      const normalized = rides.map(normalizeRide).filter(Boolean);
+      const foundActive = normalized.find(r => Number(r.driverId) && ["DRIVER_ASSIGNED","DRIVER_ARRIVING","DRIVER_ARRIVED","IN_PROGRESS"].includes(String(r.status || "").toUpperCase()));
+      if (foundActive) activeRide = foundActive;
+      renderRides(normalized);
+      renderActiveRide();
+    } catch (error) {
+      console.error("FAGA rider ride loading error", error);
+      $("rideList").innerHTML = `<div class="card empty">Unable to load ride requests. The rider ride service may not be enabled yet.</div>`;
+    }
+  }
+
+  async function updateRideStatus(rideId, status) {
+    try {
+      const response = await FagaAPI.request(`/api/rider/rides/${encodeURIComponent(rideId)}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status })
+      });
+      const ride = normalizeRide(response?.ride || response?.data || response);
+      if (ride) activeRide = ride;
+      showToast(`Ride status updated to ${status.replaceAll("_", " ")}.`);
+      if (status === "DRIVER_ASSIGNED" || status === "DRIVER_ARRIVING" || status === "DRIVER_ARRIVED" || status === "IN_PROGRESS") {
+        startDriverGpsTracking(rideId);
+      }
+      if (status === "COMPLETED" || status === "CANCELLED") stopDriverGpsTracking();
+      await loadRides();
+    } catch (error) {
+      console.error("Ride status update failed", error);
+      showToast(error?.data?.message || "Unable to update ride status.");
+    }
+  }
+
+  async function acceptRide(rideId) {
+    try {
+      const response = await FagaAPI.request(`/api/rider/rides/${encodeURIComponent(rideId)}/accept`, {
+        method: "POST"
+      });
+      activeRide = normalizeRide(response?.ride || response?.data || response);
+      showToast("Ride accepted. Starting driver GPS...");
+      startDriverGpsTracking(rideId);
+      await loadRides();
+    } catch (error) {
+      console.error("Ride acceptance failed", error);
+      showToast(error?.data?.message || "Unable to accept this ride.");
+    }
+  }
+
+  function startDriverGpsTracking(rideId) {
+    if (!rideId) return;
+    if (!navigator.geolocation) {
+      showToast("GPS is not supported on this device.");
+      return;
+    }
+    if (driverGpsWatchId !== null) navigator.geolocation.clearWatch(driverGpsWatchId);
+    $("gpsText").textContent = "Requesting GPS permission...";
+    driverGpsWatchId = navigator.geolocation.watchPosition(async position => {
+      const { latitude, longitude, accuracy } = position.coords;
+      const now = Date.now();
+      if (now - lastGpsSentAt < 5000) return;
+      lastGpsSentAt = now;
+      try {
+        await FagaAPI.request(`/api/rides/${encodeURIComponent(rideId)}/location`, {
+          method: "POST",
+          body: JSON.stringify({ latitude, longitude, accuracy })
+        });
+        gpsUpdateCount += 1;
+        $("gpsCount").textContent = gpsUpdateCount;
+        $("gpsDot").classList.add("live");
+        $("gpsText").textContent = `GPS live · ±${Math.round(accuracy || 0)}m accuracy`;
+        const activeDot = $("activeGpsDot");
+        const activeText = $("activeGpsText");
+        if (activeDot) activeDot.classList.add("live");
+        if (activeText) activeText.textContent = `GPS live · Last update ${new Date().toLocaleTimeString()}`;
+      } catch (error) {
+        console.error("Driver GPS upload failed", error);
+        $("gpsText").textContent = "GPS available, upload failed";
+      }
+    }, error => {
+      console.error("Driver GPS error", error);
+      $("gpsDot").classList.remove("live");
+      if (error.code === error.PERMISSION_DENIED) $("gpsText").textContent = "GPS permission denied";
+      else if (error.code === error.POSITION_UNAVAILABLE) $("gpsText").textContent = "GPS temporarily unavailable";
+      else $("gpsText").textContent = "Unable to read GPS";
+      showToast("FAGA needs your real device GPS to track the ride.");
+    }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 15000 });
+  }
+
+  function stopDriverGpsTracking() {
+    if (driverGpsWatchId !== null) {
+      navigator.geolocation.clearWatch(driverGpsWatchId);
+      driverGpsWatchId = null;
+    }
+    lastGpsSentAt = 0;
+    $("gpsDot").classList.remove("live");
+    $("gpsText").textContent = "GPS is off";
+  }
+
+  async function toggleOnline() {
+    // The backend online/offline endpoint will be added with the rider dispatch layer.
+    // Do not fake online state by pretending the server accepted it.
+    if (!isOnline) {
+      try {
+        await FagaAPI.request("/api/rider/availability", { method: "PATCH", body: JSON.stringify({ available: true }) });
+        isOnline = true;
+        $("onlineToggle").classList.add("on");
+        $("onlineText").textContent = "Online";
+        showToast("You are now online for ride requests.");
+        await loadRides();
+      } catch (error) {
+        showToast(error?.data?.message || "Rider availability service is not enabled yet.");
+      }
+    } else {
+      try {
+        await FagaAPI.request("/api/rider/availability", { method: "PATCH", body: JSON.stringify({ available: false }) });
+        isOnline = false;
+        stopDriverGpsTracking();
+        $("onlineToggle").classList.remove("on");
+        $("onlineText").textContent = "Offline";
+        showToast("You are now offline.");
+      } catch (error) {
+        showToast(error?.data?.message || "Unable to change rider availability.");
+      }
+    }
+  }
+
+  document.addEventListener("click", event => {
+    const btn = event.target.closest("[data-action]");
+    if (!btn) return;
+    const rideId = btn.dataset.id;
+    const action = btn.dataset.action;
+    if (action === "accept") acceptRide(rideId);
+    if (action === "arriving") updateRideStatus(rideId, "DRIVER_ARRIVING");
+    if (action === "arrived") updateRideStatus(rideId, "DRIVER_ARRIVED");
+    if (action === "start") updateRideStatus(rideId, "IN_PROGRESS");
+    if (action === "complete") updateRideStatus(rideId, "COMPLETED");
+  });
+
+  $("refreshBtn").addEventListener("click", loadRides);
+  $("onlineToggle").addEventListener("click", toggleOnline);
+  $("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+  $("logoutLink").addEventListener("click", event => {
+    event.preventDefault();
+    stopDriverGpsTracking();
+    if (typeof FagaAPI.removeToken === "function") FagaAPI.removeToken();
+    window.location.href = "./login.html";
+  });
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    await loadProfile();
+    await loadRides();
+    refreshTimer = setInterval(loadRides, 10000);
+  });
+
+  window.addEventListener("beforeunload", stopDriverGpsTracking);
+})();
+</script>
+</body>
+</html>
