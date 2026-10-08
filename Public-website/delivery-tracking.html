@@ -2426,47 +2426,57 @@ showToast(
         closeModal();
 
         if (action === "cancel") {
+            if (!activeDeliveryId) {
+                showToast("No delivery is currently selected.");
+                return;
+            }
 
-            /*
-                PRODUCTION:
+            const button =
+                document.getElementById("modalConfirm");
 
-                POST /api/deliveries/:deliveryId/cancel
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Cancelling...";
+            }
 
-                Backend must verify:
-                - delivery belongs to customer
-                - cancellation is still allowed
-                - rider/package status
-                - applicable cancellation fee
-                - payment/refund status
-            */
+            FagaAPI.cancelDelivery(activeDeliveryId)
+                .then(response => {
+                    showToast(
+                        response?.message ||
+                        "Delivery cancelled successfully."
+                    );
+                    return refreshDeliveryTracking();
+                })
+                .catch(error => {
+                    console.error(
+                        "FAGA delivery cancellation error:",
+                        error
+                    );
 
-            showToast(
-                "Cancellation request submitted."
-            );
+                    showToast(
+                        error?.data?.message ||
+                        error?.data?.error ||
+                        "Unable to cancel this delivery."
+                    );
+                })
+                .finally(() => {
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = "Cancel Delivery";
+                    }
+                });
 
+            return;
         }
 
         if (action === "report") {
-
-            /*
-                PRODUCTION:
-
-                POST /api/deliveries/:deliveryId/safety-report
-
-                Recommended payload:
-
-                {
-                    type: "delivery_issue",
-                    description: "...",
-                    location: {...}
-                }
-
-                Validate everything server-side.
-            */
-
             showToast(
-                "Issue reported to FAGA Support."
+                "Please contact FAGA Support to report a delivery issue."
             );
+
+            setTimeout(() => {
+                window.location.href = "./help.html";
+            }, 700);
         }
     }
 

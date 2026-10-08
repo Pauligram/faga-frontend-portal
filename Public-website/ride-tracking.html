@@ -2819,8 +2819,12 @@ function formatDuration(minutes) {
         document.getElementById("shareSafety")
             .addEventListener("click", () => {
                 showToast(
-                    "Safety support is not connected to the ride API yet."
+                    "Please contact FAGA Support for safety assistance."
                 );
+
+                setTimeout(() => {
+                    window.location.href = "./help.html";
+                }, 700);
             });
 
         /* ==========================================
@@ -2868,9 +2872,12 @@ function formatDuration(minutes) {
                 try {
                     const response =
                         await FagaAPI.request(
-                            `/api/rides/${encodeURIComponent(rideId)}/cancel`,
+                            `/api/rides/${encodeURIComponent(rideId)}/status`,
                             {
-                                method: "POST"
+                                method: "PATCH",
+                                body: JSON.stringify({
+                                    status: "CANCELLED"
+                                })
                             }
                         );
 

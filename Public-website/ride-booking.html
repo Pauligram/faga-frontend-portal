@@ -2837,6 +2837,26 @@ destinationInput.addEventListener(
                             return;
                         }
 
+                        const pickupCoordinates =
+                            window.fagaPickupCoordinates;
+
+                        const destinationCoordinates =
+                            window.fagaDestinationCoordinates;
+
+                        if (
+                            !pickupCoordinates ||
+                            !Number.isFinite(Number(pickupCoordinates.latitude)) ||
+                            !Number.isFinite(Number(pickupCoordinates.longitude)) ||
+                            !destinationCoordinates ||
+                            !Number.isFinite(Number(destinationCoordinates.latitude)) ||
+                            !Number.isFinite(Number(destinationCoordinates.longitude))
+                        ) {
+                            showToast(
+                                "Please wait for both locations to be verified before requesting the ride."
+                            );
+                            return;
+                        }
+
                         if (typeof FagaAPI === "undefined" || typeof FagaAPI.request !== "function") {
                             showToast("FAGA connection is unavailable. Please refresh and try again.");
                             return;
