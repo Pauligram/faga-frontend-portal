@@ -5,6 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>FAGA - Everything You Need, One App</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Tailwind configuration -->
@@ -3100,7 +3101,7 @@ button:active, a:active { transform: scale(.985); }
 
         try {
 
-            const response = await FagaAPI.me();
+            const response = await FagaAPI.getProfile();
 
             console.log(
                 "FAGA backend connection successful:",
@@ -3177,13 +3178,9 @@ button:active, a:active { transform: scale(.985); }
         if (event.target === popup) closePopup();
       });
 
-      if (!sessionStorage.getItem("fagaWelcomeShown")) {
-        setTimeout(function () {
-          popup.classList.add("open");
-          popup.setAttribute("aria-hidden", "false");
-          sessionStorage.setItem("fagaWelcomeShown", "1");
-        }, 1400);
-      }
+      // Intentionally do not auto-open the full-screen welcome dialog.
+      // Automatic interstitials can be classified as intrusive by browsers.
+      // The dialog markup remains available for future user-triggered use.
     }
 
     document.addEventListener("keydown", function (event) {
