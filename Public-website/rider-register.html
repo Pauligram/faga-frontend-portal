@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#102c26">
+    <title>Become a FAGA Rider</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --green: #126b4f;
+            --dark: #102c26;
+            --muted: #64748b;
+            --border: #dce5e1;
+            --surface: #ffffff;
+            --background: #f3f7f5;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: grid;
+            place-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--dark);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            padding: clamp(24px, 5vw, 40px);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 12px 36px rgba(16, 44, 38, .08);
+        }
+
+        .brand {
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        h1 { margin: 12px 0; font-size: clamp(27px, 5vw, 34px); }
+        .intro { color: var(--muted); line-height: 1.65; }
+        .account {
+            margin: 22px 0;
+            padding: 14px;
+            background: #f3f7f5;
+            border-radius: 10px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .label { display: block; font-weight: 700; margin-bottom: 6px; }
+        .field { margin: 20px 0; }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 2px 8px 0 0;
+            accent-color: var(--green);
+        }
+
+        .consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+            color: #334155;
+            line-height: 1.55;
+        }
+
+        button, .link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 16px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--green);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button:disabled { opacity: .65; cursor: wait; }
+
+        .secondary {
+            margin-top: 12px;
+            background: #edf4f0;
+            color: var(--dark);
+        }
+
+        .message {
+            display: none;
+            margin: 18px 0;
+            padding: 13px;
+            border-radius: 9px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .message.visible { display: block; }
+        .message.success { background: #e6f7ed; color: #14532d; }
+        .message.error { background: #fff0ee; color: #9f241b; }
+        .message.info { background: #eef4ff; color: #1e40af; }
+
+        .footer { margin-top: 22px; text-align: center; font-size: 13px; }
+        .footer a { color: var(--green); }
+
+        @media (max-width: 380px) {
+            body { padding: 12px; }
+            .card { padding: 22px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="brand">FAGA</div>
+        <h1>Become a FAGA Rider</h1>
+        <p class="intro">
+            Apply to join the FAGA rider network. Your application will be
+            reviewed by the operations team before rider access is activated.
+        </p>
+
+        <div id="account" class="account">Verifying your account…</div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+
+        <form id="riderForm" hidden>
+            <div class="field">
+                <label class="consent">
+                    <input type="checkbox" id="confirmDetails" required>
+                    <span>
+                        I confirm that I am applying to become a FAGA rider
+                        and understand that access requires admin approval.
+                    </span>
+                </label>
+            </div>
+            <button id="submitButton" type="submit">Submit Rider Application</button>
+        </form>
+
+        <a class="link secondary" href="../user-portal/dashboard.html">
+            Return to My Dashboard
+        </a>
+
+        <div class="footer">
+            Need to sign in? <a href="../user-portal/login.html">Go to login</a>
+        </div>
+    </main>
+
+    <script src="../js/faga-api.js"></script>
+    <script>
+        (() => {
+            const account = document.getElementById("account");
+            const message = document.getElementById("message");
+            const form = document.getElementById("riderForm");
+            const submitButton = document.getElementById("submitButton");
+
+            function showMessage(text, type) {
+                message.textContent = text;
+                message.className = "message visible " + type;
+            }
+
+            async function initialise() {
+                if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+                    window.location.replace("../user-portal/login.html");
+                    return;
+                }
+
+                try {
+                    const user = await FagaAPI.getProfile();
+
+                    if (!user || !user.id) {
+                        throw new Error("Your account could not be verified.");
+                    }
+
+                    if (String(user.role || "").toLowerCase() === "rider") {
+                        account.textContent = "Your account already has rider access.";
+                        showMessage("You can open your rider dashboard.", "success");
+
+                        const link = document.createElement("a");
+                        link.className = "link";
+                        link.href = "../user-portal/rider-dashboard.html";
+                        link.textContent = "Open Rider Dashboard";
+                        form.replaceWith(link);
+                        return;
+                    }
+
+                    account.textContent =
+                        "Signed in as " + (user.name || user.email || "FAGA customer");
+
+                    form.hidden = false;
+                } catch (error) {
+                    console.error("Rider registration account check failed:", error);
+
+                    if (error && error.status === 401) {
+                        window.location.replace("../user-portal/login.html");
+                        return;
+                    }
+
+                    showMessage(
+                        "We could not verify your account. Please try again.",
+                        "error"
+                    );
+                    account.textContent = "Account verification unsuccessful.";
+                }
+            }
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                if (!document.getElementById("confirmDetails").checked) {
+                    showMessage("Please confirm the application statement.", "error");
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = "Submitting…";
+                showMessage("Submitting your application securely…", "info");
+
+                try {
+                    const result = await FagaAPI.submitRiderApplication();
+
+                    showMessage(
+                        result.message ||
+                            "Your application has been submitted for admin review.",
+                        "success"
+                    );
+
+                    form.hidden = true;
+                    account.textContent = "Application status: Pending admin review.";
+                } catch (error) {
+                    console.error("Rider application submission failed:", error);
+
+                    const data = error && error.data ? error.data : {};
+                    const errorText = data.error || data.message;
+
+                    if (error && error.status === 401) {
+                        window.location.replace("../user-portal/login.html");
+                        return;
+                    }
+
+                    if (error && error.status === 409) {
+                        showMessage(
+                            errorText || "Your account already has rider access.",
+                            "info"
+                        );
+                    } else {
+                        showMessage(
+                            errorText ||
+                                "We could not submit your application. Please try again.",
+                            "error"
+                        );
+                    }
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Submit Rider Application";
+                }
+            });
+
+            initialise();
+        })();
+    </script>
+</body>
+</html>

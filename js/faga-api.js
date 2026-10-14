@@ -1,4 +1,4 @@
-// frontend/js/faga-api.js
+﻿// frontend/js/faga-api.js
 
 // Live FAGA Node/Express backend on Railway
 const FAGA_API_BASE_URL =
@@ -355,12 +355,219 @@ const FagaAPI = {
             method: "GET"
         });
     },
+// =========================================================
+// JOBS
+// =========================================================
 
+async getJobs() {
+    return this.request("/api/jobs", {
+        method: "GET"
+    });
+},
+
+async getJob(jobId) {
+    if (!jobId) {
+        throw new Error("Job ID is required.");
+    }
+
+    return this.request(
+        `/api/jobs/${encodeURIComponent(jobId)}`,
+        {
+            method: "GET"
+        }
+    );
+},
+
+async applyForJob(jobId, coverLetter = "", proposedSalary = null) {
+    if (!jobId) {
+        throw new Error("Job ID is required.");
+    }
+
+    return this.request(
+        `/api/jobs/${encodeURIComponent(jobId)}/applications`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                coverLetter,
+                proposedSalary
+            })
+        }
+    );
+},
+
+async getMyJobApplications() {
+    return this.request(
+        "/api/job-applications/me",
+        {
+            method: "GET"
+        }
+    );
+},
+
+async withdrawJobApplication(applicationId) {
+    if (!applicationId) {
+        throw new Error("Application ID is required.");
+    }
+
+    return this.request(
+        `/api/job-applications/${encodeURIComponent(applicationId)}/withdraw`,
+        {
+            method: "PATCH"
+        }
+    );
+},
+
+// =========================================================
+// JOB APPLICANT PROFILE
+// =========================================================
+
+async getJobApplicantProfile() {
+    return this.request(
+        "/api/job-applicant/profile",
+        {
+            method: "GET"
+        }
+    );
+},
+
+async saveJobApplicantProfile(profile) {
+    return this.request(
+        "/api/job-applicant/profile",
+        {
+            method: "PUT",
+            body: JSON.stringify(profile)
+        }
+    );
+},
+
+// =========================================================
+// JOB PROVIDER
+// =========================================================
+
+async applyAsJobProvider(
+    businessName,
+    businessDescription,
+    businessAddress,
+    phone
+) {
+    return this.request(
+        "/api/job-provider/applications",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                businessName,
+                businessDescription,
+                businessAddress,
+                phone
+            })
+        }
+    );
+},
+
+async getMyJobProviderApplication() {
+    return this.request(
+        "/api/job-provider/applications/me",
+        {
+            method: "GET"
+        }
+    );
+},
+
+async createProviderJob(job) {
+    return this.request(
+        "/api/job-provider/jobs",
+        {
+            method: "POST",
+            body: JSON.stringify(job)
+        }
+    );
+},
+
+async getProviderJobs() {
+    return this.request(
+        "/api/job-provider/jobs",
+        {
+            method: "GET"
+        }
+    );
+},
+
+async updateProviderJob(jobId, job) {
+    if (!jobId) {
+        throw new Error("Job ID is required.");
+    }
+
+    return this.request(
+        `/api/job-provider/jobs/${encodeURIComponent(jobId)}`,
+        {
+            method: "PATCH",
+            body: JSON.stringify(job)
+        }
+    );
+},
+
+async closeProviderJob(jobId) {
+    if (!jobId) {
+        throw new Error("Job ID is required.");
+    }
+
+    return this.request(
+        `/api/job-provider/jobs/${encodeURIComponent(jobId)}/close`,
+        {
+            method: "PATCH"
+        }
+    );
+},
+
+async getProviderJobApplications(jobId) {
+    if (!jobId) {
+        throw new Error("Job ID is required.");
+    }
+
+    return this.request(
+        `/api/job-provider/jobs/${encodeURIComponent(jobId)}/applications`,
+        {
+            method: "GET"
+        }
+    );
+},
+
+async acceptJobApplication(applicationId) {
+    if (!applicationId) {
+        throw new Error("Application ID is required.");
+    }
+
+    return this.request(
+        `/api/job-provider/applications/${encodeURIComponent(applicationId)}/accept`,
+        {
+            method: "PATCH"
+        }
+    );
+},
+
+async rejectJobApplication(applicationId) {
+    if (!applicationId) {
+        throw new Error("Application ID is required.");
+    }
+
+    return this.request(
+        `/api/job-provider/applications/${encodeURIComponent(applicationId)}/reject`,
+        {
+            method: "PATCH"
+        }
+    );
+},
 
     // =========================================================
     // SELLER
     // =========================================================
 
+    async submitRiderApplication() {
+        return this.request("/api/rider-applications", {
+            method: "POST",
+            body: JSON.stringify({})
+        });
+    },
     async submitSellerApplication(
         storeName,
         businessAddress
@@ -398,6 +605,7 @@ const FagaAPI = {
         );
     }
 };
+
 
 
 // =============================================================
