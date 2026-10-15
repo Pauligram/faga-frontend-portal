@@ -2467,12 +2467,10 @@ if (validCoordinate(ride?.destinationLatitude, ride?.destinationLongitude)) {
         );
 
     if (
-        driverEtaValue !== null && driverEtaValue !== undefined && driverEtaValue !== "" &&
-        Number.isFinite(
-            driverEta
-        ) &&
-        driverEta >= 0
-    ) {
+    driverEta !== null &&
+    Number.isFinite(driverEta) &&
+    driverEta >= 0
+) {
 
         eta.textContent =
             driverEta === 0
