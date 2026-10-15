@@ -1035,6 +1035,7 @@ tbody tr:hover{
     }
 }
 </style>
+<script src="../js/faga-api.js"></script>
 <script>
 (function () {
     async function requireAdminAccess() {
@@ -1047,7 +1048,9 @@ tbody tr:hover{
             if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
                 FagaAPI.removeToken();
                 window.location.href = './login.html';
+                return;
             }
+            await loadRiderApplications();
         } catch (error) {
             if (window.FagaAPI) FagaAPI.removeToken();
             window.location.href = './login.html';
@@ -1056,7 +1059,6 @@ tbody tr:hover{
     requireAdminAccess();
 })();
 </script>
-    <script src="../js/faga-api.js"></script>
 </head>
 
 <body>
@@ -3774,39 +3776,139 @@ function reviewRider(riderId){
 }
 
 
-function verifyRider(riderId){
+function escapeRiderText(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, function (char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
 
-    const confirmed =
-        confirm(
-            "Approve rider " +
-            riderId +
-            "?"
+async function loadRiderApplications() {
+    const table = document.getElementById("ridersTable");
+    if (!table || !window.FagaAPI) return;
+
+    table.innerHTML = '<tr><td colspan="9">Loading rider applications...</td></tr>';
+
+    try {
+        const result = await FagaAPI.request(
+            "/api/admin/rider-applications",
+            { method: "GET" }
         );
 
-    if(!confirmed){
+        if (result.success === false) {
+            throw new Error(result.message || "Could not load rider applications.");
+        }
+
+        const applications = Array.isArray(result.applications)
+            ? result.applications
+            : [];
+
+        const pending = applications.filter(function (app) {
+            return String(app.status || "").toLowerCase() === "pending";
+        });
+
+        if (!pending.length) {
+            table.innerHTML =
+                '<tr><td colspan="9">No pending rider applications found.</td></tr>';
+            return;
+        }
+
+        table.innerHTML = pending.map(function (app) {
+            const id = Number(app.id);
+            if (!Number.isSafeInteger(id) || id <= 0) return "";
+
+            const name = escapeRiderText(app.name || "Unnamed applicant");
+            const email = escapeRiderText(app.email || "No email");
+            const phone = escapeRiderText(app.phone || "No phone number");
+            const submitted = app.created_at
+                ? escapeRiderText(new Date(app.created_at).toLocaleDateString())
+                : "—";
+
+            return `
+                <tr data-search="${name} ${email} ${phone} ${id}"
+                    data-availability="pending"
+                    data-verification="pending">
+                    <td><input type="checkbox" class="checkbox rider-check"
+                        onchange="updateSelected()"></td>
+                    <td>
+                        <div class="rider-info">
+                            <div class="rider-avatar">${escapeRiderText(
+                                (app.name || "R").trim().split(/\s+/)
+                                    .slice(0, 2).map(function (part) {
+                                        return part.charAt(0);
+                                    }).join("").toUpperCase()
+                            )}</div>
+                            <div class="rider-name">
+                                <strong>${name}</strong>
+                                <small>${email} · ${phone}</small>
+                                <small>Application #${id} · Submitted ${submitted}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="online-status">Awaiting review</span></td>
+                    <td><div class="vehicle"><strong>Not assigned</strong>
+                        <small>Vehicle details pending</small></div></td>
+                    <td><span class="verification">Pending</span></td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>—</td>
+                    <td>
+                        <button type="button" class="more-btn"
+                            onclick="verifyRider(${id})">Approve</button>
+                    </td>
+                </tr>`;
+        }).filter(Boolean).join("");
+
+        if (!table.innerHTML.trim()) {
+            table.innerHTML =
+                '<tr><td colspan="9">No valid pending applications found.</td></tr>';
+        }
+    } catch (error) {
+        console.error("Unable to load rider applications:", error);
+        table.innerHTML =
+            '<tr><td colspan="9">Could not load applications. Check admin access and the backend connection, then refresh.</td></tr>';
+        showToast("Could not load rider applications.");
+    }
+}
+
+async function verifyRider(applicationId) {
+    const id = Number(applicationId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        showToast("Invalid rider application ID.");
         return;
     }
 
-    showToast(
-        riderId +
-        " approved successfully."
-    );
+    if (!confirm("Approve rider application #" + id + "?")) return;
 
-    /*
-        BACKEND:
+    try {
+        const result = await FagaAPI.request(
+            "/api/admin/rider-applications/" + id + "/approve",
+            { method: "POST" }
+        );
 
-        POST /api/admin/riders/:id/verify
+        if (result.success === false) {
+            throw new Error(result.message || "The server did not approve this application.");
+        }
 
-        Also update:
-        user role = rider
-        rider verification = verified
-        rider account status = active
-        notification = sent
-        audit log = created
-    */
+        showToast("Rider application #" + id + " approved successfully.");
+        await loadRiderApplications();
+    } catch (error) {
+        console.error("Rider approval failed:", error);
+        const message = error && error.data && error.data.message
+            ? error.data.message
+            : error && error.message
+                ? error.message
+                : "Approval failed. Check your admin permissions and try again.";
 
+        showToast(message);
+    }
 }
-
 
 function rejectRider(riderId){
 
