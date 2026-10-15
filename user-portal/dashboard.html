@@ -1557,7 +1557,7 @@
           <div class="eyebrow">FAGA User Portal</div>
           <h2 id="welcomeUser">Welcome back, FAGA Member 👋</h2>
           <p>
-            Everything you need for shopping, deliveries, services and more â€”
+            Everything you need for shopping, deliveries, services and more —
             all from one FAGA account.
           </p>
         </div>
@@ -2208,7 +2208,7 @@
     }
 
     list.innerHTML = orders.slice(0, 4).map(order => {
-      const id = order?.id ?? order?.orderId ?? "â€”";
+      const id = order?.id ?? order?.orderId ?? "—";
       const pickup = order?.pickupAddress ?? order?.pickup_address ?? "Pickup";
       const dropoff = order?.dropoffAddress ?? order?.dropoff_address ?? "Destination";
       const status = order?.status ?? "PENDING";
@@ -2221,10 +2221,10 @@
 
           <div class="order-main">
             <strong>Delivery #${escapeHtml(id)}</strong>
-            <span>${escapeHtml(pickup)} â†’ ${escapeHtml(dropoff)}</span>
+            <span>${escapeHtml(pickup)} → ${escapeHtml(dropoff)}</span>
           </div>
 
-          <div class="order-price">â€”</div>
+          <div class="order-price">—</div>
           <div class="order-date">FAGA Delivery</div>
 
           <div>
@@ -2260,10 +2260,10 @@
     if (!list || !activitySection) return;
     const items = [];
     (Array.isArray(orders) ? orders.slice(0, 3) : []).forEach(order => {
-      items.push({ icon:"fa-truck-fast", title:`Delivery #${order.id || "â€”"}`, text:`Status: ${formatStatus(order.status || "PENDING")}`, time:order.updatedAt || order.createdAt });
+      items.push({ icon:"fa-truck-fast", title:`Delivery #${order.id || "—"}`, text:`Status: ${formatStatus(order.status || "PENDING")}`, time:order.updatedAt || order.createdAt });
     });
     (Array.isArray(finance?.transactions) ? finance.transactions.slice(0, 3) : []).forEach(tx => {
-      items.push({ icon:"fa-wallet", title:"Wallet transaction", text:`${String(tx.type || "TRANSACTION").replaceAll("_"," ")} Â· ₦${Number(tx.amount || 0).toLocaleString("en-NG")}`, time:tx.createdAt });
+      items.push({ icon:"fa-wallet", title:"Wallet transaction", text:`${String(tx.type || "TRANSACTION").replaceAll("_"," ")} · ₦${Number(tx.amount || 0).toLocaleString("en-NG")}`, time:tx.createdAt });
     });
     items.sort((a,b) => new Date(b.time || 0) - new Date(a.time || 0));
     const target = activitySection.querySelector(".activity-list");
@@ -2287,7 +2287,7 @@
       grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-location-dot"></i><strong>No saved addresses yet</strong><p>Save an address to use it faster when booking FAGA services.</p></div>`;
       return;
     }
-    grid.innerHTML = addresses.map((a,i) => `<div class="activity"><div class="activity-icon"><i class="fa-solid fa-location-dot"></i></div><div class="activity-content"><strong>${escapeHtml(a.label)}</strong><p>${escapeHtml(a.address)}, ${escapeHtml(a.city)}, ${escapeHtml(a.state)} Â· ${escapeHtml(a.phone)}</p></div><button type="button" class="btn btn-outline" style="padding:7px 10px;font-size:10px" onclick="deleteSavedAddress(${i})">Delete</button></div>`).join("");
+    grid.innerHTML = addresses.map((a,i) => `<div class="activity"><div class="activity-icon"><i class="fa-solid fa-location-dot"></i></div><div class="activity-content"><strong>${escapeHtml(a.label)}</strong><p>${escapeHtml(a.address)}, ${escapeHtml(a.city)}, ${escapeHtml(a.state)} · ${escapeHtml(a.phone)}</p></div><button type="button" class="btn btn-outline" style="padding:7px 10px;font-size:10px" onclick="deleteSavedAddress(${i})">Delete</button></div>`).join("");
   }
 
   window.deleteSavedAddress = function(index) {

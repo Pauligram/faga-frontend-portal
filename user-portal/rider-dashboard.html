@@ -114,7 +114,7 @@
     return `
       <article class="ride">
         <div class="ride-top">
-          <div><div class="ride-id">Ride #${escapeHtml(ride.id)}</div><small style="color:var(--muted)">${escapeHtml(ride.rideType || "Economy")} Â· ${escapeHtml(ride.passengers || 1)} passenger(s)</small></div>
+          <div><div class="ride-id">Ride #${escapeHtml(ride.id)}</div><small style="color:var(--muted)">${escapeHtml(ride.rideType || "Economy")} · ${escapeHtml(ride.passengers || 1)} passenger(s)</small></div>
           <span class="status ${statusClass(status)}">${escapeHtml(status.replaceAll("_", " "))}</span>
         </div>
         <div class="route">
@@ -122,7 +122,7 @@
           <div class="route-row"><span class="dot dest"></span><span><strong>Destination</strong><br>${escapeHtml(ride.destinationAddress || "Not provided")}</span></div>
         </div>
         <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:13px;color:var(--muted);font-size:13px">
-          <span>Fare: <strong style="color:var(--text)">â‚¦${Number(ride.fare || 0).toLocaleString("en-NG")}</strong></span>
+          <span>Fare: <strong style="color:var(--text)">₦${Number(ride.fare || 0).toLocaleString("en-NG")}</strong></span>
           <span>${ride.distanceKm != null ? Number(ride.distanceKm).toFixed(1) + " km" : "Distance pending"}</span>
         </div>
         <div class="actions">
@@ -155,7 +155,7 @@
       return;
     }
     panel.className = "card";
-    panel.innerHTML = `<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><strong>Ride #${escapeHtml(activeRide.id)}</strong><p style="color:var(--muted);margin-top:5px">${escapeHtml(activeRide.pickupAddress || "")} â†’ ${escapeHtml(activeRide.destinationAddress || "")}</p></div><span class="status ${statusClass(activeRide.status)}">${escapeHtml(String(activeRide.status || "").replaceAll("_"," "))}</span></div><div class="gps" style="margin-top:16px"><span class="gps-dot" id="activeGpsDot"></span><span id="activeGpsText">GPS is waiting to start.</span></div>`;
+    panel.innerHTML = `<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><strong>Ride #${escapeHtml(activeRide.id)}</strong><p style="color:var(--muted);margin-top:5px">${escapeHtml(activeRide.pickupAddress || "")} → ${escapeHtml(activeRide.destinationAddress || "")}</p></div><span class="status ${statusClass(activeRide.status)}">${escapeHtml(String(activeRide.status || "").replaceAll("_"," "))}</span></div><div class="gps" style="margin-top:16px"><span class="gps-dot" id="activeGpsDot"></span><span id="activeGpsText">GPS is waiting to start.</span></div>`;
     $("activeRideValue").textContent = "#" + activeRide.id;
   }
 
@@ -252,11 +252,11 @@
         gpsUpdateCount += 1;
         $("gpsCount").textContent = gpsUpdateCount;
         $("gpsDot").classList.add("live");
-        $("gpsText").textContent = `GPS live Â· Â±${Math.round(accuracy || 0)}m accuracy`;
+        $("gpsText").textContent = `GPS live · ±${Math.round(accuracy || 0)}m accuracy`;
         const activeDot = $("activeGpsDot");
         const activeText = $("activeGpsText");
         if (activeDot) activeDot.classList.add("live");
-        if (activeText) activeText.textContent = `GPS live Â· Last update ${new Date().toLocaleTimeString()}`;
+        if (activeText) activeText.textContent = `GPS live · Last update ${new Date().toLocaleTimeString()}`;
       } catch (error) {
         console.error("Driver GPS upload failed", error);
         $("gpsText").textContent = "GPS available, upload failed";
