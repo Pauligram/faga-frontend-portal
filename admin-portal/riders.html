@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAGA Admin — Riders</title>
+<title>FAGA Admin - Riders</title>
 
 <style>
 *{
@@ -1034,6 +1034,17 @@ tbody tr:hover{
         line-height:1.8;
     }
 }
+
+.live-tracking-panel{background:#fff;border:1px solid var(--border);border-radius:7px;box-shadow:var(--shadow);margin-bottom:18px;padding:17px}
+.live-tracking-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.live-tracking-heading h2{font-size:14px;color:var(--navy)}
+.live-tracking-controls{display:flex;gap:8px;flex-wrap:wrap}
+.live-tracking-controls input{height:36px;min-width:180px;border:1px solid var(--border);border-radius:4px;padding:0 10px;font-size:12px}
+.live-tracking-message{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6}
+.live-tracking-map{width:100%;height:330px;border:1px solid var(--border);border-radius:5px;margin-top:12px}
+.live-tracking-map iframe{width:100%;height:100%;border:0}
+@media(max-width:650px){.live-tracking-heading{display:block}.live-tracking-controls{margin-top:10px}.live-tracking-controls input{width:100%}.live-tracking-map{height:260px}}
+
 </style>
 <script src="../js/faga-api.js"></script>
 <script>
@@ -1049,6 +1060,16 @@ tbody tr:hover{
                 FagaAPI.removeToken();
                 window.location.href = './login.html';
                 return;
+            }
+            const displayName = user.name || user.full_name || user.email || "Administrator";
+            const nameNode = document.getElementById("adminDisplayName");
+            const roleNode = document.getElementById("adminDisplayRole");
+            const initialsNode = document.getElementById("adminDisplayInitials");
+            if (nameNode) nameNode.textContent = displayName;
+            if (roleNode) roleNode.textContent = user.role === "super_admin" ? "Super Admin" : "Admin";
+            if (initialsNode) {
+                initialsNode.textContent = displayName.trim().split(/\s+/).slice(0, 2)
+                    .map(function (part) { return part.charAt(0); }).join("").toUpperCase();
             }
             await loadRiderApplications();
         } catch (error) {
@@ -1070,7 +1091,7 @@ tbody tr:hover{
 <header class="topbar">
 
     <div class="mobile-toggle" onclick="toggleSidebar()">
-        ☰
+        MENU
     </div>
 
     <a href="index.html" class="logo">
@@ -1086,7 +1107,7 @@ tbody tr:hover{
             placeholder="Search riders, phone numbers, vehicles..."
         >
 
-        <span>🔍</span>
+        <span>Search</span>
 
     </div>
 
@@ -1096,7 +1117,7 @@ tbody tr:hover{
             class="top-action"
             onclick="showToast('Notifications opened')">
 
-            🔔
+            N
             <span class="notification-dot"></span>
 
         </div>
@@ -1105,19 +1126,17 @@ tbody tr:hover{
             class="top-action"
             onclick="showToast('Support center opened')">
 
-            💬
+            Help
 
         </div>
 
         <div class="admin-profile">
 
-            <div class="admin-avatar">
-                SA
-            </div>
+            <div class="admin-avatar" id="adminDisplayInitials">AD</div>
 
             <div>
-                <strong>Super Admin</strong>
-                <small>Administrator</small>
+                <strong id="adminDisplayName">Administrator</strong>
+                <small id="adminDisplayRole">Admin</small>
             </div>
 
         </div>
@@ -1138,7 +1157,7 @@ tbody tr:hover{
     </div>
 
     <a class="sidebar-link" href="index.html">
-        <span class="sidebar-icon">📊</span>
+        <span class="sidebar-icon">DASH</span>
         Dashboard
     </a>
 
@@ -1148,50 +1167,47 @@ tbody tr:hover{
     </div>
 
     <a class="sidebar-link" href="users.html">
-        <span class="sidebar-icon">👥</span>
+        <span class="sidebar-icon">USER</span>
         Users
-        <span class="sidebar-badge">24</span>
     </a>
 
     <a class="sidebar-link" href="orders.html">
-        <span class="sidebar-icon">📦</span>
+        <span class="sidebar-icon">ORD</span>
         Orders
-        <span class="sidebar-badge">18</span>
     </a>
 
     <a class="sidebar-link" href="logistics.html">
-        <span class="sidebar-icon">🚚</span>
+        <span class="sidebar-icon">LOG</span>
         Logistics
     </a>
 
     <a class="sidebar-link active" href="riders.html">
-        <span class="sidebar-icon">🏍️</span>
+        <span class="sidebar-icon">RIDE</span>
         Riders
-        <span class="sidebar-badge">7</span>
     </a>
 
     <a class="sidebar-link" href="marketplace.html">
-        <span class="sidebar-icon">🛍️</span>
+        <span class="sidebar-icon">MKT</span>
         Marketplace
     </a>
 
     <a class="sidebar-link" href="sellers.html">
-        <span class="sidebar-icon">🏪</span>
+        <span class="sidebar-icon">SELL</span>
         Sellers
     </a>
 
     <a class="sidebar-link" href="service-providers.html">
-        <span class="sidebar-icon">🛠️</span>
+        <span class="sidebar-icon">SERV</span>
         Services
     </a>
 
     <a class="sidebar-link" href="service-providers.html">
-        <span class="sidebar-icon">👨‍🔧</span>
+        <span class="sidebar-icon">SERV</span>
         Service Providers
     </a>
 
     <a class="sidebar-link" href="marketplace.html">
-        <span class="sidebar-icon">🍽️</span>
+        <span class="sidebar-icon">FOOD</span>
         Food & Restaurants
     </a>
 
@@ -1201,17 +1217,17 @@ tbody tr:hover{
     </div>
 
     <a class="sidebar-link" href="payments.html">
-        <span class="sidebar-icon">💳</span>
+        <span class="sidebar-icon">PAY</span>
         Payments
     </a>
 
     <a class="sidebar-link" href="wallets.html">
-        <span class="sidebar-icon">💰</span>
+        <span class="sidebar-icon">WAL</span>
         Wallets
     </a>
 
     <a class="sidebar-link" href="payouts.html">
-        <span class="sidebar-icon">🏦</span>
+        <span class="sidebar-icon">OUT</span>
         Payouts
     </a>
 
@@ -1221,20 +1237,18 @@ tbody tr:hover{
     </div>
 
     <a class="sidebar-link" href="reports.html">
-        <span class="sidebar-icon">📈</span>
+        <span class="sidebar-icon">RPT</span>
         Reports
     </a>
 
     <a class="sidebar-link" href="support.html">
-        <span class="sidebar-icon">🎧</span>
+        <span class="sidebar-icon">HELP</span>
         Support
-        <span class="sidebar-badge">9</span>
     </a>
 
     <a class="sidebar-link" href="disputes.html">
-        <span class="sidebar-icon">⚠️</span>
+        <span class="sidebar-icon">ALERT</span>
         Disputes
-        <span class="sidebar-badge">3</span>
     </a>
 
 
@@ -1243,7 +1257,7 @@ tbody tr:hover{
     </div>
 
     <a class="sidebar-link" href="settings.html">
-        <span class="sidebar-icon">⚙️</span>
+        <span class="sidebar-icon">SET</span>
         Settings
     </a>
 
@@ -1251,7 +1265,7 @@ tbody tr:hover{
         class="sidebar-link"
         onclick="showToast('Audit logs opened')">
 
-        <span class="sidebar-icon">🔐</span>
+        <span class="sidebar-icon">AUD</span>
         Audit Logs
 
     </div>
@@ -1260,7 +1274,7 @@ tbody tr:hover{
     <div class="sidebar-bottom">
 
         <a class="sidebar-link" href="./index.html">
-            <span class="sidebar-icon">↩</span>
+            <span class="sidebar-icon">BACK</span>
             User Portal
         </a>
 
@@ -1269,7 +1283,7 @@ tbody tr:hover{
             style="color:#ff9a9a"
             onclick="logout()">
 
-            <span class="sidebar-icon">↪</span>
+            <span class="sidebar-icon">OUT</span>
             Sign Out
 
         </div>
@@ -1306,9 +1320,12 @@ tbody tr:hover{
 
             <button
                 class="btn btn-white"
+                onclick="openLiveRideTracker()">Track Live Ride</button>
+            <button
+                class="btn btn-white"
                 onclick="exportRiders()">
 
-                ↓ Export Riders
+                DOWN  Export Riders
 
             </button>
 
@@ -1322,6 +1339,22 @@ tbody tr:hover{
 
         </div>
 
+    </section>
+
+    <section class="live-tracking-panel" id="liveTrackingPanel">
+        <div class="live-tracking-heading">
+            <div>
+                <h2>Live Ride GPS</h2>
+                <p class="live-tracking-message">Enter an actual ride ID to view the latest GPS coordinates reported by the rider's device.</p>
+            </div>
+            <div class="live-tracking-controls">
+                <input id="liveRideId" type="number" min="1" step="1" placeholder="Enter ride ID" aria-label="Ride ID">
+                <button class="btn btn-orange" type="button" onclick="trackLiveRide()">Track Ride</button>
+                <button class="btn btn-white" type="button" onclick="refreshLiveRide()">Refresh</button>
+            </div>
+        </div>
+        <div id="liveTrackingMessage" class="live-tracking-message" role="status">No ride selected. No simulated coordinates are displayed.</div>
+        <div id="liveTrackingMap" class="live-tracking-map" hidden></div>
     </section>
 
 
@@ -1338,20 +1371,10 @@ tbody tr:hover{
             </small>
 
             <div class="summary-number">
-                2,846
+                N/A
             </div>
 
-            <div class="summary-bottom">
-
-                <span class="green">
-                    ↑ 12.4%
-                </span>
-
-                <span style="color:var(--muted)">
-                    this month
-                </span>
-
-            </div>
+            <div class="summary-bottom"><span style="color:var(--muted)">Live data required</span></div>
 
         </div>
 
@@ -1363,20 +1386,10 @@ tbody tr:hover{
             </small>
 
             <div class="summary-number">
-                742
+                N/A
             </div>
 
-            <div class="summary-bottom">
-
-                <span class="green">
-                    26.1%
-                </span>
-
-                <span style="color:var(--muted)">
-                    of riders
-                </span>
-
-            </div>
+            <div class="summary-bottom"><span style="color:var(--muted)">Live data required</span></div>
 
         </div>
 
@@ -1388,20 +1401,10 @@ tbody tr:hover{
             </small>
 
             <div class="summary-number">
-                428
+                N/A
             </div>
 
-            <div class="summary-bottom">
-
-                <span class="orange-text">
-                    Active
-                </span>
-
-                <span style="color:var(--muted)">
-                    deliveries
-                </span>
-
-            </div>
+            <div class="summary-bottom"><span style="color:var(--muted)">Live data required</span></div>
 
         </div>
 
@@ -1413,20 +1416,10 @@ tbody tr:hover{
             </small>
 
             <div class="summary-number">
-                86
+                N/A
             </div>
 
-            <div class="summary-bottom">
-
-                <span class="orange-text">
-                    Review
-                </span>
-
-                <span style="color:var(--muted)">
-                    applications
-                </span>
-
-            </div>
+            <div class="summary-bottom"><span style="color:var(--muted)">Live data required</span></div>
 
         </div>
 
@@ -1438,20 +1431,10 @@ tbody tr:hover{
             </small>
 
             <div class="summary-number">
-                31
+                N/A
             </div>
 
-            <div class="summary-bottom">
-
-                <span class="red">
-                    Needs review
-                </span>
-
-                <span style="color:var(--muted)">
-                    accounts
-                </span>
-
-            </div>
+            <div class="summary-bottom"><span style="color:var(--muted)">Live data required</span></div>
 
         </div>
 
@@ -1479,7 +1462,7 @@ tbody tr:hover{
             </div>
 
             <span class="live-indicator">
-                ● LIVE
+                 LIVE
             </span>
 
         </div>
@@ -1657,7 +1640,7 @@ tbody tr:hover{
                 onclick="setAvailability(this,'all')">
 
                 All Riders
-                <strong>2,846</strong>
+                
 
             </button>
 
@@ -1666,7 +1649,7 @@ tbody tr:hover{
                 onclick="setAvailability(this,'online')">
 
                 Online
-                <strong>742</strong>
+                
 
             </button>
 
@@ -1675,7 +1658,7 @@ tbody tr:hover{
                 onclick="setAvailability(this,'busy')">
 
                 On Delivery
-                <strong>428</strong>
+                
 
             </button>
 
@@ -1684,7 +1667,7 @@ tbody tr:hover{
                 onclick="setAvailability(this,'offline')">
 
                 Offline
-                <strong>1,676</strong>
+                
 
             </button>
 
@@ -1693,7 +1676,7 @@ tbody tr:hover{
                 onclick="setVerification(this,'pending')">
 
                 Pending Verification
-                <strong>86</strong>
+                
 
             </button>
 
@@ -1803,984 +1786,6 @@ tbody tr:hover{
 
 
                 <tbody id="ridersTable">
-
-
-                    <!-- RIDER 1 -->
-
-                    <tr
-                        data-search="musa abdullahi RID-1001 08031234567 honda pcx ikeja"
-                        data-availability="busy"
-                        data-verification="verified">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    MA
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        Musa Abdullahi
-                                    </strong>
-
-                                    <small>
-                                        RID-1001 · 0803 123 4567
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot busy-dot"></span>
-
-                                On Delivery
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Honda PCX
-                                </strong>
-
-                                <small>
-                                    KSF-284-LA · Motorcycle
-                                </small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification verified">
-                                Verified
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ 4.9
-                                <span>(482)</span>
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                1,284
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <strong>
-                                ₦684K
-                            </strong>
-
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1001')">
-                                        View Rider
-                                    </button>
-
-                                    <button onclick="viewDeliveries('RID-1001')">
-                                        View Deliveries
-                                    </button>
-
-                                    <button onclick="messageRider('Musa Abdullahi')">
-                                        Message Rider
-                                    </button>
-
-                                    <button onclick="showLocation('RID-1001')">
-                                        View Location
-                                    </button>
-
-                                    <button
-                                        class="danger"
-                                        onclick="suspendRider('RID-1001')">
-
-                                        Suspend Rider
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- RIDER 2 -->
-
-                    <tr
-                        data-search="chioma okafor RID-1002 08045678901 yamaha lekki"
-                        data-availability="online"
-                        data-verification="verified">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    CO
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        Chioma Okafor
-                                    </strong>
-
-                                    <small>
-                                        RID-1002 · 0804 567 8901
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot"></span>
-
-                                Online
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Yamaha NMAX
-                                </strong>
-
-                                <small>
-                                    LAG-772-AB · Motorcycle
-                                </small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification verified">
-                                Verified
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ 4.8
-                                <span>(316)</span>
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                932
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <strong>₦492K</strong>
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1002')">
-                                        View Rider
-                                    </button>
-
-                                    <button onclick="viewDeliveries('RID-1002')">
-                                        View Deliveries
-                                    </button>
-
-                                    <button onclick="messageRider('Chioma Okafor')">
-                                        Message Rider
-                                    </button>
-
-                                    <button onclick="showLocation('RID-1002')">
-                                        View Location
-                                    </button>
-
-                                    <button
-                                        class="danger"
-                                        onclick="suspendRider('RID-1002')">
-
-                                        Suspend Rider
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- RIDER 3 -->
-
-                    <tr
-                        data-search="emmanuel john RID-1003 08123456789 toyota corolla ikeja"
-                        data-availability="online"
-                        data-verification="verified">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    EJ
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        Emmanuel John
-                                    </strong>
-
-                                    <small>
-                                        RID-1003 · 0812 345 6789
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot"></span>
-
-                                Online
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Toyota Corolla
-                                </strong>
-
-                                <small>
-                                    KJA-114-BD · Car</small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification verified">
-                                Verified
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ 4.7
-                                <span>(284)</span>
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                817
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <strong>₦518K</strong>
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1003')">
-                                        View Rider
-                                    </button>
-
-                                    <button onclick="viewDeliveries('RID-1003')">
-                                        View Deliveries
-                                    </button>
-
-                                    <button onclick="messageRider('Emmanuel John')">
-                                        Message Rider
-                                    </button>
-
-                                    <button onclick="showLocation('RID-1003')">
-                                        View Location
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- RIDER 4 -->
-
-                    <tr
-                        data-search="abdulrahman bello RID-1004 08098765432 honda cb lekki"
-                        data-availability="offline"
-                        data-verification="pending">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    AB
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        Abdulrahman Bello
-                                    </strong>
-
-                                    <small>
-                                        RID-1004 · 0809 876 5432
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot offline-dot"></span>
-
-                                Offline
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Honda CB125
-                                </strong>
-
-                                <small>
-                                    LSR-408-CE · Motorcycle
-                                </small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification pending">
-                                Pending
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ —
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                0
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <strong>₦0</strong>
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1004')">
-                                        View Application
-                                    </button>
-
-                                    <button onclick="reviewRider('RID-1004')">
-                                        Review Documents
-                                    </button>
-
-                                    <button onclick="verifyRider('RID-1004')">
-                                        Approve Rider
-                                    </button>
-
-                                    <button
-                                        class="danger"
-                                        onclick="rejectRider('RID-1004')">
-
-                                        Reject Application
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- RIDER 5 -->
-
-                    <tr
-                        data-search="sarah ade RID-1005 08187654321 suzuki surulere"
-                        data-availability="busy"
-                        data-verification="verified">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    SA
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        Sarah Ade
-                                    </strong>
-
-                                    <small>
-                                        RID-1005 · 0818 765 4321
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot busy-dot"></span>
-
-                                On Delivery
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Suzuki Address
-                                </strong>
-
-                                <small>
-                                    KSF-991-LA · Motorcycle
-                                </small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification verified">
-                                Verified
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ 4.9
-                                <span>(621)</span>
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                1,542
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <strong>₦812K</strong>
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1005')">
-                                        View Rider
-                                    </button>
-
-                                    <button onclick="viewDeliveries('RID-1005')">
-                                        View Deliveries
-                                    </button>
-
-                                    <button onclick="showLocation('RID-1005')">
-                                        View Location
-                                    </button>
-
-                                    <button onclick="messageRider('Sarah Ade')">
-                                        Message Rider
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- RIDER 6 -->
-
-                    <tr
-                        data-search="john peter RID-1006 08034567890 toyota sienna yaba"
-                        data-availability="offline"
-                        data-verification="verified">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    JP
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        John Peter
-                                    </strong>
-
-                                    <small>
-                                        RID-1006 · 0803 456 7890
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot offline-dot"></span>
-
-                                Offline
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Toyota Sienna
-                                </strong>
-
-                                <small>
-                                    YAB-331-AA · Van
-                                </small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification verified">
-                                Verified
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ 4.6
-                                <span>(198)</span>
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                645
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <strong>₦431K</strong>
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1006')">
-                                        View Rider
-                                    </button>
-
-                                    <button onclick="viewDeliveries('RID-1006')">
-                                        View Deliveries
-                                    </button>
-
-                                    <button onclick="messageRider('John Peter')">
-                                        Message Rider
-                                    </button>
-
-                                    <button onclick="showLocation('RID-1006')">
-                                        Last Location
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
-                    <!-- RIDER 7 -->
-
-                    <tr
-                        data-search="michael obi RID-1007 08134567890 yamaha aerox victoria island"
-                        data-availability="online"
-                        data-verification="rejected">
-
-                        <td>
-
-                            <input
-                                type="checkbox"
-                                class="checkbox rider-check"
-                                onchange="updateSelected()"
-                            >
-
-                        </td>
-
-                        <td>
-
-                            <div class="rider-info">
-
-                                <div class="rider-avatar">
-                                    MO
-                                </div>
-
-                                <div class="rider-name">
-
-                                    <strong>
-                                        Michael Obi
-                                    </strong>
-
-                                    <small>
-                                        RID-1007 · 0813 456 7890
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="online-status">
-
-                                <span class="online-dot offline-dot"></span>
-
-                                Offline
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="vehicle">
-
-                                <strong>
-                                    Yamaha Aerox
-                                </strong>
-
-                                <small>
-                                    LAG-602-QT · Motorcycle
-                                </small>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="verification rejected">
-                                Rejected
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="rating">
-                                ★ —
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <span class="delivery-count">
-                                0
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <strong>₦0</strong>
-                        </td>
-
-                        <td>
-
-                            <div class="action-menu">
-
-                                <button
-                                    class="more-btn"
-                                    onclick="toggleMenu(this)">
-
-                                    ⋮
-
-                                </button>
-
-                                <div class="dropdown">
-
-                                    <button onclick="viewRider('RID-1007')">
-                                        View Application
-                                    </button>
-
-                                    <button onclick="reviewRider('RID-1007')">
-                                        Review Documents
-                                    </button>
-
-                                    <button onclick="showToast('Rejection reason opened')">
-                                        View Reason
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-
                 </tbody>
 
             </table>
@@ -2791,55 +1796,9 @@ tbody tr:hover{
         <!-- PAGINATION -->
 
         <div class="pagination">
-
-            <div class="pagination-info">
-
-                Showing
-                <strong>1–7</strong>
-                of
-                <strong>2,846</strong>
-                riders
-
+            <div class="pagination-info" id="riderPaginationInfo">
+                Showing applications returned by the backend.
             </div>
-
-            <div class="pages">
-
-                <button class="page-btn">
-                    ‹
-                </button>
-
-                <button class="page-btn active">
-                    1
-                </button>
-
-                <button
-                    class="page-btn"
-                    onclick="changePage(2)">
-                    2
-                </button>
-
-                <button
-                    class="page-btn"
-                    onclick="changePage(3)">
-                    3
-                </button>
-
-                <button class="page-btn">
-                    ...
-                </button>
-
-                <button
-                    class="page-btn"
-                    onclick="changePage(285)">
-                    285
-                </button>
-
-                <button class="page-btn">
-                    ›
-                </button>
-
-            </div>
-
         </div>
 
     </section>
@@ -2880,11 +1839,11 @@ tbody tr:hover{
                 <div class="operation-top">
 
                     <div class="operation-icon">
-                        🟢
+                        ON
                     </div>
 
                     <div class="operation-count">
-                        742
+                        N/A
                     </div>
 
                 </div>
@@ -2901,7 +1860,7 @@ tbody tr:hover{
                     class="operation-link"
                     onclick="showToast('Opening live rider map')">
 
-                    View Live Map →
+                    View Live Map  to 
 
                 </div>
 
@@ -2913,11 +1872,11 @@ tbody tr:hover{
                 <div class="operation-top">
 
                     <div class="operation-icon">
-                        🏍️
+                        RIDE
                     </div>
 
                     <div class="operation-count">
-                        428
+                        N/A
                     </div>
 
                 </div>
@@ -2934,7 +1893,7 @@ tbody tr:hover{
                     class="operation-link"
                     onclick="showToast('Opening active deliveries')">
 
-                    View Deliveries →
+                    View Deliveries  to 
 
                 </div>
 
@@ -2946,11 +1905,11 @@ tbody tr:hover{
                 <div class="operation-top">
 
                     <div class="operation-icon">
-                        📋
+                        APPS
                     </div>
 
                     <div class="operation-count">
-                        86
+                        N/A
                     </div>
 
                 </div>
@@ -2967,7 +1926,7 @@ tbody tr:hover{
                     class="operation-link"
                     onclick="showPendingVerification()">
 
-                    Review Applications →
+                    Review Applications  to 
 
                 </div>
 
@@ -2979,11 +1938,11 @@ tbody tr:hover{
                 <div class="operation-top">
 
                     <div class="operation-icon">
-                        ⚠️
+                        ALERT
                     </div>
 
                     <div class="operation-count">
-                        31
+                        N/A
                     </div>
 
                 </div>
@@ -3000,7 +1959,7 @@ tbody tr:hover{
                     class="operation-link"
                     onclick="showSuspended()">
 
-                    Review Riders →
+                    Review Riders  to 
 
                 </div>
 
@@ -3016,338 +1975,28 @@ tbody tr:hover{
     ====================================================== -->
 
     <section class="lower-grid">
-
-
-        <!-- ZONES -->
-
         <div class="card">
-
             <div class="card-header">
-
                 <div>
-
-                    <h2>
-                        Riders by Zone
-                    </h2>
-
-                    <p>
-                        Current rider distribution.
-                    </p>
-
+                    <h2>Rider Location Status</h2>
+                    <p>Current GPS data from active rides.</p>
                 </div>
-
             </div>
-
-
             <div class="zone-list">
-
-
-                <div class="zone-row">
-
-                    <div class="zone-icon">
-                        📍
-                    </div>
-
-                    <div class="zone-info">
-
-                        <strong>
-                            Ikeja
-                        </strong>
-
-                        <small>
-                            188 online riders
-                        </small>
-
-                        <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                style="width:78%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="zone-number">
-                        486
-                    </div>
-
-                </div>
-
-
-                <div class="zone-row">
-
-                    <div class="zone-icon">
-                        📍
-                    </div>
-
-                    <div class="zone-info">
-
-                        <strong>
-                            Lekki
-                        </strong>
-
-                        <small>
-                            164 online riders
-                        </small>
-
-                        <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                style="width:69%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="zone-number">
-                        421
-                    </div>
-
-                </div>
-
-
-                <div class="zone-row">
-
-                    <div class="zone-icon">
-                        📍
-                    </div>
-
-                    <div class="zone-info">
-
-                        <strong>
-                            Surulere
-                        </strong>
-
-                        <small>
-                            107 online riders
-                        </small>
-
-                        <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                style="width:51%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="zone-number">
-                        328
-                    </div>
-
-                </div>
-
-
-                <div class="zone-row">
-
-                    <div class="zone-icon">
-                        📍
-                    </div>
-
-                    <div class="zone-info">
-
-                        <strong>
-                            Yaba
-                        </strong>
-
-                        <small>
-                            91 online riders
-                        </small>
-
-                        <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                style="width:43%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="zone-number">
-                        276
-                    </div>
-
-                </div>
-
-
-                <div class="zone-row">
-
-                    <div class="zone-icon">
-                        📍
-                    </div>
-
-                    <div class="zone-info">
-
-                        <strong>
-                            Victoria Island
-                        </strong>
-
-                        <small>
-                            92 online riders
-                        </small>
-
-                        <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                style="width:47%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="zone-number">
-                        294
-                    </div>
-
-                </div>
-
+                <p style="font-size:12px;color:var(--muted)">Location summaries will appear when real GPS records are available from the backend.</p>
             </div>
-
         </div>
-
-
-        <!-- ACTIVITY -->
-
         <div class="card">
-
             <div class="card-header">
-
                 <div>
-
-                    <h2>
-                        Recent Rider Activity
-                    </h2>
-
-                    <p>
-                        Latest rider events.
-                    </p>
-
+                    <h2>Recent Rider Activity</h2>
+                    <p>Latest events returned by the system.</p>
                 </div>
-
             </div>
-
-
             <div class="activity-list">
-
-
-                <div class="activity-row">
-
-                    <div class="activity-dot"></div>
-
-                    <div class="activity-content">
-
-                        <strong>
-                            Musa Abdullahi completed delivery
-                        </strong>
-
-                        <small>
-                            Order #ORD-10284 · Lekki → Ikeja
-                        </small>
-
-                    </div>
-
-                    <div class="activity-time">
-                        2 min
-                    </div>
-
-                </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-dot"></div>
-
-                    <div class="activity-content">
-
-                        <strong>
-                            Chioma Okafor became available
-                        </strong>
-
-                        <small>
-                            Rider is now accepting deliveries
-                        </small>
-
-                    </div>
-
-                    <div class="activity-time">
-                        5 min
-                    </div>
-
-                </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-dot"></div>
-
-                    <div class="activity-content">
-
-                        <strong>
-                            New rider application received
-                        </strong>
-
-                        <small>
-                            RID-1008 · Documents submitted
-                        </small>
-
-                    </div>
-
-                    <div class="activity-time">
-                        11 min
-                    </div>
-
-                </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-dot"></div>
-
-                    <div class="activity-content">
-
-                        <strong>
-                            Sarah Ade accepted delivery
-                        </strong>
-
-                        <small>
-                            Order #ORD-10283 · Food delivery
-                        </small>
-
-                    </div>
-
-                    <div class="activity-time">
-                        16 min
-                    </div>
-
-                </div>
-
-
-                <div class="activity-row">
-
-                    <div class="activity-dot"></div>
-
-                    <div class="activity-content">
-
-                        <strong>
-                            Emmanuel John went online
-                        </strong>
-
-                        <small>
-                            Ikeja delivery zone
-                        </small>
-
-                    </div>
-
-                    <div class="activity-time">
-                        21 min
-                    </div>
-
-                </div>
-
+                <p style="font-size:12px;color:var(--muted)">No live activity data is currently connected to this page.</p>
             </div>
-
         </div>
-
     </section>
 
 </main>
@@ -3365,15 +2014,15 @@ tbody tr:hover{
             FAGA Admin
         </strong>
 
-        — Rider Management
+        - Rider Management
 
     </div>
 
     <div>
 
-        FAGA Platform v1.0
+        FAGA Platform
 
-        <span>●</span>
+        <span></span>
 
         Secure Administration
 
@@ -3744,20 +2393,131 @@ function messageRider(name){
 }
 
 
-function showLocation(riderId){
-
-    showToast(
-        "Opening live location for " +
-        riderId
-    );
-
-    /*
-        BACKEND:
-
-        GET /api/admin/riders/:id/location
-    */
-
+function openLiveRideTracker() {
+    const panel = document.getElementById("liveTrackingPanel");
+    if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    const input = document.getElementById("liveRideId");
+    if (input) input.focus();
 }
+
+let liveRideTrackingTimer = null;
+
+async function trackLiveRide() {
+    const input = document.getElementById("liveRideId");
+    const message = document.getElementById("liveTrackingMessage");
+    const map = document.getElementById("liveTrackingMap");
+    const rideId = Number(input && input.value);
+
+    if (!Number.isSafeInteger(rideId) || rideId <= 0) {
+        message.textContent = "Enter a valid ride ID.";
+        map.hidden = true;
+        map.innerHTML = "";
+        if (liveRideTrackingTimer) {
+            clearInterval(liveRideTrackingTimer);
+            liveRideTrackingTimer = null;
+        }
+        return;
+    }
+
+    if (!window.FagaAPI || !FagaAPI.isLoggedIn()) {
+        message.textContent = "Your admin session is unavailable. Sign in again.";
+        map.hidden = true;
+        return;
+    }
+
+    message.textContent = "Loading the latest GPS report for ride #" + rideId + "...";
+    if (!liveRideTrackingTimer) {
+        liveRideTrackingTimer = setInterval(function () {
+            trackLiveRide();
+        }, 15000);
+    }
+
+    try {
+        const result = await FagaAPI.request(
+            "/api/rides/" + encodeURIComponent(rideId) + "/tracking",
+            { method: "GET" }
+        );
+
+        if (!result || result.success === false) {
+            throw new Error(result && result.message ? result.message : "The tracking service did not return ride data.");
+        }
+
+        const location = result.location;
+        const latitude = location ? Number(location.latitude) : NaN;
+        const longitude = location ? Number(location.longitude) : NaN;
+        const rideStatus = result.ride && result.ride.status ? String(result.ride.status) : "unknown";
+        const driverName = result.driver && result.driver.name ? String(result.driver.name) : "No driver assigned";
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+            latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            map.hidden = true;
+            map.innerHTML = "";
+            message.textContent = "Ride #" + rideId + " (" + rideStatus + "): " + driverName +
+                ". No GPS coordinates have been received. The rider's device must share location while assigned to an active ride.";
+            return;
+        }
+
+        const offset = 0.01;
+        const bbox = [
+            longitude - offset,
+            latitude - offset,
+            longitude + offset,
+            latitude + offset
+        ].join("%2C");
+        const mapUrl = "https://www.openstreetmap.org/export/embed.html?bbox=" +
+            bbox + "&layer=mapnik&marker=" + latitude + "%2C" + longitude;
+        const mapLink = "https://www.openstreetmap.org/?mlat=" + latitude +
+            "&mlon=" + longitude + "#map=16/" + latitude + "/" + longitude;
+
+        map.innerHTML = '<iframe title="Live GPS location for ride ' + rideId +
+            '" loading="lazy" referrerpolicy="no-referrer" src="' + mapUrl +
+            '"></iframe>';
+        map.hidden = false;
+
+        const reportedAt = location.created_at ? new Date(location.created_at) : null;
+        const timestamp = reportedAt && !Number.isNaN(reportedAt.getTime())
+            ? reportedAt.toLocaleString()
+            : "timestamp unavailable";
+
+        message.textContent = "Ride #" + rideId + " | Status: " + rideStatus +
+            " | Driver: " + driverName + " | Coordinates: " +
+            latitude.toFixed(6) + ", " + longitude.toFixed(6) +
+            " | Last GPS report: " + timestamp + " | ";
+        const link = document.createElement("a");
+        link.href = mapLink;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Open map";
+        link.style.color = "var(--orange2)";
+        link.style.fontWeight = "700";
+        message.appendChild(link);
+    } catch (error) {
+        console.error("Live ride tracking failed:", error);
+        map.hidden = true;
+        map.innerHTML = "";
+        const detail = error && error.data && (error.data.message || error.data.error)
+            ? (error.data.message || error.data.error)
+            : (error && error.message ? error.message : "Unable to retrieve live GPS.");
+        message.textContent = "Could not load live GPS for ride #" + rideId + ". " + detail;
+    }
+}
+
+function refreshLiveRide() {
+    return trackLiveRide();
+}
+
+function showLocation(rideId) {
+    openLiveRideTracker();
+    const input = document.getElementById("liveRideId");
+    if (input && /^\d+$/.test(String(rideId || ""))) {
+        input.value = String(rideId);
+        trackLiveRide();
+    }
+}
+
+window.addEventListener("beforeunload", function () {
+    if (liveRideTrackingTimer) clearInterval(liveRideTrackingTimer);
+});
 
 
 function reviewRider(riderId){
@@ -3827,7 +2587,7 @@ async function loadRiderApplications() {
             const phone = escapeRiderText(app.phone || "No phone number");
             const submitted = app.created_at
                 ? escapeRiderText(new Date(app.created_at).toLocaleDateString())
-                : "—";
+                : "-";
 
             return `
                 <tr data-search="${name} ${email} ${phone} ${id}"
@@ -3845,8 +2605,8 @@ async function loadRiderApplications() {
                             )}</div>
                             <div class="rider-name">
                                 <strong>${name}</strong>
-                                <small>${email} · ${phone}</small>
-                                <small>Application #${id} · Submitted ${submitted}</small>
+                                <small>${email}  |  ${phone}</small>
+                                <small>Application #${id}  |  Submitted ${submitted}</small>
                             </div>
                         </div>
                     </td>
@@ -3854,9 +2614,9 @@ async function loadRiderApplications() {
                     <td><div class="vehicle"><strong>Not assigned</strong>
                         <small>Vehicle details pending</small></div></td>
                     <td><span class="verification">Pending</span></td>
-                    <td>—</td>
-                    <td>—</td>
-                    <td>—</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
                     <td>
                         <button type="button" class="more-btn"
                             onclick="verifyRider(${id})">Approve</button>
