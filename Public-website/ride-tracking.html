@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Ride | FAGA</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
         * {
@@ -212,6 +213,23 @@
                 #e5eadf;
 
             background-size: 65px 65px;
+        }
+
+        #liveMap {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            min-height: 430px;
+            background: #e5eadf;
+        }
+
+        /* Decorative map artwork is disabled; only real map data is shown. */
+        .road, .map-place, .route-line, .destination-marker, .driver-marker {
+            display: none !important;
+        }
+
+        .leaflet-container {
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .road {
@@ -1287,6 +1305,7 @@
             <section class="map-card">
 
                 <div class="map-area" id="mapArea">
+                    <div id="liveMap" aria-label="Live ride map"></div>
 
                     
 
@@ -2069,6 +2088,7 @@
     ></div>
 
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="../js/faga-api.js"></script>
 
     <script>
@@ -2134,6 +2154,51 @@
         let latestTracking = null;
         let pollingTimer = null;
         let mapScale = 1;
+        let liveMap = null;
+        let driverMapMarker = null;
+        let pickupMapMarker = null;
+        let destinationMapMarker = null;
+        let routeLine = null;
+
+        function initLiveMap() {
+            if (typeof L === "undefined") {
+                mapStatus.textContent = "Map unavailable";
+                mapStatusText.textContent = "The map library could not load. Ride details can still update.";
+                return;
+            }
+            if (liveMap) return;
+            liveMap = L.map("liveMap", { zoomControl: false }).setView([0, 0], 2);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: "&copy; OpenStreetMap contributors"
+            }).addTo(liveMap);
+            L.control.zoom({ position: "topright" }).addTo(liveMap);
+        }
+
+        function validCoordinate(lat, lng) {
+    if (
+        lat === null || lat === undefined || lat === "" ||
+        lng === null || lng === undefined || lng === ""
+    ) {
+        return false;
+    }
+
+    const latitude = Number(lat);
+    const longitude = Number(lng);
+
+    return Number.isFinite(latitude) &&
+        Number.isFinite(longitude) &&
+        latitude >= -90 && latitude <= 90 &&
+        longitude >= -180 && longitude <= 180;
+}
+
+        function placeMapMarker(existing, lat, lng, label, color) {
+            if (!validCoordinate(lat, lng) || !liveMap) return existing;
+            const point = [Number(lat), Number(lng)];
+            if (existing) { existing.setLatLng(point); existing.bindPopup(label); return existing; }
+            return L.circleMarker(point, { radius: 8, color: "#ffffff", weight: 3, fillColor: color, fillOpacity: 1 })
+                .addTo(liveMap).bindPopup(label);
+        }
 
         const statusProgress = {
             REQUESTED: 10,
@@ -2184,6 +2249,47 @@
             window.location.href =
                 "../user-portal/login.html?redirect=" +
                 encodeURIComponent(redirect);
+        }
+
+        function normalizeRide(raw) {
+            if (!raw || typeof raw !== "object") return raw;
+            return {
+                ...raw,
+                id: raw.id,
+                driverId: raw.driverId ?? raw.driver_id,
+                customerId: raw.customerId ?? raw.customer_id,
+                pickupAddress: raw.pickupAddress ?? raw.pickup_address,
+                pickupLatitude: raw.pickupLatitude ?? raw.pickup_latitude,
+                pickupLongitude: raw.pickupLongitude ?? raw.pickup_longitude,
+                destinationAddress: raw.destinationAddress ?? raw.destination_address,
+                destinationLatitude: raw.destinationLatitude ?? raw.destination_latitude,
+                destinationLongitude: raw.destinationLongitude ?? raw.destination_longitude,
+                rideType: raw.rideType ?? raw.ride_type,
+                distanceKm: raw.distanceKm ?? raw.distance_km,
+                durationMinutes: raw.durationMinutes ?? raw.duration_minutes,
+                driverEtaMinutes: raw.driverEtaMinutes ?? raw.driver_eta_minutes,
+                passengers: raw.passengers,
+                fare: raw.fare,
+                routeGeometry: raw.routeGeometry ?? raw.route_geometry
+            };
+        }
+
+        function normalizeTracking(raw, fallbackRide) {
+            const ride = normalizeRide(raw?.ride || fallbackRide);
+            const rawLocation = raw?.location ?? raw?.driverLocation ?? null;
+            const location = rawLocation ? {
+                ...rawLocation,
+                latitude: rawLocation.latitude,
+                longitude: rawLocation.longitude,
+                createdAt: rawLocation.createdAt ?? rawLocation.created_at
+            } : null;
+            return {
+                ...raw,
+                ride,
+                driver: raw?.driver || null,
+                driverLocation: location,
+                driverEtaMinutes: raw?.driverEtaMinutes ?? raw?.driver_eta_minutes ?? ride?.driverEtaMinutes
+            };
         }
 
         function getRideStatus(ride) {
@@ -2265,66 +2371,64 @@
         }
 
         function updateMapFromTracking(tracking) {
-            const location = tracking?.driverLocation;
+            initLiveMap();
+            const location = tracking?.driverLocation || tracking?.location || null;
+            const ride = normalizeRide(latestRide);
+            if (validCoordinate(ride?.pickupLatitude, ride?.pickupLongitude)) {
+    pickupMapMarker = placeMapMarker(
+        pickupMapMarker,
+        ride.pickupLatitude,
+        ride.pickupLongitude,
+        "Pickup",
+        "#16a34a"
+    );
+} else if (pickupMapMarker && liveMap) {
+    liveMap.removeLayer(pickupMapMarker);
+    pickupMapMarker = null;
+}
 
-            if (location &&
-                Number.isFinite(Number(location.latitude)) &&
-                Number.isFinite(Number(location.longitude))) {
+if (validCoordinate(ride?.destinationLatitude, ride?.destinationLongitude)) {
+    destinationMapMarker = placeMapMarker(
+        destinationMapMarker,
+        ride.destinationLatitude,
+        ride.destinationLongitude,
+        "Destination",
+        "#dc2626"
+    );
+} else if (destinationMapMarker && liveMap) {
+    liveMap.removeLayer(destinationMapMarker);
+    destinationMapMarker = null;
+}
 
-                driverMarker.style.display = "flex";
-                trackingBadge.innerHTML =
-                    '<span class="live-dot"></span> LIVE LOCATION';
-
-                mapStatus.textContent =
-                    "Driver location received";
-
-                mapStatusText.textContent =
-                    "The latest driver GPS location is shown on the map.";
-
-                mapDistance.textContent =
-                    "Live GPS location available";
-
+            if (location && validCoordinate(location.latitude, location.longitude)) {
+                const point = [Number(location.latitude), Number(location.longitude)];
+                driverMapMarker = placeMapMarker(driverMapMarker, point[0], point[1], "Driver's latest GPS location", "#071a33");
+                trackingBadge.innerHTML = '<span class="live-dot"></span> LIVE GPS';
+                mapStatus.textContent = "Driver GPS received";
+                mapStatusText.textContent = "Showing the latest location received from the driver's device.";
+                mapDistance.textContent = "Live GPS location available";
                 if (location.createdAt) {
-                    const updatedAt =
-                        new Date(location.createdAt);
-
-                    mapUpdated.textContent =
-                        Number.isNaN(updatedAt.getTime())
-                            ? "Location updated"
-                            : `Updated ${updatedAt.toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit"
-                            })}`;
-                } else {
-                    mapUpdated.textContent =
-                        "Location updated";
-                }
-
-                /*
-                 * The current backend provides latitude/longitude but
-                 * the existing page does not yet include a real map SDK.
-                 * Do not fake movement or invent map coordinates.
-                 */
-                return;
+                    const updatedAt = new Date(location.createdAt);
+                    mapUpdated.textContent = Number.isNaN(updatedAt.getTime()) ? "Location updated" : `Updated ${updatedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+                } else mapUpdated.textContent = "Location updated";
+                const points = [point];
+                if (validCoordinate(ride?.pickupLatitude, ride?.pickupLongitude)) points.push([Number(ride.pickupLatitude), Number(ride.pickupLongitude)]);
+                if (validCoordinate(ride?.destinationLatitude, ride?.destinationLongitude)) points.push([Number(ride.destinationLatitude), Number(ride.destinationLongitude)]);
+                if (points.length > 1) liveMap.fitBounds(L.latLngBounds(points), { padding: [35, 35], maxZoom: 15 });
+                else liveMap.setView(point, 15);
+            } else {
+                trackingBadge.innerHTML = '<span class="live-dot"></span> WAITING FOR GPS';
+                mapStatus.textContent = ride?.driverId ? "Waiting for driver location" : "Waiting for driver assignment";
+                mapStatusText.textContent = ride?.driverId ? "A driver is assigned, but no GPS update has been received yet." : "No driver has been assigned. No driver location is available yet.";
+                mapDistance.textContent = "No live GPS yet";
+                mapUpdated.textContent = "Waiting for live location";
+                const known = [];
+                if (validCoordinate(ride?.pickupLatitude, ride?.pickupLongitude)) known.push([Number(ride.pickupLatitude), Number(ride.pickupLongitude)]);
+                if (validCoordinate(ride?.destinationLatitude, ride?.destinationLongitude)) known.push([Number(ride.destinationLatitude), Number(ride.destinationLongitude)]);
+                if (known.length > 1) liveMap.fitBounds(L.latLngBounds(known), { padding: [35, 35], maxZoom: 14 });
+                else if (known.length === 1) liveMap.setView(known[0], 14);
+                if (driverMapMarker) { liveMap.removeLayer(driverMapMarker); driverMapMarker = null; }
             }
-
-            driverMarker.style.display = "none";
-            trackingBadge.innerHTML =
-                '<span class="live-dot"></span> STATUS UPDATES';
-
-            mapStatus.textContent =
-                latestRide?.driverId
-                    ? "Waiting for driver location"
-                    : "Waiting for driver assignment";
-
-            mapStatusText.textContent =
-                latestRide?.driverId
-                    ? "The driver is assigned. Live GPS will appear when the driver app sends a location."
-                    : "FAGA is processing your ride request. No driver GPS is available yet.";
-
-            mapDistance.textContent = "--";
-            mapUpdated.textContent =
-                "Waiting for live location";
         }
 
         function updateRideUI(
@@ -2332,6 +2436,8 @@
     tracking
 ) {
 
+    ride = normalizeRide(ride);
+    tracking = normalizeTracking(tracking, ride);
     latestRide = ride;
     latestTracking = tracking;
 
@@ -2361,6 +2467,7 @@
         );
 
     if (
+        driverEtaValue !== null && driverEtaValue !== undefined && driverEtaValue !== "" &&
         Number.isFinite(
             driverEta
         ) &&
@@ -2487,44 +2594,31 @@
     if (ridePassengers) {
 
         ridePassengers.textContent =
-            Number.isFinite(
-                Number(
-                    ride?.passengers
-                )
-            )
+            ride?.passengers !== null && ride?.passengers !== undefined && ride?.passengers !== "" &&
+            Number.isFinite(Number(ride.passengers))
                 ? ride.passengers
                 : "--";
     }
 
     if (rideDistance) {
 
-        const distance =
-            Number(
-                ride?.distanceKm
-            );
+        const distanceValue = ride?.distanceKm;
+        const distance = Number(distanceValue);
 
         rideDistance.textContent =
-            Number.isFinite(
-                distance
-            )
+            distanceValue !== null && distanceValue !== undefined && distanceValue !== "" && Number.isFinite(distance)
                 ? `${distance.toFixed(1)} km`
                 : "--";
     }
 
     if (rideDuration) {
 
-        const duration =
-            Number(
-                ride?.durationMinutes
-            );
+        const durationValue = ride?.durationMinutes;
+        const duration = Number(durationValue);
 
         rideDuration.textContent =
-            Number.isFinite(
-                duration
-            )
-                ? formatDuration(
-                    duration
-                )
+            durationValue !== null && durationValue !== undefined && durationValue !== "" && Number.isFinite(duration) && duration > 0
+                ? formatDuration(duration)
                 : "--";
     }
 
@@ -2629,7 +2723,7 @@ function formatDuration(minutes) {
                     );
 
                 const ride =
-                    response?.ride || response;
+                    normalizeRide(response?.ride || response);
 
                 if (!ride?.id) {
                     throw new Error("Invalid ride response.");
@@ -2642,14 +2736,7 @@ function formatDuration(minutes) {
                         `/api/rides/${encodeURIComponent(rideId)}/tracking`
                     );
 
-                const tracking =
-                    trackingResponse?.driverLocation !== undefined
-                        ? trackingResponse
-                        : {
-                            ride,
-                            driverLocation:
-                                trackingResponse?.driverLocation || null
-                        };
+                const tracking = normalizeTracking(trackingResponse, ride);
 
                 updateRideUI(
                     ride,
@@ -2696,14 +2783,7 @@ function formatDuration(minutes) {
                         `/api/rides/${encodeURIComponent(rideId)}/tracking`
                     );
 
-                const tracking =
-                    response?.driverLocation !== undefined
-                        ? response
-                        : {
-                            ride: latestRide,
-                            driverLocation:
-                                response?.driverLocation || null
-                        };
+                const tracking = normalizeTracking(response, latestRide);
 
                 latestTracking = tracking;
 
@@ -2729,27 +2809,19 @@ function formatDuration(minutes) {
 
         document.getElementById("zoomIn")
             .addEventListener("click", () => {
-                mapScale =
-                    Math.min(mapScale + 0.1, 1.5);
-
-                mapArea.style.transform =
-                    `scale(${mapScale})`;
+                if (liveMap) liveMap.zoomIn();
             });
 
         document.getElementById("zoomOut")
             .addEventListener("click", () => {
-                mapScale =
-                    Math.max(mapScale - 0.1, 0.8);
-
-                mapArea.style.transform =
-                    `scale(${mapScale})`;
+                if (liveMap) liveMap.zoomOut();
             });
 
         document.getElementById("centerMap")
             .addEventListener("click", () => {
-                mapScale = 1;
-                mapArea.style.transform = "scale(1)";
-                showToast("Map centered.");
+                if (driverMapMarker && liveMap) liveMap.setView(driverMapMarker.getLatLng(), Math.max(liveMap.getZoom(), 14));
+                else if (liveMap && pickupMapMarker) liveMap.setView(pickupMapMarker.getLatLng(), 13);
+                else showToast("No ride coordinates are available to center the map yet.");
             });
 
         /* ==========================================
@@ -2884,10 +2956,10 @@ function formatDuration(minutes) {
                     cancelModal.classList.remove("show");
 
                     const cancelledRide =
-                        response?.ride || {
+                        normalizeRide(response?.ride || {
                             ...latestRide,
                             status: "CANCELLED"
-                        };
+                        });
 
                     updateRideUI(
                         cancelledRide,
@@ -3000,6 +3072,10 @@ function formatDuration(minutes) {
                 await loadRide();
 
             if (!loaded) return;
+
+            initLiveMap();
+            window.setTimeout(() => { if (liveMap) liveMap.invalidateSize(); }, 150);
+            window.addEventListener("resize", () => { if (liveMap) liveMap.invalidateSize(); });
 
             pollingTimer =
                 window.setInterval(
