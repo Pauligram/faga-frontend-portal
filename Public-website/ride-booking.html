@@ -5,6 +5,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Book a Ride | FAGA</title>
 
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
                 <style>
                     * {
                         margin: 0;
@@ -1299,6 +1300,19 @@
                 }
             }
 
+            /* Real interactive map (Leaflet + OpenStreetMap) */
+            .map-area { background: #e6ebdf; }
+            #fagaLiveMap { position:absolute; inset:0; width:100%; height:100%; min-height:360px; z-index:1; }
+            .map-area .map-info, .map-area .map-note, .map-area .map-controls { z-index:500; }
+            .map-area .map-note { bottom:20px; }
+            .map-area .map-controls { bottom:20px; }
+            .map-area .map-info { max-width:calc(100% - 90px); }
+            .faga-map-pin { width:18px; height:18px; border:3px solid #fff; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,.35); }
+            .faga-map-pin.pickup { background:#16a34a; }
+            .faga-map-pin.destination { background:#dc2626; border-radius:4px; }
+            .faga-map-pin.current { background:#2563eb; }
+            .leaflet-container { font-family:Arial,Helvetica,sans-serif; }
+
             @media (prefers-reduced-motion: reduce) {
                 *, *::before, *::after {
                     scroll-behavior: auto !important;
@@ -1545,9 +1559,12 @@
 
                                     <div>
                                         <div class="option-label">Payment</div>
-                                        <div class="option-value">
-                                            💳 Card / Wallet
-                                        </div>
+                                        <select id="paymentMethod" aria-label="Choose payment method" style="width:100%; margin-top:6px; padding:8px; border:1px solid var(--border); border-radius:7px; background:#fff; color:var(--text);">
+                                            <option value="CARD">Card</option>
+                                            <option value="BANK_TRANSFER">Bank transfer</option>
+                                            <option value="WALLET">FAGA Wallet</option>
+                                            <option value="CASH">Cash</option>
+                                        </select>
                                     </div>
 
                                 </div>
@@ -1616,79 +1633,17 @@
                         <section class="map-card">
 
                             <div class="map-area">
-
-                                <div class="road one"></div>
-                                <div class="road two"></div>
-                                <div class="road three"></div>
-
-                                <span class="map-label label-one">
-                                    Victoria Island
-                                </span>
-
-                                <span class="map-label label-two">
-                                    Lekki
-                                </span>
-
-                                <span class="map-label label-three">
-                                    Ikoyi
-                                </span>
-
-
-                                <div class="map-route"></div>
-
-                                <div class="map-marker pickup-marker"></div>
-
-                                <div class="map-marker destination-marker"></div>
-
-
+                                <div id="fagaLiveMap" role="application" aria-label="Interactive live pickup and destination map"></div>
                                 <div class="map-info">
-
-                                    <strong>Ride preview</strong>
-
-                                    <span>
-                                        Route preview
-                                    </span>
-
+                                    <strong id="mapStatusTitle">Live ride map</strong>
+                                    <span id="mapStatusText">Use “Use current” or enter locations</span>
                                 </div>
-
-
                                 <div class="map-controls">
-
-                                    <button
-                                        class="map-control"
-                                        type="button"
-                                        id="zoomIn"
-                                    >
-                                        +
-                                    </button>
-
-                                    <button
-                                        class="map-control"
-                                        type="button"
-                                        id="zoomOut"
-                                    >
-                                        −
-                                    </button>
-
-                                    <button
-                                        class="map-control"
-                                        type="button"
-                                        id="centerMap"
-                                    >
-                                        ◎
-                                    </button>
-
+                                    <button class="map-control" type="button" id="zoomIn" aria-label="Zoom in">+</button>
+                                    <button class="map-control" type="button" id="zoomOut" aria-label="Zoom out">−</button>
+                                    <button class="map-control" type="button" id="centerMap" aria-label="Fit route or center map">◎</button>
                                 </div>
-
-
-                                <div class="map-note">
-
-                                    📍 Map preview. Live route details will appear when the FAGA routing service is connected.
-                                    Connect your preferred map provider for live routing
-                                    and GPS tracking.
-
-                                </div>
-
+                                <div class="map-note" id="mapNote">GPS access requires permission. Map tiles and road routes need an internet connection.</div>
                             </div>
 
                         </section>
@@ -1948,6 +1903,7 @@
                 <div class="toast" id="toast"></div>
 
 
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
             <script src="../js/faga-api.js"></script>
 
             <script>
@@ -2002,6 +1958,103 @@
 
                     window.fagaPickupCoordinates = null;
                     window.fagaDestinationCoordinates = null;
+
+                    // Real map and location markers. Browser GPS is only read after the
+                    // passenger explicitly taps “Use current”.
+                    let fagaMap = null;
+                    let pickupMapMarker = null;
+                    let destinationMapMarker = null;
+                    let currentGpsMarker = null;
+                    let routeLine = null;
+                    let routeRequestNumber = 0;
+                    let lastRouteKey = "";
+                    const mapStatusTitle = document.getElementById("mapStatusTitle");
+                    const mapStatusText = document.getElementById("mapStatusText");
+                    const mapNote = document.getElementById("mapNote");
+                    const mapIcons = {
+                        pickup: L.divIcon({className:"", html:'<div class="faga-map-pin pickup"></div>', iconSize:[18,18], iconAnchor:[9,9]}),
+                        destination: L.divIcon({className:"", html:'<div class="faga-map-pin destination"></div>', iconSize:[18,18], iconAnchor:[9,9]}),
+                        current: L.divIcon({className:"", html:'<div class="faga-map-pin current"></div>', iconSize:[18,18], iconAnchor:[9,9]})
+                    };
+
+                    if (window.L && document.getElementById("fagaLiveMap")) {
+                        fagaMap = L.map("fagaLiveMap", {zoomControl:false}).setView([6.5244, 3.3792], 11);
+                        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                            maxZoom:19,
+                            attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+                        }).addTo(fagaMap);
+                    } else {
+                        if (mapStatusText) mapStatusText.textContent = "Map library unavailable";
+                        if (mapNote) mapNote.textContent = "The interactive map could not load. Check your internet connection.";
+                    }
+
+                    function validFagaCoordinates(point) {
+                        return !!point && Number.isFinite(Number(point.latitude)) && Number.isFinite(Number(point.longitude)) && Math.abs(Number(point.latitude)) <= 90 && Math.abs(Number(point.longitude)) <= 180;
+                    }
+
+                    function renderFagaMap() {
+                        if (!fagaMap) return;
+                        const pickup = validFagaCoordinates(window.fagaPickupCoordinates) ? window.fagaPickupCoordinates : null;
+                        const destination = validFagaCoordinates(window.fagaDestinationCoordinates) ? window.fagaDestinationCoordinates : null;
+                        if (pickup) {
+                            const latlng = [Number(pickup.latitude), Number(pickup.longitude)];
+                            if (pickupMapMarker) pickupMapMarker.setLatLng(latlng);
+                            else pickupMapMarker = L.marker(latlng,{icon:mapIcons.pickup,title:"Pickup location"}).addTo(fagaMap).bindPopup("Pickup location");
+                        } else if (pickupMapMarker) { fagaMap.removeLayer(pickupMapMarker); pickupMapMarker = null; }
+                        if (destination) {
+                            const latlng = [Number(destination.latitude), Number(destination.longitude)];
+                            if (destinationMapMarker) destinationMapMarker.setLatLng(latlng);
+                            else destinationMapMarker = L.marker(latlng,{icon:mapIcons.destination,title:"Destination"}).addTo(fagaMap).bindPopup("Destination");
+                        } else if (destinationMapMarker) { fagaMap.removeLayer(destinationMapMarker); destinationMapMarker = null; }
+                        const points = [];
+                        if (pickup) points.push([Number(pickup.latitude),Number(pickup.longitude)]);
+                        if (destination) points.push([Number(destination.latitude),Number(destination.longitude)]);
+                        if (points.length === 2) {
+                            fagaMap.fitBounds(points,{padding:[55,55],maxZoom:15});
+                            if (mapStatusTitle) mapStatusTitle.textContent = "Pickup & destination";
+                            if (mapStatusText) mapStatusText.textContent = "Loading road route…";
+                        } else if (points.length === 1) {
+                            fagaMap.setView(points[0],15);
+                            if (mapStatusTitle) mapStatusTitle.textContent = pickup ? "Pickup location" : "Destination";
+                            if (mapStatusText) mapStatusText.textContent = `${points[0][0].toFixed(5)}, ${points[0][1].toFixed(5)}`;
+                        } else {
+                            if (mapStatusTitle) mapStatusTitle.textContent = "Live ride map";
+                            if (mapStatusText) mapStatusText.textContent = "Use “Use current” or enter locations";
+                        }
+                    }
+
+                    async function drawFagaRoadRoute() {
+                        if (!fagaMap || !validFagaCoordinates(window.fagaPickupCoordinates) || !validFagaCoordinates(window.fagaDestinationCoordinates)) {
+                            if (routeLine && fagaMap) { fagaMap.removeLayer(routeLine); routeLine = null; }
+                            lastRouteKey = "";
+                            return;
+                        }
+                        const p = window.fagaPickupCoordinates, d = window.fagaDestinationCoordinates;
+                        const key = `${p.latitude},${p.longitude}|${d.latitude},${d.longitude}`;
+                        if (key === lastRouteKey) return;
+                        lastRouteKey = key;
+                        const requestNo = ++routeRequestNumber;
+                        try {
+                            const url = `https://router.project-osrm.org/route/v1/driving/${Number(p.longitude)},${Number(p.latitude)};${Number(d.longitude)},${Number(d.latitude)}?overview=full&geometries=geojson&steps=false`;
+                            const response = await fetch(url);
+                            if (!response.ok) throw new Error("Road routing service unavailable");
+                            const data = await response.json();
+                            if (requestNo !== routeRequestNumber) return;
+                            if (data.code !== "Ok" || !data.routes?.[0]?.geometry?.coordinates) throw new Error("No road route found");
+                            const route = data.routes[0];
+                            const latlngs = route.geometry.coordinates.map(c => [c[1],c[0]]);
+                            if (routeLine) fagaMap.removeLayer(routeLine);
+                            routeLine = L.polyline(latlngs,{color:"#f7931e",weight:5,opacity:.9}).addTo(fagaMap);
+                            fagaMap.fitBounds(routeLine.getBounds(),{padding:[55,55]});
+                            if (mapStatusText) mapStatusText.textContent = `${(route.distance/1000).toFixed(1)} km road route · ${(route.duration/60).toFixed(0)} min estimated drive`;
+                            if (mapNote) mapNote.textContent = "Road route preview. Actual journey time depends on traffic; GPS updates require location permission.";
+                        } catch (error) {
+                            if (requestNo !== routeRequestNumber) return;
+                            if (mapStatusText) mapStatusText.textContent = "Locations pinned · road route unavailable";
+                            if (mapNote) mapNote.textContent = "The locations are shown, but the public road-routing service did not return a route. Try again later.";
+                            console.warn("FAGA map route unavailable:", error.message);
+                        }
+                    }
 
 
                     /* =====================================
@@ -2192,8 +2245,8 @@ pickupInput.addEventListener(
                 null;
         }
 
-        window.fagaRouteData =
-            null;
+        window.fagaRouteData = null;
+        renderFagaMap();
 
         window.clearTimeout(
             pickupGeocodeTimer
@@ -2294,8 +2347,8 @@ destinationInput.addEventListener(
         window.fagaDestinationCoordinates =
             null;
 
-        window.fagaRouteData =
-            null;
+        window.fagaRouteData = null;
+        renderFagaMap();
 
         window.clearTimeout(
             destinationGeocodeTimer
@@ -2386,6 +2439,8 @@ destinationInput.addEventListener(
             let routeEstimateRequest = 0;
 
             async function updateRoute() {
+                renderFagaMap();
+                drawFagaRoadRoute();
 
                 const distanceValue =
                     document.getElementById("distanceValue");
@@ -2736,25 +2791,35 @@ destinationInput.addEventListener(
                                     longitude
                                 );
 
-                                window.fagaPickupCoordinates = {
-                                    latitude,
-                                    longitude
-                                };
-
-                                // Destination coordinates are optional until a routing/geocoding
-                                // service supplies them.
-                                window.fagaDestinationCoordinates = null;
-
-                                pickupInput.value =
-                                    "Current location";
-
-                                locationBtn.textContent =
-                                    "Located";
-
-                                showToast(
-                                    "Pickup location detected."
+                                window.fagaPickupCoordinates = { latitude, longitude };
+                                pickupInput.value = "Current location";
+                                locationBtn.textContent = "Located";
+                                if (fagaMap) {
+                                    const latlng = [latitude, longitude];
+                                    if (currentGpsMarker) currentGpsMarker.setLatLng(latlng);
+                                    else currentGpsMarker = L.marker(latlng,{icon:mapIcons.current,title:"Your current GPS location"}).addTo(fagaMap).bindPopup("Your current location");
+                                    fagaMap.setView(latlng,16);
+                                }
+                                if (mapNote) mapNote.textContent = `GPS fix accuracy: approximately ${Math.round(position.coords.accuracy)} m. Your browser shared this location after permission was granted.`;
+                                // Keep the pickup GPS fresh while this booking page stays open.
+                                if (window.fagaGpsWatchId !== undefined && window.fagaGpsWatchId !== null) {
+                                    navigator.geolocation.clearWatch(window.fagaGpsWatchId);
+                                }
+                                window.fagaGpsWatchId = navigator.geolocation.watchPosition(
+                                    livePosition => {
+                                        const liveLat = livePosition.coords.latitude;
+                                        const liveLng = livePosition.coords.longitude;
+                                        window.fagaPickupCoordinates = { latitude: liveLat, longitude: liveLng };
+                                        if (currentGpsMarker) currentGpsMarker.setLatLng([liveLat, liveLng]);
+                                        else currentGpsMarker = L.marker([liveLat, liveLng], {icon:mapIcons.current,title:"Your current GPS location"}).addTo(fagaMap).bindPopup("Your current location");
+                                        if (mapStatusText) mapStatusText.textContent = `GPS live · accuracy about ${Math.round(livePosition.coords.accuracy)} m`;
+                                        renderFagaMap();
+                                    },
+                                    gpsError => console.warn("FAGA live GPS update:", gpsError.message),
+                                    { enableHighAccuracy:true, maximumAge:3000, timeout:20000 }
                                 );
-                                    updateRoute();
+                                showToast("Current GPS detected. Live pickup updates are on while this page remains open.");
+                                updateRoute();
                             },
 
                             
@@ -2768,12 +2833,12 @@ destinationInput.addEventListener(
                                 locationBtn.textContent =
                                     "Use current";
 
-                                showToast(
-                                    "Unable to get your location. Please enter it manually."
-                                );
+                                const reason = error.code === 1 ? "Location permission was denied." : error.code === 2 ? "Your device could not determine its location." : "GPS request timed out.";
+                                showToast(reason + " Allow location access and try again, or enter pickup manually.");
+                                if (mapStatusText) mapStatusText.textContent = reason;
 
-                            }
-
+                            },
+                            { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
                         );
 
                     });
@@ -2793,10 +2858,9 @@ destinationInput.addEventListener(
 
                                 if (!pickupInput.value.trim()) {
 
-                                    pickupInput.value =
-                                        location;
-
+                                    pickupInput.value = location;
                                     window.fagaPickupCoordinates = null;
+                                    pickupInput.dispatchEvent(new Event("input", { bubbles:true }));
 
                                     showToast(
                                         "Pickup location selected."
@@ -2804,8 +2868,9 @@ destinationInput.addEventListener(
 
                                 } else {
 
-                                    destinationInput.value =
-                                        location;
+                                    destinationInput.value = location;
+                                    window.fagaDestinationCoordinates = null;
+                                    destinationInput.dispatchEvent(new Event("input", { bubbles:true }));
 
                                     showToast(
                                         "Destination selected."
@@ -2883,6 +2948,7 @@ destinationInput.addEventListener(
                                     destinationAddress: destination,
                                     rideType: selectedRide,
                                     passengers: passengers,
+                                    paymentMethod: document.getElementById("paymentMethod")?.value || "CARD",
                                     pickupLatitude: window.fagaPickupCoordinates?.latitude ?? null,
                                     pickupLongitude: window.fagaPickupCoordinates?.longitude ?? null,
                                     destinationLatitude: window.fagaDestinationCoordinates?.latitude ?? null,
@@ -2986,48 +3052,22 @@ destinationInput.addEventListener(
                     MAP CONTROLS
                     ===================================== */
 
-                    let mapScale = 1;
-
-                    const mapArea =
-                        document.querySelector(".map-area");
-
-                    document.getElementById("zoomIn")
-                        .addEventListener("click", () => {
-
-                            mapScale =
-                                Math.min(mapScale + 0.1, 1.5);
-
-                            mapArea.style.transform =
-                                `scale(${mapScale})`;
-
-                        });
-
-
-                    document.getElementById("zoomOut")
-                        .addEventListener("click", () => {
-
-                            mapScale =
-                                Math.max(mapScale - 0.1, 0.8);
-
-                            mapArea.style.transform =
-                                `scale(${mapScale})`;
-
-                        });
-
-
-                    document.getElementById("centerMap")
-                        .addEventListener("click", () => {
-
-                            mapScale = 1;
-
-                            mapArea.style.transform =
-                                "scale(1)";
-
-                            showToast(
-                                "Map centered."
-                            );
-
-                        });
+                    document.getElementById("zoomIn").addEventListener("click", () => {
+                        if (fagaMap) fagaMap.zoomIn();
+                    });
+                    document.getElementById("zoomOut").addEventListener("click", () => {
+                        if (fagaMap) fagaMap.zoomOut();
+                    });
+                    document.getElementById("centerMap").addEventListener("click", () => {
+                        if (!fagaMap) return;
+                        const points = [];
+                        if (validFagaCoordinates(window.fagaPickupCoordinates)) points.push([Number(window.fagaPickupCoordinates.latitude),Number(window.fagaPickupCoordinates.longitude)]);
+                        if (validFagaCoordinates(window.fagaDestinationCoordinates)) points.push([Number(window.fagaDestinationCoordinates.latitude),Number(window.fagaDestinationCoordinates.longitude)]);
+                        if (routeLine) fagaMap.fitBounds(routeLine.getBounds(),{padding:[55,55]});
+                        else if (points.length > 1) fagaMap.fitBounds(points,{padding:[55,55]});
+                        else if (points.length === 1) fagaMap.setView(points[0],16);
+                        else fagaMap.setView([6.5244,3.3792],11);
+                    });
 
 
                     /* =====================================
